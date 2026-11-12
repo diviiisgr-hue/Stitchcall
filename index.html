@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StitchCall — Neighbourhood Tailoring Marketplace | Coimbatore</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --maroon: #6B1D2F;
+      --maroon-dark: #4E1321;
+      --gold: #C8963E;
+      --gold-light: #F6ECD9;
+      --cream: #FDFBF7;
+      --surface: #FFFFFF;
+      --text: #1F2421;
+      --muted: #5C635E;
+      --border: #E5DFD5;
+      --green: #1E7E48;
+      --whatsapp: #25D366;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--maroon); }
+
+    /* Top Launch Banner */
+    .launch-banner {
+      background: var(--maroon-dark);
+      color: #FFF8EB;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border-bottom: 2px solid var(--gold);
+    }
+    .launch-banner span {
+      background: var(--gold);
+      color: #1F1405;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--maroon);
+    }
+    .brand-loc {
+      font-size: 0.78rem;
+      background: var(--gold-light);
+      color: var(--maroon);
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--gold-light);
+      color: var(--maroon);
+      border-color: var(--gold);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #FFFDF9 0%, #F7EFE1 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 44px 20px;
+    }
+    .hero-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: var(--maroon);
+      color: #FFF;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: 2.3rem;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.02rem;
+      margin-bottom: 22px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn-primary {
+      background: var(--maroon);
+      color: #FFF;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--maroon-dark); }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--maroon);
+      border: 1.5px solid var(--maroon);
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .hero-img img {
+      width: 100%;
+      border-radius: 14px;
+      border: 2px solid var(--gold);
+      box-shadow: 0 10px 25px rgba(107, 29, 47, 0.12);
+      object-fit: cover;
+      max-height: 310px;
+    }
+
+    /* Main Container & Sections */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 36px 20px;
+    }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .section-head {
+      margin-bottom: 22px;
+    }
+    .section-head h2 { font-size: 1.75rem; margin-bottom: 4px; }
+    .section-head p { color: var(--muted); font-size: 0.95rem; }
+
+    /* Filters */
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      background: var(--surface);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      background: #FFF;
+    }
+
+    /* Tailor Cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      background: #EFE9DF;
+    }
+    .card-body {
+      padding: 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .badges {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+    .badge-type {
+      background: var(--gold-light);
+      color: var(--maroon);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .badge-demo {
+      background: #EFEFEF;
+      color: #555;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 4px; }
+    .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .tag {
+      background: #F6F4F0;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .card-footer {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    /* Forms */
+    .form-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 680px;
+    }
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    /* WhatsApp Direct Button */
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--whatsapp);
+      color: #FFF;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--maroon-dark);
+      color: #F5EDE0;
+      padding: 32px 20px;
+      margin-top: 40px;
+      text-align: center;
+    }
+    footer p { margin-bottom: 8px; font-size: 0.92rem; }
+    .footer-wa {
+      display: inline-block;
+      margin-top: 10px;
+      background: var(--whatsapp);
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Announcement Banner -->
+  <div class="launch-banner">
+    <span>Coimbatore Launch</span>
+    Launching in Ramanathapuram, Coimbatore — Free Tailor Registration Open Now!
+  </div>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="nav-container">
+      <div class="brand">
+        <span class="brand-title">StitchCall</span>
+        <span class="brand-loc">Coimbatore • Ramanathapuram</span>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-btn active" onclick="showTab('explore', this)">Home & Explore</button>
+        <button class="nav-btn" onclick="showTab('services', this)">Services</button>
+        <button class="nav-btn" onclick="showTab('book', this)">Book Stitching</button>
+        <button class="nav-btn" onclick="showTab('join', this)">Join as Tailor (₹0)</button>
+        <button class="nav-btn" onclick="showTab('requests', this)">My Requests</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <span class="hero-tag">Launching First in Ramanathapuram & Coimbatore</span>
+        <h1>Your neighbourhood tailor, one call away.</h1>
+        <p>
+          Discover verified tailoring shops and skilled home-based tailors across Coimbatore.
+          Compare stitching charges, choose shop drop-off or doorstep pickup, and request stitching in seconds.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showTab('book')">Request Stitching Now</button>
+          <button class="btn-secondary" onclick="showTab('join')">Register Shop / Home Tailor (₹0 Free)</button>
+        </div>
+      </div>
+      <div class="hero-img">
+        <img src="hero.png" alt="StitchCall Tailoring Coimbatore" onerror="this.style.display='none'" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- 1. EXPLORE TAILORS -->
+    <div id="explore" class="section active">
+      <div class="section-head">
+        <h2>Find Tailors in Coimbatore</h2>
+        <p>Tamil Nadu expansion coming next • Direct WhatsApp support: +91 73739 69064</p>
+      </div>
+
+      <div class="filters">
+        <select id="areaFilter" onchange="filterTailors()">
+          <option value="all">All Coimbatore Areas</option>
+          <option value="Ramanathapuram">Ramanathapuram (Launch Focus)</option>
+          <option value="RS Puram">RS Puram</option>
+          <option value="Gandhipuram">Gandhipuram</option>
+          <option value="Peelamedu">Peelamedu</option>
+          <option value="Saibaba Colony">Saibaba Colony</option>
+          <option value="Singanallur">Singanallur</option>
+        </select>
+
+        <select id="typeFilter" onchange="filterTailors()">
+          <option value="all">All Tailor Types</option>
+          <option value="Registered Shop">Registered Tailoring Shop</option>
+          <option value="Home-Based Tailor">Independent Home-Based Tailor</option>
+        </select>
+
+        <select id="serviceFilter" onchange="filterTailors()">
+          <option value="all">All Services</option>
+          <option value="Blouse">Saree / Designer / Bridal Blouse</option>
+          <option value="Salwar">Salwar / Churidar / Kurti</option>
+          <option value="Mens">Men's Shirt / Trousers / Kurta</option>
+          <option value="Alterations">Alterations & Repairs</option>
+        </select>
+      </div>
+
+      <div class="grid" id="tailorGrid">
+        <!-- Tailor 1 -->
+        <div class="card tailor-card" data-area="Ramanathapuram" data-type="Registered Shop" data-service="Blouse Salwar">
+          <img src="shop1.png" alt="Kovai Classic Ladies Tailors" onerror="this.style.display='none'" />
+          <div class="card-body">
+            <div class="badges">
+              <span class="badge-type">Registered Shop</span>
+              <span class="badge-demo">SAMPLE LISTING</span>
+            </div>
+            <h3>Kovai Classic Ladies Tailors</h3>
+            <p class="meta">By K. Lakshmi • Ramanathapuram, Coimbatore • 14 yrs exp.</p>
+            <div class="tags">
+              <span class="tag">Saree Blouse</span>
+              <span class="tag">Designer & Bridal Blouse</span>
+              <span class="tag">Salwar & Kurti</span>
+            </div>
+            <div class="card-footer">
+              <span>Hours: 9:30 AM – 8:30 PM • Pickup Avail.</span>
+              <button class="btn-primary" style="padding:7px 12px; font-size:0.82rem;" onclick="selectTailorForBooking('Kovai Classic Ladies Tailors')">Request</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tailor 2 -->
+        <div class="card tailor-card" data-area="Ramanathapuram" data-type="Home-Based Tailor" data-service="Blouse Alterations">
+          <img src="shop2.png" alt="Home Stitching Studio" onerror="this.style.display='none'" />
+          <div class="card-body">
+            <div class="badges">
+              <span class="badge-type">Home-Based Tailor</span>
+              <span class="badge-demo">SAMPLE LISTING</span>
+            </div>
+            <h3>Home Stitching Studio</h3>
+            <p class="meta">By S. Revathi • Ramanathapuram, Coimbatore • 8 yrs exp.</p>
+            <div class="tags">
+              <span class="tag">Saree Blouse</span>
+              <span class="tag">Kids Pattu Pavadai</span>
+              <span class="tag">Alterations</span>
+            </div>
+            <div class="card-footer">
+              <span>Hours: 10:00 AM – 6:30 PM • Shop Drop-off</span>
+              <button class="btn-primary" style="padding:7px 12px; font-size:0.82rem;" onclick="selectTailorForBooking('Home Stitching Studio')">Request</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SERVICES & PRICING GUIDE -->
+    <div id="services" class="section">
+      <div class="section-head">
+        <h2>Stitching Services & Transparent Guide</h2>
+        <p>Compare standard Coimbatore stitching services before booking.</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="card-body">
+            <h3>Saree & Bridal Blouses</h3>
+            <p class="meta">Lining blouse, Aari work blouse, princess cut, padded & bridal designs.</p>
+            <p><strong>Starting from ₹350</strong> • Standard 3–5 days delivery</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Salwar, Churidar & Kurti</h3>
+            <p class="meta">Custom fit salwar sets, Anarkali, palazzo pants & office kurtis.</p>
+            <p><strong>Starting from ₹450</strong> • Standard 3–5 days delivery</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3>Men's Formal & Ethnic Wear</h3>
+            <p class="meta">Custom shirts, formal trousers, wedding kurtas & alterations.</p>
+            <p><strong>Starting from ₹400</strong> • Doorstep pickup option</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. BOOK STITCHING -->
+    <div id="book" class="section">
+      <div class="section-head">
+        <h2>Request Stitching Now</h2>
+        <p>Fill your details below—we will confirm your tailor & pickup/drop-off immediately via WhatsApp.</p>
+      </div>
+      <div class="form-box">
+        <form onsubmit="submitBooking(event)">
+          <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" id="custName" required placeholder="Enter your name" />
+          </div>
+          <div class="form-group">
+            <label>Mobile / WhatsApp Number *</label>
+            <input type="tel" id="custPhone" required placeholder="e.g., 9876543210" />
+          </div>
+          <div class="form-group">
+            <label>Your Area in Coimbatore *</label>
+            <select id="custArea">
+              <option value="Ramanathapuram">Ramanathapuram</option>
+              <option value="RS Puram">RS Puram</option>
+              <option value="Gandhipuram">Gandhipuram</option>
+              <option value="Peelamedu">Peelamedu</option>
+              <option value="Saibaba Colony">Saibaba Colony</option>
+              <option value="Singanallur">Singanallur</option>
+              <option value="Other Coimbatore Area">Other Coimbatore Area</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Garment / Stitching Requirement *</label>
+            <input type="text" id="custService" required placeholder="e.g., 2 Lining Saree Blouses, 1 Churidar" />
+          </div>
+          <div class="form-group">
+            <label>Preferred Tailor (Optional)</label>
+            <input type="text" id="selectedTailor" placeholder="Any verified tailor near me" />
+          </div>
+          <div class="form-group">
+            <label>Delivery Preference</label>
+            <select id="deliveryMode">
+              <option value="Doorstep Pickup & Delivery">Doorstep Pickup & Delivery</option>
+              <option value="Shop Drop-off">I will drop off at Tailor Shop</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Send Booking via WhatsApp</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 4. JOIN AS TAILOR -->
+    <div id="join" class="section">
+      <div class="section-head">
+        <h2>Register Your Tailoring Shop or Home Studio (₹0 Free)</h2>
+        <p>Zero joining fee for Coimbatore tailors. Get regular stitching orders from nearby customers.</p>
+      </div>
+      <div class="form-box">
+        <form onsubmit="submitTailorJoin(event)">
+          <div class="form-group">
+            <label>Tailor / Shop Name *</label>
+            <input type="text" id="tailorShopName" required placeholder="e.g., Sri Lakshmi Ladies Tailors" />
+          </div>
+          <div class="form-group">
+            <label>Owner Name *</label>
+            <input type="text" id="tailorOwner" required placeholder="Your full name" />
+          </div>
+          <div class="form-group">
+            <label>WhatsApp / Phone Number *</label>
+            <input type="tel" id="tailorPhone" required placeholder="10-digit mobile number" />
+          </div>
+          <div class="form-group">
+            <label>Area / Locality in Coimbatore *</label>
+            <input type="text" id="tailorArea" required placeholder="e.g., Ramanathapuram, Trichy Road" />
+          </div>
+          <div class="form-group">
+            <label>Tailor Category *</label>
+            <select id="tailorCategory">
+              <option value="Registered Tailoring Shop">Registered Tailoring Shop</option>
+              <option value="Home-Based Tailor">Independent Home-Based Tailor</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Specialties & Experience *</label>
+            <textarea id="tailorSkills" rows="3" required placeholder="e.g., Bridal Blouse, Aari work, Salwar, 10 years experience"></textarea>
+          </div>
+          <button type="submit" class="btn-primary">Register Free via WhatsApp</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 5. MY REQUESTS -->
+    <div id="requests" class="section">
+      <div class="section-head">
+        <h2>My Stitching Requests</h2>
+        <p>Track your recent bookings submitted from this device.</p>
+      </div>
+      <div id="savedRequestsList">
+        <p style="color:var(--muted);">No booking requests saved on this device yet. Click "Book Stitching" to place a request.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>StitchCall — Coimbatore, Tamil Nadu</strong></p>
+    <p>Starting in Ramanathapuram • Zero-Fee Tailor Onboarding • Transparent Commission Model</p>
+    <p>Direct Phone & WhatsApp Support: <strong>+91 73739 69064</strong></p>
+    <a class="footer-wa" href="https://wa.me/917373969064?text=Hello%20StitchCall%20Coimbatore!%20I%20would%20like%20to%20enquire%20about%20stitching%20services." target="_blank">
+      Chat on WhatsApp (+91 73739 69064)
+    </a>
+  </footer>
+
+  <script>
+    const ADMIN_WHATSAPP = "917373969064";
+
+    function showTab(tabId, btn) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      if (btn) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      if (tabId === 'requests') renderRequests();
+    }
+
+    function filterTailors() {
+      const area = document.getElementById('areaFilter').value;
+      const type = document.getElementById('typeFilter').value;
+      const service = document.getElementById('serviceFilter').value;
+
+      document.querySelectorAll('.tailor-card').forEach(card => {
+        const matchArea = area === 'all' || card.dataset.area === area;
+        const matchType = type === 'all' || card.dataset.type === type;
+        const matchService = service === 'all' || card.dataset.service.includes(service);
+        card.style.display = (matchArea && matchType && matchService) ? 'flex' : 'none';
+      });
+    }
+
+    function selectTailorForBooking(tailorName) {
+      document.getElementById('selectedTailor').value = tailorName;
+      showTab('book');
+      window.scrollTo({ top: 200, behavior: 'smooth' });
+    }
+
+    function submitBooking(e) {
+      e.preventDefault();
+      const name = document.getElementById('custName').value;
+      const phone = document.getElementById('custPhone').value;
+      const area = document.getElementById('custArea').value;
+      const service = document.getElementById('custService').value;
+      const tailor = document.getElementById('selectedTailor').value || 'Any available tailor';
+      const mode = document.getElementById('deliveryMode').value;
+
+      const reqObj = { name, phone, area, service, tailor, mode, date: new Date().toLocaleDateString() };
+      const existing = JSON.parse(localStorage.getItem('stitchcall_requests') || '[]');
+      existing.unshift(reqObj);
+      localStorage.setItem('stitchcall_requests', JSON.stringify(existing));
+
+      const msg = `*New StitchCall Booking Request*%0A` +
+                  `Name: ${encodeURIComponent(name)}%0A` +
+                  `Phone: ${encodeURIComponent(phone)}%0A` +
+                  `Area: ${encodeURIComponent(area)}%0A` +
+                  `Service: ${encodeURIComponent(service)}%0A` +
+                  `Tailor: ${encodeURIComponent(tailor)}%0A` +
+                  `Mode: ${encodeURIComponent(mode)}`;
+
+      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+    }
+
+    function submitTailorJoin(e) {
+      e.preventDefault();
+      const shop = document.getElementById('tailorShopName').value;
+      const owner = document.getElementById('tailorOwner').value;
+      const phone = document.getElementById('tailorPhone').value;
+      const area = document.getElementById('tailorArea').value;
+      const cat = document.getElementById('tailorCategory').value;
+      const skills = document.getElementById('tailorSkills').value;
+
+      const msg = `*New Tailor Registration (₹0 Free)*%0A` +
+                  `Shop/Studio: ${encodeURIComponent(shop)}%0A` +
+                  `Owner: ${encodeURIComponent(owner)}%0A` +
+                  `Phone: ${encodeURIComponent(phone)}%0A` +
+                  `Area: ${encodeURIComponent(area)}%0A` +
+                  `Type: ${encodeURIComponent(cat)}%0A` +
+                  `Skills: ${encodeURIComponent(skills)}`;
+
+      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+    }
+
+    function renderRequests() {
+      const list = JSON.parse(localStorage.getItem('stitchcall_requests') || '[]');
+      const container = document.getElementById('savedRequestsList');
+      if (!list.length) return;
+      container.innerHTML = list.map(r => `
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-body">
+            <h3>${r.service}</h3>
+            <p class="meta">${r.area} • ${r.mode} • Submitted on ${r.date}</p>
+            <p>Tailor: <strong>${r.tailor}</strong> | Contact: ${r.phone}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
