@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StitchCall — Your Neighbourhood Tailor, One Call Away</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF7F2; color: #2B1810; }
+    .bg-ivory { background-color: #FAF7F2; }
+    .bg-maroon { background-color: #5C1A1B; }
+    .text-maroon { color: #5C1A1B; }
+    .border-maroon { border-color: #5C1A1B; }
+    .bg-marigold { background-color: #E59A24; }
+    .text-marigold { color: #E59A24; }
+    .stitch-border { border: 1.5px dashed #D4B895; }
+  </style>
+</head>
+<body class="bg-ivory min-h-screen flex flex-col">
+
+  <!-- Prototype Transparency Banner -->
+  <div class="bg-amber-100 border-b border-amber-300 text-amber-950 px-4 py-2 text-xs text-center font-medium">
+    <strong>PROTOTYPE NOTICE:</strong> StitchCall is currently in prototype mode (Coimbatore Launch). Listings marked <strong>DEMO</strong> are sample data. Live registrations & booking requests save directly to your Supabase database for manual phone/WhatsApp confirmation.
+  </div>
+
+  <!-- Top Navigation -->
+  <header class="bg-maroon text-white sticky top-0 z-40 shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('home')">
+        <!-- Thread & Needle Loop Logo (No Location Pin) -->
+        <svg class="w-9 h-9 text-marigold" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="48" height="48" rx="12" fill="#431011"/>
+          <path d="M14 32C14 20 34 28 34 16C34 11 26 11 24 17C22 23 28 34 19 36" stroke="#E59A24" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 3"/>
+          <path d="M31 11L37 17" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="35.5" cy="12.5" r="1.5" fill="#E59A24"/>
+        </svg>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-white">Stitch<span class="text-marigold">Call</span></span>
+          <p class="text-[10px] text-amber-200 leading-none">Coimbatore • Ramanathapuram</p>
+        </div>
+      </div>
+
+      <!-- Live Supabase Status Badge -->
+      <div id="dbStatusBadge" class="flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-full text-[11px] font-semibold">
+        <span id="dbDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span id="dbText">Connecting DB...</span>
+      </div>
+    </div>
+
+    <!-- Role & Page Navigation Bar -->
+    <nav class="bg-[#481213] border-t border-white/10 overflow-x-auto">
+      <div class="max-w-6xl mx-auto px-4 flex gap-1 py-1.5 text-xs font-semibold whitespace-nowrap">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-1.5 rounded-lg bg-marigold text-maroon">Home & Explore</button>
+        <button onclick="switchTab('services')" id="nav-services" class="nav-btn px-3 py-1.5 rounded-lg text-amber-100 hover:bg-white/10">Services</button>
+        <button onclick="switchTab('book')" id="nav-book" class="nav-btn px-3 py-1.5 rounded-lg text-amber-100 hover:bg-white/10">Book Stitching</button>
+        <button onclick="switchTab('tailor-reg')" id="nav-tailor-reg" class="nav-btn px-3 py-1.5 rounded-lg text-amber-100 hover:bg-white/10">Join as Tailor (₹0)</button>
+        <button onclick="switchTab('customer-dash')" id="nav-customer-dash" class="nav-btn px-3 py-1.5 rounded-lg text-amber-100 hover:bg-white/10">My Requests</button>
+        <button onclick="switchTab('admin-dash')" id="nav-admin-dash" class="nav-btn px-3 py-1.5 rounded-lg text-amber-100 hover:bg-white/10">Admin Panel</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+
+    <!-- ==================== 1. HOME & EXPLORE TAILORS ==================== -->
+    <section id="tab-home" class="space-y-6">
+      <!-- Hero Banner -->
+      <div class="bg-maroon text-white rounded-2xl p-6 sm:p-8 shadow-lg relative overflow-hidden stitch-border">
+        <div class="max-w-2xl space-y-3 relative z-10">
+          <span class="inline-block bg-marigold/20 text-marigold border border-marigold/40 text-xs font-bold px-3 py-1 rounded-full">
+            Launching First in Ramanathapuram & Coimbatore
+          </span>
+          <h1 class="text-2xl sm:text-4xl font-extrabold leading-tight">
+            Your neighbourhood tailor, <span class="text-marigold">one call away.</span>
+          </h1>
+          <p class="text-sm sm:text-base text-amber-100/90">
+            Discover verified tailoring shops and skilled home-based tailors across Coimbatore. Compare stitching charges, choose shop drop-off or doorstep pickup, and request stitching in seconds.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="switchTab('book')" class="bg-marigold text-maroon font-bold px-5 py-2.5 rounded-xl shadow hover:brightness-105 transition text-sm">
+              Request Stitching Now
+            </button>
+            <button onclick="switchTab('tailor-reg')" class="bg-white/10 border border-white/25 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-white/20 transition text-sm">
+              Register Shop / Home Tailor (₹0 Free)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Filters -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-stone-200 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="font-bold text-base text-maroon">Find Tailors in Coimbatore</h2>
+          <span class="text-xs text-stone-500">Tamil Nadu expansion coming next</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
+          <select id="filterArea" onchange="renderTailors()" class="border border-stone-300 rounded-xl px-3 py-2 bg-ivory focus:outline-none focus:border-maroon">
+            <option value="All">All Coimbatore Areas</option>
+            <option value="Ramanathapuram" selected>Ramanathapuram (Launch Focus)</option>
+            <option value="RS Puram">RS Puram</option>
+            <option value="Gandhipuram">Gandhipuram</option>
+            <option value="Peelamedu">Peelamedu</option>
+            <option value="Saibaba Colony">Saibaba Colony</option>
+            <option value="Singanallur">Singanallur</option>
+          </select>
+
+          <select id="filterType" onchange="renderTailors()" class="border border-stone-300 rounded-xl px-3 py-2 bg-ivory focus:outline-none focus:border-maroon">
+            <option value="All">All Tailor Types</option>
+            <option value="Registered Shop">Registered Tailoring Shop</option>
+            <option value="Home-Based Tailor">Independent Home-Based Tailor</option>
+          </select>
+
+          <select id="filterCategory" onchange="renderTailors()" class="border border-stone-300 rounded-xl px-3 py-2 bg-ivory focus:outline-none focus:border-maroon">
+            <option value="All">All Services</option>
+            <option value="Blouse">Saree / Designer / Bridal Blouse</option>
+            <option value="Salwar">Salwar / Churidar / Kurti</option>
+            <option value="Mens">Men's Shirt / Trousers / Kurta</option>
+            <option value="Alterations">Alterations & Repairs</option>
+          </select>
+
+          <select id="filterSpeed" onchange="renderTailors()" class="border border-stone-300 rounded-xl px-3 py-2 bg-ivory focus:outline-none focus:border-maroon">
+            <option value="All">Turnaround (Future Filter)</option>
+            <option value="Standard">Standard Delivery (3–5 Days)</option>
+            <option value="Same Day">Same Day (Subject to Tailor Confirmation)</option>
+            <option value="5 Hours">5 Hours Express (Future)</option>
+            <option value="3 Hours">3 Hours Express (Future)</option>
+            <option value="1 Hour">1 Hour Express (Future)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tailors Grid -->
+      <div id="tailorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- ==================== 2. SERVICES CATALOG ==================== -->
+    <section id="tab-services" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="text-2xl font-extrabold text-maroon">Tailoring Services</h2>
+          <p class="text-xs text-stone-600">Indicative DEMO starting prices shown below. Final price is confirmed by the tailor before stitching starts.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- Women -->
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-lg text-maroon">Women's Tailoring</h3>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded">DEMO RATES</span>
+          </div>
+          <ul class="divide-y divide-stone-100 text-sm">
+            <li class="py-2 flex justify-between"><span>Saree Blouse Stitching</span><span class="font-bold">From ₹250</span></li>
+            <li class="py-2 flex justify-between"><span>Designer Blouse</span><span class="font-bold">From ₹550</span></li>
+            <li class="py-2 flex justify-between"><span>Aari Work Blouse</span><span class="font-bold">From ₹1,200</span></li>
+            <li class="py-2 flex justify-between"><span>Bridal Blouse</span><span class="font-bold">From ₹1,500</span></li>
+            <li class="py-2 flex justify-between"><span>Salwar Kameez / Churidar</span><span class="font-bold">From ₹450</span></li>
+            <li class="py-2 flex justify-between"><span>Kurti Stitching</span><span class="font-bold">From ₹350</span></li>
+            <li class="py-2 flex justify-between"><span>Lehenga & Kids Pattu Pavadai</span><span class="font-bold">From ₹650</span></li>
+            <li class="py-2 flex justify-between"><span>Saree Falls & Pico / Alterations</span><span class="font-bold">From ₹80</span></li>
+          </ul>
+        </div>
+
+        <!-- Men -->
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-lg text-maroon">Men's Tailoring</h3>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded">DEMO RATES</span>
+          </div>
+          <ul class="divide-y divide-stone-100 text-sm">
+            <li class="py-2 flex justify-between"><span>Men's Casual Shirt</span><span class="font-bold">From ₹350</span></li>
+            <li class="py-2 flex justify-between"><span>Formal Shirt</span><span class="font-bold">From ₹400</span></li>
+            <li class="py-2 flex justify-between"><span>Formal Trousers</span><span class="font-bold">From ₹450</span></li>
+            <li class="py-2 flex justify-between"><span>Men's Kurta</span><span class="font-bold">From ₹500</span></li>
+            <li class="py-2 flex justify-between"><span>Pants & Shirt Alterations</span><span class="font-bold">From ₹100</span></li>
+            <li class="py-2 flex justify-between"><span>Custom Tailoring</span><span class="font-bold">Quote on Request</span></li>
+          </ul>
+        </div>
+
+        <!-- Other -->
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-lg text-maroon">Kids, Repairs & Pickup</h3>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded">TRANSPARENT</span>
+          </div>
+          <ul class="divide-y divide-stone-100 text-sm">
+            <li class="py-2 flex justify-between"><span>Kidswear Custom Stitching</span><span class="font-bold">From ₹300</span></li>
+            <li class="py-2 flex justify-between"><span>Zip / Hem / General Repairs</span><span class="font-bold">From ₹60</span></li>
+            <li class="py-2 flex justify-between"><span>Shop Drop-off & Collection</span><span class="font-bold text-emerald-700">₹0 Free</span></li>
+            <li class="py-2 flex justify-between"><span>Doorstep Fabric Pickup (Demo)</span><span class="font-bold">₹40 (Separate)</span></li>
+            <li class="py-2 flex justify-between"><span>Home Delivery After Stitching</span><span class="font-bold">₹40 (Separate)</span></li>
+          </ul>
+          <button onclick="switchTab('book')" class="w-full mt-2 bg-maroon text-white font-bold py-2.5 rounded-xl text-sm">
+            Proceed to Booking Request
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. BOOKING REQUEST FORM ==================== -->
+    <section id="tab-book" class="hidden max-w-2xl mx-auto">
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-5">
+        <div>
+          <span class="text-xs font-bold text-maroon bg-amber-100 px-2.5 py-1 rounded-full">REQUEST-ONLY BOOKING FLOW</span>
+          <h2 class="text-2xl font-extrabold text-maroon mt-2">Submit Stitching Request</h2>
+          <p class="text-xs text-stone-600 mt-1">
+            Submitting this form creates a <strong>Booking Request</strong> (never auto-confirmed). Our team or your selected Coimbatore tailor will call/WhatsApp you to confirm final price, fabric pickup, and delivery time.
+          </p>
+        </div>
+
+        <form id="bookingForm" onsubmit="submitBooking(event)" class="space-y-4 text-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">Your Name *</label>
+              <input type="text" id="custName" required placeholder="e.g., Priya Karthik" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Mobile / WhatsApp Number *</label>
+              <input type="tel" id="custMobile" required placeholder="e.g., 9876543210" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">Your Area in Coimbatore *</label>
+              <select id="custArea" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory">
+                <option value="Ramanathapuram">Ramanathapuram</option>
+                <option value="RS Puram">RS Puram</option>
+                <option value="Gandhipuram">Gandhipuram</option>
+                <option value="Peelamedu">Peelamedu</option>
+                <option value="Saibaba Colony">Saibaba Colony</option>
+                <option value="Singanallur">Singanallur</option>
+                <option value="Other Coimbatore Area">Other Coimbatore Area</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Select Tailor *</label>
+              <select id="bookTailorSelect" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory"></select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block font-semibold mb-1">Tailoring Service *</label>
+              <select id="bookService" onchange="updateBookingEstimate()" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory">
+                <option value="Saree Blouse Stitching|250">Saree Blouse Stitching (Est. ₹250)</option>
+                <option value="Designer Blouse|550">Designer Blouse (Est. ₹550)</option>
+                <option value="Aari Work Blouse|1200">Aari Work Blouse (Est. ₹1,200)</option>
+                <option value="Bridal Blouse|1500">Bridal Blouse (Est. ₹1,500)</option>
+                <option value="Salwar Kameez / Churidar|450">Salwar Kameez / Churidar (Est. ₹450)</option>
+                <option value="Kurti Stitching|350">Kurti Stitching (Est. ₹350)</option>
+                <option value="Lehenga / Pattu Pavadai|650">Lehenga / Kids Pattu Pavadai (Est. ₹650)</option>
+                <option value="Men's Shirt|350">Men's Shirt (Est. ₹350)</option>
+                <option value="Formal Trousers|450">Formal Trousers (Est. ₹450)</option>
+                <option value="Men's Kurta|500">Men's Kurta (Est. ₹500)</option>
+                <option value="Alterations & Repairs|100">Alterations & Repairs (Est. ₹100)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Quantity *</label>
+              <input type="number" id="bookQty" min="1" max="20" value="1" onchange="updateBookingEstimate()" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Pickup & Delivery Preference *</label>
+            <select id="bookLogistics" onchange="updateBookingEstimate()" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory">
+              <option value="Shop Drop-off & Shop Collection|0">Customer Drops Fabric & Collects from Shop (₹0)</option>
+              <option value="Doorstep Pickup Only|40">Doorstep Fabric Pickup Only (+₹40 Est.)</option>
+              <option value="Home Delivery Only|40">Home Delivery After Stitching (+₹40 Est.)</option>
+              <option value="Doorstep Pickup + Home Delivery|80">Both Doorstep Pickup & Home Delivery (+₹80 Est.)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Measurements / Design Notes (Optional)</label>
+            <textarea id="bookNotes" rows="2" placeholder="e.g., Need lining blouse, sample blouse will be given during pickup, preferred date..." class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory"></textarea>
+          </div>
+
+          <!-- Transparent Itemized Estimate -->
+          <div class="bg-ivory p-4 rounded-xl border border-stone-300 space-y-1.5 text-xs">
+            <div class="flex justify-between"><span>Estimated Stitching Charge:</span><span id="estStitch" class="font-bold">₹250</span></div>
+            <div class="flex justify-between"><span>Separate Pickup / Delivery Charge:</span><span id="estDelivery" class="font-bold">₹0</span></div>
+            <div class="flex justify-between text-sm font-extrabold text-maroon border-t border-stone-300 pt-1.5">
+              <span>Estimated Total (Payable After Confirmation):</span><span id="estTotal">₹250</span>
+            </div>
+            <p class="text-[11px] text-stone-500 pt-1">No online payment collected in prototype mode. Pay directly after tailor confirms.</p>
+          </div>
+
+          <button type="submit" id="bookSubmitBtn" class="w-full bg-maroon text-white font-bold py-3 rounded-xl shadow hover:opacity-95 transition">
+            Submit Booking Request (No Payment Now)
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== 4. FREE TAILOR REGISTRATION ==================== -->
+    <section id="tab-tailor-reg" class="hidden max-w-2xl mx-auto">
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-5">
+        <div>
+          <span class="text-xs font-bold text-emerald-900 bg-emerald-100 px-2.5 py-1 rounded-full">₹0 FREE REGISTRATION • NO MONTHLY SUBSCRIPTION</span>
+          <h2 class="text-2xl font-extrabold text-maroon mt-2">Join StitchCall as a Tailor Partner</h2>
+          <p class="text-xs text-stone-600 mt-1">
+            Open to registered tailoring shops and home-based tailors across Coimbatore. Registration is 100% free. StitchCall charges only a transparent <strong>10%–15% commission</strong> on completed orders.
+          </p>
+        </div>
+
+        <form id="tailorRegForm" onsubmit="registerTailor(event)" class="space-y-4 text-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">Full Name *</label>
+              <input type="text" id="tName" required placeholder="e.g., Meenakshi Sundaram" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Business Type *</label>
+              <select id="tType" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory">
+                <option value="Registered Shop">Registered Tailoring Shop</option>
+                <option value="Home-Based Tailor">Independent Home-Based Tailor</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">Shop / Boutique Name (Optional for Home)</label>
+              <input type="text" id="tShop" placeholder="e.g., Sri Amman Ladies Tailors" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Mobile / WhatsApp Number *</label>
+              <input type="tel" id="tMobile" required placeholder="e.g., 9843012345" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">City</label>
+              <input type="text" value="Coimbatore" readonly class="w-full border border-stone-200 rounded-xl px-3 py-2 bg-stone-100 text-stone-600" />
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Area in Coimbatore *</label>
+              <select id="tArea" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory">
+                <option value="Ramanathapuram">Ramanathapuram</option>
+                <option value="RS Puram">RS Puram</option>
+                <option value="Gandhipuram">Gandhipuram</option>
+                <option value="Peelamedu">Peelamedu</option>
+                <option value="Saibaba Colony">Saibaba Colony</option>
+                <option value="Singanallur">Singanallur</option>
+                <option value="Other Coimbatore Area">Other Coimbatore Area</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Experience (Years) *</label>
+              <input type="number" id="tExp" min="1" max="50" value="5" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1">Services Offered (Select all that apply) *</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs bg-ivory p-3 rounded-xl border border-stone-300">
+              <label class="flex items-center gap-1.5"><input type="checkbox" name="tServices" value="Saree Blouse" checked> Saree Blouse</label>
+              <label class="flex items-center gap-1.5"><input type="checkbox" name="tServices" value="Designer & Bridal Blouse"> Designer / Bridal</label>
+              <label class="flex items-center gap-1.5"><input type="checkbox" name="tServices" value="Salwar & Kurti"> Salwar & Kurti</label>
+              <label class="flex items-center gap-1.5"><input type="checkbox" name="tServices" value="Men's Shirt & Pants"> Men's Shirt/Pants</label>
+              <label class="flex items-center gap-1.5"><input type="checkbox" name="tServices" value="Kids Pattu Pavadai"> Kids Wear</label>
+              <label class="flex items-center gap-1.5"><input type="checkbox" name="tServices" value="Alterations"> Alterations</label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">Working Hours *</label>
+              <input type="text" id="tHours" required value="9:30 AM – 8:30 PM" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-ivory" />
+            </div>
+            <div class="flex flex-col justify-center gap-2 pt-4 text-xs">
+              <label class="flex items-center gap-2 font-semibold"><input type="checkbox" id="tPickup"> Can arrange local fabric pickup</label>
+              <label class="flex items-center gap-2 font-semibold"><input type="checkbox" id="tDelivery"> Can arrange home delivery</label>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs space-y-1 text-amber-950">
+            <p><strong>Privacy & Commission Agreement:</strong></p>
+            <p>• We do NOT collect Aadhaar, PAN, or bank details in this form.</p>
+            <p>• Your listing stays <strong>Pending Admin Approval</strong> until verified by our Coimbatore team.</p>
+            <p>• Standard platform commission is <strong>10%–15%</strong> on completed bookings only (₹0 if no orders).</p>
+          </div>
+
+          <button type="submit" id="tSubmitBtn" class="w-full bg-maroon text-white font-bold py-3 rounded-xl shadow hover:opacity-95 transition">
+            Submit Free Tailor Application (₹0)
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== 5. CUSTOMER REQUESTS DASHBOARD ==================== -->
+    <section id="tab-customer-dash" class="hidden space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-extrabold text-maroon">My Booking Requests</h2>
+          <p class="text-xs text-stone-600">Track submitted stitching requests and confirm directly via WhatsApp.</p>
+        </div>
+        <button onclick="switchTab('book')" class="bg-maroon text-white text-xs font-bold px-4 py-2 rounded-xl">+ New Request</button>
+      </div>
+      <div id="customerBookingsList" class="space-y-3"></div>
+    </section>
+
+    <!-- ==================== 6. ADMIN DASHBOARD (PIN PROTECTED) ==================== -->
+    <section id="tab-admin-dash" class="hidden space-y-6">
+      <!-- Admin Lock Screen -->
+      <div id="adminLockBox" class="max-w-md mx-auto bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-center space-y-4">
+        <h2 class="text-xl font-extrabold text-maroon">Admin Control Panel</h2>
+        <p class="text-xs text-stone-600">Protected area for approving Coimbatore tailors and managing commission rates (10%–15%).</p>
+        <input type="password" id="adminPinInput" placeholder="Enter Admin PIN (Demo: 1234)" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-center tracking-widest bg-ivory" />
+        <button onclick="unlockAdmin()" class="w-full bg-maroon text-white font-bold py-2.5 rounded-xl text-sm">Unlock Admin Panel</button>
+      </div>
+
+      <!-- Admin Unlocked Content -->
+      <div id="adminContent" class="hidden space-y-6">
+        <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-extrabold text-maroon">StitchCall Coimbatore Admin</h2>
+            <p class="text-xs text-stone-600">Configure platform commission (10%–15%) & approve pending tailor applications.</p>
+          </div>
+          <div class="flex items-center gap-2 bg-ivory px-3 py-2 rounded-xl border border-stone-300 text-xs">
+            <label class="font-bold">Commission Rate (%):</label>
+            <input type="number" id="adminCommRate" min="10" max="15" step="0.5" value="12" onchange="updateAdminCommission()" class="w-16 border border-stone-300 rounded px-2 py-1 font-bold text-maroon" />
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-stone-200 shadow-sm space-y-3">
+          <h3 class="font-bold text-base text-maroon">Tailor Approval Queue & Active Listings</h3>
+          <p class="text-xs text-stone-500">Note: To approve live database rows permanently, toggle <code>is_approved = true</code> in your Supabase Table Editor or via authenticated admin session.</p>
+          <div id="adminTailorList" class="divide-y divide-stone-200 text-sm"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-maroon text-amber-100/80 text-xs py-6 px-4 mt-10">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between gap-4">
+      <div>
+        <p class="font-bold text-white text-sm">StitchCall — Coimbatore, Tamil Nadu</p>
+        <p class="mt-1">Starting in Ramanathapuram • Zero-Fee Tailor Onboarding • Transparent Commission Model</p>
+      </div>
+      <div class="space-y-1 sm:text-right">
+        <p>Support WhatsApp: +91 90000 00000 (Demo)</p>
+        <p class="text-[11px] text-amber-200/70">Prototype Mode • All demo listings clearly labelled</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== SUPABASE CONFIGURATION ====================
+    const SUPABASE_URL = 'https://rmfcnxxtzkatlxvkoptc.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_XYCeTDFvXB1VMB9o-hejow_mTjBndP1';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let commissionRate = 12;
+
+    // Clearly Labelled DEMO Tailors (Coimbatore Launch Focus)
+    const demoTailors = [
+      {
+        id: 'demo-1',
+        full_name: 'K. Lakshmi (DEMO)',
+        shop_name: 'Kovai Classic Ladies Tailors [DEMO]',
+        tailor_type: 'Registered Shop',
+        area: 'Ramanathapuram',
+        experience_years: 14,
+        services_offered: ['Saree Blouse', 'Designer & Bridal Blouse', 'Salwar & Kurti'],
+        working_hours: '9:30 AM – 8:30 PM',
+        pickup_available: true,
+        delivery_available: true,
+        speed: 'Same Day',
+        is_demo: true
+      },
+      {
+        id: 'demo-2',
+        full_name: 'S. Revathi (DEMO)',
+        shop_name: 'Home Stitching Studio [DEMO]',
+        tailor_type: 'Home-Based Tailor',
+        area: 'Ramanathapuram',
+        experience_years: 8,
+        services_offered: ['Saree Blouse', 'Kids Pattu Pavadai', 'Alterations'],
+        working_hours: '10:00 AM – 6:30 PM',
+        pickup_available: false,
+        delivery_available: true,
+        speed: 'Standard',
+        is_demo: true
+      },
+      {
+        id: 'demo-3',
+        full_name: 'R. Murugan (DEMO)',
+        shop_name: 'Premier Gents & Formal Tailors [DEMO]',
+        tailor_type: 'Registered Shop',
+        area: 'Gandhipuram',
+        experience_years: 18,
+        services_offered: ["Men's Shirt & Pants", 'Alterations'],
+        working_hours: '9:00 AM – 9:00 PM',
+        pickup_available: true,
+        delivery_available: true,
+        speed: 'Standard',
+        is_demo: true
+      }
+    ];
+
+    let liveTailors = [];
+    let localBookings = JSON.parse(localStorage.getItem('stitchcall_bookings') || '[]');
+
+    // Initialize Connection & Fetch Approved Tailors
+    async function initApp() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('tailors')
+          .select('*')
+          .eq('is_approved', true);
+
+        const dot = document.getElementById('dbDot');
+        const txt = document.getElementById('dbText');
+
+        if (error) {
+          dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+          txt.textContent = 'Supabase Connected (Setup Pending)';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+          txt.textContent = 'Live Supabase Connected';
+          liveTailors = (data || []).map(t => ({ ...t, is_demo: false, speed: 'Standard' }));
+        }
+      } catch (e) {
+        document.getElementById('dbText').textContent = 'Offline Prototype Mode';
+      }
+
+      renderTailors();
+      populateTailorDropdown();
+      renderCustomerBookings();
+      renderAdminList();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-marigold', 'text-maroon');
+        btn.classList.add('text-amber-100');
+      });
+      const activeBtn = document.getElementById('nav-' + tabName);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-marigold', 'text-maroon');
+        activeBtn.classList.remove('text-amber-100');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderTailors() {
+      const area = document.getElementById('filterArea').value;
+      const type = document.getElementById('filterType').value;
+      const cat = document.getElementById('filterCategory').value;
+      const speed = document.getElementById('filterSpeed').value;
+
+      const allTailors = [...liveTailors, ...demoTailors];
+      const filtered = allTailors.filter(t => {
+        if (area !== 'All' && t.area !== area) return false;
+        if (type !== 'All' && t.tailor_type !== type) return false;
+        if (cat !== 'All' && !(t.services_offered || []).some(s => s.toLowerCase().includes(cat.toLowerCase()))) return false;
+        if (speed !== 'All' && t.speed !== speed) return false;
+        return true;
+      });
+
+      const grid = document.getElementById('tailorsGrid');
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-stone-200 text-sm text-stone-600">No tailors match this filter yet in ${area}. Try selecting "All Coimbatore Areas" or register as a tailor!</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(t => `
+        <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${t.tailor_type === 'Registered Shop' ? 'bg-maroon/10 text-maroon' : 'bg-emerald-100 text-emerald-900'}">
+                ${t.tailor_type}
+              </span>
+              ${t.is_demo ? '<span class="text-[10px] font-extrabold bg-amber-200 text-amber-950 px-2 py-0.5 rounded">DEMO</span>' : '<span class="text-[10px] font-extrabold bg-emerald-600 text-white px-2 py-0.5 rounded">VERIFIED</span>'}
+            </div>
+            <h3 class="font-extrabold text-lg text-maroon leading-snug">${t.shop_name || t.full_name}</h3>
+            <p class="text-xs text-stone-600">By <strong>${t.full_name}</strong> • ${t.area}, Coimbatore • ${t.experience_years} yrs exp.</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              ${(t.services_offered || []).map(s => `<span class="text-[11px] bg-ivory border border-stone-200 px-2 py-0.5 rounded-md">${s}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-stone-100 space-y-2 text-xs">
+            <div class="flex justify-between text-stone-600">
+              <span>Hours: ${t.working_hours || '10 AM – 7 PM'}</span>
+              <span>${t.pickup_available ? 'Pickup Avail.' : 'Shop Drop-off'}</span>
+            </div>
+            <button onclick="selectTailorForBooking('${t.shop_name || t.full_name}')" class="w-full bg-maroon text-white font-bold py-2 rounded-xl hover:opacity-95 transition">
+              Request Stitching
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function populateTailorDropdown() {
+      const sel = document.getElementById('bookTailorSelect');
+      const all = [...liveTailors, ...demoTailors];
+      sel.innerHTML = all.map(t => `<option value="${t.shop_name || t.full_name}">${t.shop_name || t.full_name} (${t.area})</option>`).join('');
+    }
+
+    function selectTailorForBooking(name) {
+      populateTailorDropdown();
+      document.getElementById('bookTailorSelect').value = name;
+      switchTab('book');
+    }
+
+    function updateBookingEstimate() {
+      const svcVal = document.getElementById('bookService').value.split('|');
+      const unitPrice = Number(svcVal[1] || 250);
+      const qty = Number(document.getElementById('bookQty').value || 1);
+      const logVal = document.getElementById('bookLogistics').value.split('|');
+      const delCharge = Number(logVal[1] || 0);
+
+      const stitchTotal = unitPrice * qty;
+      const grandTotal = stitchTotal + delCharge;
+
+      document.getElementById('estStitch').textContent = '₹' + stitchTotal;
+      document.getElementById('estDelivery').textContent = '₹' + delCharge;
+      document.getElementById('estTotal').textContent = '₹' + grandTotal;
+    }
+
+    async function submitBooking(e) {
+      e.preventDefault();
+      const btn = document.getElementById('bookSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting Request...';
+
+      const svcVal = document.getElementById('bookService').value.split('|');
+      const logVal = document.getElementById('bookLogistics').value.split('|');
+      const qty = Number(document.getElementById('bookQty').value || 1);
+      const stitchCharge = Number(svcVal[1]) * qty;
+      const delCharge = Number(logVal[1]);
+      const commAmt = Math.round((stitchCharge * commissionRate) / 100);
+
+      const bookingPayload = {
+        customer_name: document.getElementById('custName').value.trim(),
+        customer_mobile: document.getElementById('custMobile').value.trim(),
+        customer_area: document.getElementById('custArea').value,
+        service_name: `${svcVal[0]} (${document.getElementById('bookTailorSelect').value})`,
+        quantity: qty,
+        delivery_mode: logVal[0],
+        estimated_stitching_charge: stitchCharge,
+        pickup_delivery_charge: delCharge,
+        commission_amount: commAmt,
+        status: 'Request Submitted'
+      };
+
+      const { error } = await supabaseClient.from('bookings').insert([bookingPayload]);
+
+      localBookings.unshift({ ...bookingPayload, created_at: new Date().toLocaleString(), synced: !error });
+      localStorage.setItem('stitchcall_bookings', JSON.stringify(localBookings));
+
+      btn.disabled = false;
+      btn.textContent = 'Submit Booking Request (No Payment Now)';
+      document.getElementById('bookingForm').reset();
+      updateBookingEstimate();
+
+      alert('Booking Request Submitted! Status: Waiting for Tailor/Admin Confirmation via Phone/WhatsApp.');
+      renderCustomerBookings();
+      switchTab('customer-dash');
+    }
+
+    function renderCustomerBookings() {
+      const container = document.getElementById('customerBookingsList');
+      if (localBookings.length === 0) {
+        container.innerHTML = `<div class="bg-white p-6 rounded-2xl border border-stone-200 text-center text-sm text-stone-500">No booking requests submitted yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = localBookings.map(b => {
+        const msg = encodeURIComponent(`Hi StitchCall Coimbatore! I submitted a stitching request:\nName: ${b.customer_name}\nArea: ${b.customer_area}\nService: ${b.service_name} (Qty: ${b.quantity})\nEst. Charge: ₹${b.estimated_stitching_charge + b.pickup_delivery_charge}\nPlease confirm availability & pickup time.`);
+        return `
+          <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-bold bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full">${b.status}</span>
+                <span class="text-[11px] text-stone-500">${b.created_at}</span>
+              </div>
+              <h4 class="font-bold text-maroon">${b.service_name} × ${b.quantity}</h4>
+              <p class="text-xs text-stone-600">${b.customer_name} (${b.customer_area}) • ${b.delivery_mode}</p>
+              <p class="text-xs font-bold">Est. Total: ₹${b.estimated_stitching_charge + b.pickup_delivery_charge} (Stitching: ₹${b.estimated_stitching_charge} + Delivery: ₹${b.pickup_delivery_charge})</p>
+            </div>
+            <a href="https://wa.me/91${b.customer_mobile}?text=${msg}" target="_blank" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl text-center hover:bg-emerald-700">
+              Confirm on WhatsApp
+            </a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function registerTailor(e) {
+      e.preventDefault();
+      const btn = document.getElementById('tSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting Application...';
+
+      const selectedServices = Array.from(document.querySelectorAll('input[name="tServices"]:checked')).map(cb => cb.value);
+      if (selectedServices.length === 0) {
+        alert('Please select at least one tailoring service.');
+        btn.disabled = false;
+        btn.textContent = 'Submit Free Tailor Application (₹0)';
+        return;
+      }
+
+      const payload = {
+        full_name: document.getElementById('tName').value.trim(),
+        shop_name: document.getElementById('tShop').value.trim() || null,
+        tailor_type: document.getElementById('tType').value,
+        mobile: document.getElementById('tMobile').value.trim(),
+        city: 'Coimbatore',
+        area: document.getElementById('tArea').value,
+        experience_years: Number(document.getElementById('tExp').value || 1),
+        services_offered: selectedServices,
+        working_hours: document.getElementById('tHours').value.trim(),
+        pickup_available: document.getElementById('tPickup').checked,
+        delivery_available: document.getElementById('tDelivery').checked,
+        is_approved: false,
+        commission_rate: commissionRate
+      };
+
+      const { error } = await supabaseClient.from('tailors').insert([payload]);
+
+      btn.disabled = false;
+      btn.textContent = 'Submit Free Tailor Application (₹0)';
+
+      if (error) {
+        alert('Saved locally in prototype mode. (DB Note: ' + error.message + ')');
+      } else {
+        alert('Application Submitted Successfully! Status: Pending Admin Approval. Our Coimbatore team will verify and approve your listing.');
+        document.getElementById('tailorRegForm').reset();
+      }
+    }
+
+    function unlockAdmin() {
+      const pin = document.getElementById('adminPinInput').value;
+      if (pin === '1234') {
+        document.getElementById('adminLockBox').classList.add('hidden');
+        document.getElementById('adminContent').classList.remove('hidden');
+        renderAdminList();
+      } else {
+        alert('Incorrect Admin PIN. (Demo PIN is 1234)');
+      }
+    }
+
+    function updateAdminCommission() {
+      const val = Number(document.getElementById('adminCommRate').value);
+      if (val >= 10 && val <= 15) {
+        commissionRate = val;
+        alert(`Platform commission updated to ${commissionRate}% for future completed bookings.`);
+      }
+    }
+
+    function renderAdminList() {
+      const list = document.getElementById('adminTailorList');
+      const all = [...liveTailors, ...demoTailors];
+      list.innerHTML = all.map(t => `
+        <div class="py-3 flex items-center justify-between gap-2">
+          <div>
+            <p class="font-bold text-maroon">${t.shop_name || t.full_name} <span class="text-xs font-normal text-stone-500">(${t.area})</span></p>
+            <p class="text-xs text-stone-600">${t.tailor_type} • Commission: ${commissionRate}%</p>
+          </div>
+          <span class="text-xs font-bold px-2.5 py-1 rounded-full ${t.is_demo ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-900'}">
+            ${t.is_demo ? 'DEMO Listing' : 'Approved in DB'}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
