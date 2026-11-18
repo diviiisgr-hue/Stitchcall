@@ -29,7 +29,7 @@
 
   <!-- Top Colorful Strip -->
   <div class="bg-amber-400 text-purple-950 text-center text-xs sm:text-sm font-extrabold py-2 px-3 tracking-wide shadow-sm">
-    🎉 COIMBATORE LAUNCH • RAMANATHAPURAM • FREE TAILOR JOINING (₹0)
+    🎉 ALL COIMBATORE AREAS • FREE TAILOR JOINING (₹0) • FAST BOOKING
   </div>
 
   <!-- Vibrant Header -->
@@ -41,7 +41,7 @@
         </div>
         <div>
           <h1 class="text-xl sm:text-2xl font-black tracking-tight leading-none">StitchCall</h1>
-          <p class="text-[11px] text-amber-200 font-semibold mt-0.5">📍 Coimbatore • Ramanathapuram</p>
+          <p class="text-[11px] text-amber-200 font-semibold mt-0.5">📍 All Over Coimbatore</p>
         </div>
       </div>
       <div class="flex gap-2">
@@ -58,7 +58,6 @@
   <!-- Visual Hero Banner -->
   <section class="max-w-5xl mx-auto px-4 pt-6 pb-4 w-full">
     <div class="rounded-3xl overflow-hidden shadow-xl bg-white border-2 border-pink-200 grid grid-cols-1 md:grid-cols-2">
-      <!-- Visual Photo Side -->
       <div class="relative h-56 md:h-auto bg-purple-900">
         <img 
           src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=80" 
@@ -71,7 +70,6 @@
         </div>
       </div>
 
-      <!-- Quick Visual Action Side -->
       <div class="p-6 sm:p-8 flex flex-col justify-center bg-gradient-to-br from-white via-pink-50 to-amber-50">
         <span class="inline-block w-fit bg-purple-100 text-purple-800 text-xs font-extrabold px-3 py-1 rounded-full mb-2">
           ⚡ 10-Second Booking
@@ -95,7 +93,7 @@
     </div>
   </section>
 
-  <!-- Visual 3-Step Strip (No Reading Needed!) -->
+  <!-- Visual 3-Step Strip -->
   <section class="max-w-5xl mx-auto px-4 py-4 w-full">
     <div class="grid grid-cols-3 gap-2.5 sm:gap-4 text-center">
       <div class="bg-white p-3.5 sm:p-5 rounded-2xl border-2 border-pink-200 shadow-sm">
@@ -116,7 +114,7 @@
     </div>
   </section>
 
-  <!-- Visual Service Cards (Tap to Book Directly) -->
+  <!-- Visual Service Cards -->
   <section class="max-w-5xl mx-auto px-4 py-4 w-full">
     <h3 class="text-lg sm:text-xl font-black text-purple-950 mb-3 flex items-center gap-2">
       <span>🎨 Enna Thaikkanum?</span>
@@ -166,12 +164,6 @@
       </div>
       <select id="areaFilter" onchange="filterTailors()" class="border-2 border-purple-300 rounded-xl px-3 py-2 text-sm font-bold text-purple-950 bg-purple-50">
         <option value="All">📍 All Areas (Coimbatore)</option>
-        <option value="Ramanathapuram">📍 Ramanathapuram</option>
-        <option value="RS Puram">📍 RS Puram</option>
-        <option value="Gandhipuram">📍 Gandhipuram</option>
-        <option value="Peelamedu">📍 Peelamedu</option>
-        <option value="Saibaba Colony">📍 Saibaba Colony</option>
-        <option value="Singanallur">📍 Singanallur</option>
       </select>
     </div>
 
@@ -197,7 +189,7 @@
           <input type="tel" id="custPhone" required placeholder="📱 WhatsApp Number *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="custArea" required placeholder="📍 Area (e.g. Ramanathapuram) *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full" />
+          <input type="text" id="custArea" list="cbeAreasList" required placeholder="📍 Unga Area (Type or Select) *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full" />
           <select id="custService" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
             <option value="Saree / Designer Blouse">👚 Saree / Designer Blouse</option>
             <option value="Salwar / Churidar / Kurti">👗 Salwar / Churidar / Kurti</option>
@@ -217,7 +209,7 @@
     </div>
   </section>
 
-  <!-- Tailor Direct Registration Form (Colorful + Visual + 10% Commission Box) -->
+  <!-- Tailor Direct Registration Form -->
   <section id="register-section" class="max-w-3xl mx-auto px-4 py-6 w-full">
     <div class="bg-gradient-to-br from-amber-100 via-yellow-50 to-pink-50 p-6 rounded-3xl shadow-lg border-2 border-amber-400">
       <div class="flex items-center gap-3 mb-4">
@@ -235,16 +227,13 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input type="tel" id="tPhone" required placeholder="📱 WhatsApp Number *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-          <select id="tArea" required class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
-            <option value="Ramanathapuram">📍 Ramanathapuram</option>
-            <option value="RS Puram">📍 RS Puram</option>
-            <option value="Gandhipuram">📍 Gandhipuram</option>
-            <option value="Peelamedu">📍 Peelamedu</option>
-            <option value="Saibaba Colony">📍 Saibaba Colony</option>
-            <option value="Singanallur">📍 Singanallur</option>
-            <option value="Other Coimbatore Area">📍 Other Coimbatore Area</option>
+          <select id="tArea" onchange="toggleCustomArea()" required class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
           </select>
         </div>
+
+        <!-- Custom Area Input (Shows if Other Area is selected) -->
+        <input type="text" id="tCustomArea" placeholder="📍 Enter Your Area Name in Coimbatore *" class="hidden border-2 border-pink-400 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <select id="tType" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
             <option value="Tailoring Shop">🏪 Tailoring Shop</option>
@@ -270,10 +259,13 @@
     </div>
   </section>
 
+  <!-- Autocomplete List for Customer Area -->
+  <datalist id="cbeAreasList"></datalist>
+
   <!-- Colorful Footer -->
   <footer class="brand-gradient text-white text-center py-7 px-4 mt-8">
     <p class="font-black text-lg">🪡 StitchCall — Coimbatore</p>
-    <p class="text-xs text-amber-200 mt-1 font-semibold">Ramanathapuram • ₹0 Tailor Registration • Fast WhatsApp Booking</p>
+    <p class="text-xs text-amber-200 mt-1 font-semibold">All Coimbatore Areas • ₹0 Tailor Registration • Fast WhatsApp Booking</p>
     <a href="https://wa.me/917373969064" target="_blank" class="inline-block mt-3 bg-green-500 hover:bg-green-600 text-white text-xs font-black px-5 py-2.5 rounded-full shadow-lg">
       💬 WhatsApp Support: +91 73739 69064
     </a>
@@ -284,7 +276,46 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtZmNueHh0emthdGx4dmtvcHRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjU4NjcsImV4cCI6MjEwODY0MTg2N30.0QfPa91_8nD7xvbiPNCMp7FS8xQjQKHJBym69q06J_0';
     const ADMIN_WHATSAPP = '917373969064';
 
+    const COIMBATORE_AREAS = [
+      "Ramanathapuram", "RS Puram", "Gandhipuram", "Peelamedu", "Saibaba Colony",
+      "Singanallur", "Ukkadam", "Town Hall", "Podanur", "Sundarapuram",
+      "Kuniyamuthur", "Saravanampatti", "Ganapathy", "Vadavalli", "Thudiyalur",
+      "Hopes College", "Ondipudur", "Trichy Road", "Avinashi Road", "Race Course",
+      "Sungam", "Puliyakulam", "Nanjundapuram", "Sowripalayam", "Tatabad",
+      "Rathinapuri", "Sivananda Colony", "Koundampalayam", "Goundampalayam",
+      "Periyanaickenpalayam", "Karamadai", "Mettupalayam", "Sulur", "Neelambur",
+      "Kalapatti", "Vilankurichi", "Chinniampalayam", "Kovaipudur", "Madukkarai",
+      "Eachanari", "Malumichampatti", "Kinathukadavu", "Pollachi"
+    ];
+
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Populate all Coimbatore areas into dropdowns & datalist
+    function initAreas() {
+      const areaFilter = document.getElementById('areaFilter');
+      const tArea = document.getElementById('tArea');
+      const datalist = document.getElementById('cbeAreasList');
+
+      COIMBATORE_AREAS.forEach(area => {
+        areaFilter.innerHTML += `<option value="${area}">📍 ${area}</option>`;
+        tArea.innerHTML += `<option value="${area}">📍 ${area}</option>`;
+        datalist.innerHTML += `<option value="${area}">`;
+      });
+
+      tArea.innerHTML += `<option value="OTHER">➕ Other Area (Type Name)</option>`;
+    }
+
+    function toggleCustomArea() {
+      const tArea = document.getElementById('tArea').value;
+      const customInput = document.getElementById('tCustomArea');
+      if (tArea === 'OTHER') {
+        customInput.classList.remove('hidden');
+        customInput.required = true;
+      } else {
+        customInput.classList.add('hidden');
+        customInput.required = false;
+      }
+    }
 
     const sampleTailors = [
       {
@@ -337,120 +368,4 @@
     function renderTailors(list) {
       const grid = document.getElementById('tailorsGrid');
       if (list.length === 0) {
-        grid.innerHTML = '<p class="text-sm font-bold text-gray-500 col-span-full text-center py-4">Indha area-la innum tailors add aagala.</p>';
-        return;
-      }
-
-      grid.innerHTML = list.map(t => `
-        <div class="card-glow bg-white p-5 rounded-3xl shadow-sm border-2 ${t.isSample ? 'border-purple-100' : 'border-pink-300'} flex flex-col justify-between">
-          <div>
-            <div class="flex justify-between items-center mb-2.5">
-              <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-purple-100 text-purple-900">
-                ${t.tailor_type.includes('Home') ? '🏠' : '🏪'} ${t.tailor_type}
-              </span>
-              ${t.isSample 
-                ? '<span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-500">SAMPLE</span>' 
-                : '<span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">✅ VERIFIED</span>'}
-            </div>
-            <h4 class="text-lg font-black text-purple-950">${t.shop_name}</h4>
-            <p class="text-xs font-semibold text-gray-600 mb-3">👤 ${t.owner_name} • 📍 ${t.area} • ⭐ ${t.experience}</p>
-            <div class="flex flex-wrap gap-1.5 mb-3">
-              ${t.services.split(',').map(s => `<span class="text-[11px] font-bold bg-pink-50 text-pink-800 border border-pink-200 px-2.5 py-0.5 rounded-lg">${s.trim()}</span>`).join('')}
-            </div>
-          </div>
-          <div class="flex items-center justify-between pt-3 border-t border-gray-100">
-            <span class="text-xs font-bold text-gray-500">⏰ ${t.hours}</span>
-            <button onclick="selectTailorForBooking('${t.shop_name} (${t.area})')" class="bg-gradient-to-r from-pink-600 to-purple-700 text-white text-xs font-black px-4 py-2 rounded-xl shadow hover:opacity-95">
-              Book Tailor →
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function filterTailors() {
-      const area = document.getElementById('areaFilter').value;
-      if (area === 'All') {
-        renderTailors(allTailors);
-      } else {
-        renderTailors(allTailors.filter(t => t.area.toLowerCase().includes(area.toLowerCase())));
-      }
-    }
-
-    function selectTailorForBooking(tailorLabel) {
-      document.getElementById('custNotes').value = 'Tailor: ' + tailorLabel;
-      document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    document.getElementById('tailorRegForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      if (!document.getElementById('commissionCheck').checked) {
-        alert('Please tick the 10% commission box.');
-        return;
-      }
-
-      const btn = document.getElementById('regSubmitBtn');
-      btn.disabled = true;
-      btn.innerText = 'Joining...';
-
-      const newTailor = {
-        shop_name: document.getElementById('tShopName').value.trim(),
-        owner_name: document.getElementById('tOwnerName').value.trim(),
-        phone: document.getElementById('tPhone').value.trim(),
-        area: document.getElementById('tArea').value,
-        tailor_type: document.getElementById('tType').value,
-        services: document.getElementById('tServices').value.trim(),
-        experience: document.getElementById('tExp').value.trim(),
-        hours: document.getElementById('tHours').value.trim(),
-        commission_agreed: true
-      };
-
-      const { error } = await supabaseClient.from('tailors').insert([newTailor]);
-
-      if (error) {
-        alert('Error: ' + error.message);
-        btn.disabled = false;
-        btn.innerText = '✅ Accept & Join StitchCall';
-        return;
-      }
-
-      await loadTailors();
-      document.getElementById('tailorRegForm').reset();
-      btn.disabled = false;
-      btn.innerText = '✅ Accept & Join StitchCall';
-
-      alert('🎉 Success! Unga shop StitchCall website-la live aayiduchu.');
-
-      const msg = `*New Tailor Joined StitchCall*%0A` +
-        `Shop: ${newTailor.shop_name}%0A` +
-        `Name: ${newTailor.owner_name}%0A` +
-        `Phone: ${newTailor.phone}%0A` +
-        `Area: ${newTailor.area}%0A` +
-        `Services: ${newTailor.services}%0A` +
-        `10% Commission Agreed: YES`;
-      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
-    });
-
-    document.getElementById('bookingForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = document.getElementById('custName').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const area = document.getElementById('custArea').value.trim();
-      const service = document.getElementById('custService').value;
-      const delivery = document.getElementById('custDelivery').value;
-      const notes = document.getElementById('custNotes').value.trim();
-
-      const msg = `*New Stitching Order — StitchCall*%0A` +
-        `Name: ${name}%0A` +
-        `Phone: ${phone}%0A` +
-        `Area: ${area}%0A` +
-        `Service: ${service}%0A` +
-        `Option: ${delivery}%0A` +
-        `Notes: ${notes || 'None'}`;
-      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${msg}`, '_blank');
-    });
-
-    loadTailors();
-  </script>
-</body>
-</html>
+        grid.innerHTML = '<p class="text-sm font-bold text-gray-500 col-span-full text-center py-4">Indha area-la innum tailors ad
