@@ -1,325 +1,266 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StitchCall — Coimbatore Tailors</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#641f35">
+  <title>StitchCall — Coimbatore Tailoring</title>
+  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    html { scroll-behavior: smooth; }
-    body { background: #F7F6FB; color: #1E1B2E; font-family: system-ui, -apple-system, sans-serif; }
-    .grad { background: linear-gradient(135deg, #581C87 0%, #BE185D 60%, #EA580C 100%); }
-  </style>
 </head>
-<body class="min-h-screen flex flex-col">
 
-  <div class="bg-amber-400 text-purple-950 text-center text-[11px] font-black py-1.5 px-2">
-    ⚡ 1-HR & 3-HR EXPRESS STITCHING • COIMBATORE • ₹0 TAILOR JOINING
-  </div>
+<body>
 
-  <!-- Header -->
-  <header class="grad text-white shadow-lg sticky top-0 z-40">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-2">
-        <span class="w-9 h-9 rounded-xl bg-amber-300 text-purple-950 flex items-center justify-center text-xl shadow">🪡</span>
-        <div>
-          <h1 class="text-lg font-black leading-none">StitchCall</h1>
-          <p class="text-[11px] text-amber-200 font-semibold">📍 Coimbatore</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <a href="#reg-sec" class="text-xs bg-amber-300 text-purple-950 font-black px-3 py-2 rounded-xl shadow">✂️ Join as a Tailor</a>
-        <button type="button" onclick="openDash()" class="text-xs bg-white/20 font-bold px-3 py-2 rounded-xl">🔐 Login</button>
-      </div>
+<header class="topbar">
+  <a class="brand" href="#" onclick="showView('home');return false">
+    <span class="brand-mark">SC</span>
+    <span>StitchCall<small>COIMBATORE</small></span>
+  </a>
+
+  <nav>
+    <button class="text-btn" onclick="showView('home')">Explore</button>
+    <button id="navLogin" class="text-btn" onclick="showView('auth')">Login</button>
+    <button id="navJoin" class="primary small" onclick="showView('join')">Join as Tailor</button>
+    <button id="navDashboard" class="text-btn hidden" onclick="showView('dashboard')">Dashboard</button>
+    <button id="navLogout" class="text-btn hidden" onclick="logout()">Logout</button>
+  </nav>
+</header>
+
+<main>
+
+<section id="homeView" class="view">
+
+  <div class="hero">
+    <div>
+      <p class="eyebrow">YOUR NEIGHBOURHOOD TAILOR, ONE CALL AWAY</p>
+
+      <h1>
+        Perfect stitching.<br>
+        <em>Right around you.</em>
+      </h1>
+
+      <p class="hero-copy">
+        Discover tailoring shops and home-based tailors in Coimbatore.
+      </p>
+
+      <button class="primary"
+        onclick="document.getElementById('tailorList').scrollIntoView({behavior:'smooth'})">
+        Explore tailors
+      </button>
     </div>
-  </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-5 space-y-6 w-full">
-
-    <!-- Top Join as a Tailor Banner -->
-    <section class="bg-gradient-to-r from-purple-900 via-pink-700 to-amber-600 text-white p-4 rounded-3xl shadow flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div>
-        <span class="bg-amber-300 text-purple-950 text-[10px] font-black px-2.5 py-0.5 rounded-full">₹0 FREE JOINING</span>
-        <h2 class="text-base sm:text-lg font-black mt-1">Tailoring Shop or Home Tailor-aa?</h2>
-        <p class="text-xs text-amber-100">StitchCall-la free-aa join panni direct orders perunga!</p>
-      </div>
-      <a href="#reg-sec" class="w-full sm:w-auto text-center bg-amber-300 hover:bg-amber-400 text-purple-950 font-black px-5 py-2.5 rounded-2xl text-xs sm:text-sm shadow whitespace-nowrap">
-        ✂️ Join as a Tailor →
-      </a>
-    </section>
-
-    <!-- Tailor Shops Direct Feed -->
-    <section class="space-y-3">
-      <div class="flex items-center justify-between">
-        <h3 id="shopHeading" class="text-lg font-black text-purple-950">🏪 Tailor Shops in Coimbatore</h3>
-        <span class="text-xs text-pink-600 font-bold">Tap shop to view & book</span>
-      </div>
-      <div id="shopsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
-
-    <!-- Tailor Registration Section -->
-    <section id="reg-sec" class="bg-amber-50 p-5 rounded-3xl shadow border-2 border-amber-400">
-      <span class="bg-purple-800 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">₹0 FREE PARTNER JOINING</span>
-      <h3 class="text-xl font-black text-purple-950 mt-1 mb-3">✂️ Join as a Tailor</h3>
-      <form id="rForm" class="space-y-3">
-        <input type="text" id="rShop" required placeholder="🏪 Shop / Home Studio Name *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="rOwner" required placeholder="👤 Tailor Full Name *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="tel" id="rPhone" required placeholder="📱 WhatsApp Number (Used for Login) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <select id="rType" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
-          <option value="Tailoring Shop">🏪 Tailoring Shop</option>
-          <option value="Home Tailor">🏠 Home Tailor</option>
-        </select>
-        <input type="text" id="rArea" list="areas" required placeholder="📍 Area (e.g. Ramanathapuram) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
-        <input type="text" id="rPrice" required placeholder="💰 Starting Price (e.g. ₹150) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
-        <textarea id="rAddr" rows="2" required placeholder="🏠 Full Address (Door No, Street, Landmark) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2 text-sm w-full bg-white"></textarea>
-        <input type="text" id="rExp" required placeholder="⭐ Experience (e.g. 10 yrs) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="rHours" required placeholder="⏰ Working Hours (e.g. 9 AM - 9 PM) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="rServ" required placeholder="👗 Services (Blouse, Chudithar, Shirt, Pant) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-
-        <label class="bg-white p-3 rounded-xl border border-amber-300 flex items-center gap-2 text-xs font-bold">
-          <input type="checkbox" id="rUrgent" checked class="w-4 h-4 accent-amber-600" />
-          ⚡ 1-Hour / 3-Hours Urgent Delivery orders accept pannuvom
-        </label>
-
-        <label class="bg-white p-3 rounded-xl border-2 border-pink-400 flex items-start gap-2 text-xs">
-          <input type="checkbox" id="rComm" required class="mt-0.5 w-4 h-4 accent-pink-600" />
-          <span><strong>✅ 10% Commission Agreement:</strong> Joining ₹0 Free. StitchCall orders-ku mattum <strong>10% commission</strong> thara sammadhikkiren.</span>
-        </label>
-
-        <button type="submit" id="rBtn" class="w-full bg-amber-400 text-purple-950 font-black py-3.5 rounded-2xl shadow text-base">✅ Accept & Join StitchCall</button>
-      </form>
-    </section>
-
-  </main>
-
-  <!-- SHOP DETAIL & IN-SHOP BOOKING MODAL -->
-  <div id="shopModal" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
-      <div class="grad text-white p-5 relative">
-        <button type="button" onclick="closeShop()" class="absolute top-4 right-4 bg-white/20 px-3 py-1 rounded-xl font-black text-xs">✕ Close</button>
-        <span id="mType" class="bg-amber-300 text-purple-950 text-[10px] font-black px-2.5 py-0.5 rounded-full"></span>
-        <span id="mStar" class="bg-emerald-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full ml-1"></span>
-        <h3 id="mName" class="text-xl font-black mt-1"></h3>
-        <p id="mSub" class="text-xs text-amber-200 font-semibold"></p>
-        <p id="mAddr" class="text-xs text-white/90 mt-1"></p>
-      </div>
-
-      <div class="p-5 overflow-y-auto space-y-4">
-        <div class="bg-purple-50 p-3.5 rounded-2xl border border-purple-200 space-y-1 text-xs">
-          <p class="font-extrabold text-purple-950">💰 Price: <span id="mPrice" class="text-pink-600"></span> • ⏰ <span id="mHours"></span></p>
-          <p class="text-gray-700">✂️ <strong>Services:</strong> <span id="mServ"></span></p>
-        </div>
-
-        <form id="sbForm" class="space-y-2.5">
-          <h4 class="font-black text-sm text-purple-950">👗 Book This Tailor</h4>
-          <input type="text" id="sbName" required placeholder="👤 Your Name *" class="border-2 rounded-xl px-3 py-2 text-sm w-full" />
-          <input type="tel" id="sbPhone" required placeholder="📱 Your WhatsApp Number *" class="border-2 rounded-xl px-3 py-2 text-sm w-full" />
-          <select id="sbDress" onchange="checkOtherDress()" class="border-2 rounded-xl px-3 py-2 text-sm w-full bg-white font-bold">
-            <option value="Saree Blouse (Normal)">👚 Saree Blouse (Normal)</option>
-            <option value="Lining Blouse">👚 Lining Blouse</option>
-            <option value="Bridal / Aari Blouse">👰 Bridal / Aari Blouse</option>
-            <option value="Chudithar Full Set">👗 Chudithar Full Set</option>
-            <option value="Kurti Top">👘 Kurti Top</option>
-            <option value="Salwar / Pant Only">👖 Salwar / Pant Only</option>
-            <option value="Mens Shirt">👔 Men's Shirt</option>
-            <option value="Mens Pant / Trousers">👖 Men's Pant / Trousers</option>
-            <option value="Pattu Pavadai / Kids">🧒 Pattu Pavadai / Kids</option>
-            <option value="Saree Falls & Pico">🪡 Saree Falls & Pico</option>
-            <option value="Alterations / Fitting">✂️ Alterations / Fitting</option>
-            <option value="OTHER">✍️ Other (Type Dress Name)</option>
-          </select>
-          <input type="text" id="sbOther" placeholder="✍️ Type Dress Name *" class="hidden border-2 border-pink-400 rounded-xl px-3 py-2 text-sm w-full bg-pink-50" />
-          <select id="sbSpeed" class="border-2 border-red-300 rounded-xl px-3 py-2 text-sm w-full bg-red-50 text-red-900 font-extrabold">
-            <option value="⚡ 1 Hour Express">⚡ 1 Hour Express</option>
-            <option value="🚀 3 Hours Urgent">🚀 3 Hours Urgent</option>
-            <option value="📅 Normal Delivery" selected>📅 Normal Delivery (2–3 Days)</option>
-          </select>
-          <select id="sbPickup" class="border-2 rounded-xl px-3 py-2 text-sm w-full bg-white font-semibold">
-            <option value="Home Pickup & Delivery">🛵 Home Pickup & Delivery</option>
-            <option value="Direct Shop Visit">🏪 Direct Shop Visit</option>
-          </select>
-          <textarea id="sbNotes" rows="2" placeholder="✍️ Design notes / Pickup address (Optional)" class="border-2 rounded-xl px-3 py-2 text-sm w-full"></textarea>
-          <button type="submit" id="sbBtn" class="w-full bg-gradient-to-r from-pink-600 to-purple-700 text-white font-black py-3.5 rounded-2xl shadow text-sm">
-            ✅ Book Now
-          </button>
-        </form>
-      </div>
+    <div class="hero-art">
+      <div class="thread">〰</div>
+      <div class="needle">✳</div>
+      <span>Made with care<br>in Coimbatore</span>
     </div>
   </div>
 
-  <!-- PARTNER & OWNER DASHBOARD MODAL -->
-  <div id="dashModal" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
-      <div class="grad text-white px-5 py-4 flex justify-between items-center">
-        <h3 class="font-black text-base">🔐 Partner & Owner Dashboard</h3>
-        <button type="button" onclick="closeDash()" class="bg-white/20 px-3 py-1 rounded-xl font-black text-xs">✕ Close</button>
-      </div>
-      <div class="p-5 overflow-y-auto space-y-4">
-        <div id="loginBox" class="bg-purple-50 p-4 rounded-2xl border border-purple-200 space-y-2.5">
-          <p class="text-xs font-bold text-purple-950">Enter registered WhatsApp number:</p>
-          <div class="flex gap-2">
-            <input type="tel" id="loginPhone" placeholder="📱 10-digit Phone Number" class="border-2 border-purple-300 rounded-xl px-3 py-2 text-sm w-full font-bold" />
-            <button type="button" onclick="doLogin()" class="bg-purple-800 text-white font-black px-5 py-2 rounded-xl text-sm">Open</button>
-          </div>
-        </div>
-        <div id="dashBody" class="hidden space-y-4">
-          <div class="flex justify-between items-center bg-gray-100 px-3.5 py-2 rounded-xl">
-            <span id="roleLabel" class="text-xs font-black text-purple-950"></span>
-            <button type="button" onclick="doLogout()" class="text-xs text-red-600 font-bold underline">Logout</button>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-            <div class="bg-pink-50 p-2.5 rounded-xl border border-pink-200"><p class="text-[10px] font-bold">Total</p><p id="sTot" class="text-lg font-black">0</p></div>
-            <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200"><p class="text-[10px] font-bold">Accepted</p><p id="sAcc" class="text-lg font-black text-amber-700">0</p></div>
-            <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200"><p class="text-[10px] font-bold">Completed</p><p id="sCom" class="text-lg font-black text-emerald-700">0</p></div>
-            <div class="bg-purple-50 p-2.5 rounded-xl border border-purple-200"><p class="text-[10px] font-bold">10% Comm</p><p id="sFee" class="text-lg font-black text-purple-900">₹0</p></div>
-          </div>
-          <div id="ordersList" class="space-y-3"></div>
-        </div>
-      </div>
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">LOCAL TALENT</p>
+      <h2>Find your tailor</h2>
     </div>
+
+    <input
+      id="searchInput"
+      class="search"
+      placeholder="Search by name or area…"
+      oninput="renderTailors()">
   </div>
 
-  <datalist id="areas">
-    <option value="Ramanathapuram"><option value="RS Puram"><option value="Gandhipuram">
-    <option value="Peelamedu"><option value="Saibaba Colony"><option value="Singanallur">
-    <option value="Ukkadam"><option value="Town Hall"><option value="Podanur">
-    <option value="Sundarapuram"><option value="Kuniyamuthur"><option value="Saravanampatti">
-    <option value="Ganapathy"><option value="Vadavalli"><option value="Thudiyalur">
-    <option value="Hopes College"><option value="Ondipudur"><option value="Race Course">
-    <option value="Sungam"><option value="Puliyakulam"><option value="Nanjundapuram">
-    <option value="Sowripalayam"><option value="Tatabad"><option value="Rathinapuri">
-    <option value="Koundampalayam"><option value="Sulur"><option value="Kalapatti">
-    <option value="Kovaipudur"><option value="Eachanari"><option value="Pollachi">
-  </datalist>
+  <div id="tailorList" class="cards">
+    <p class="muted">Loading approved tailors…</p>
+  </div>
 
-  <footer class="grad text-white text-center py-6 px-4 mt-8">
-    <p class="font-black">🪡 StitchCall — Coimbatore</p>
-    <p class="text-xs text-amber-200 mt-1">1-Hr & 3-Hrs Express Delivery • ₹0 Tailor Registration</p>
-    <a href="https://wa.me/917373969064" target="_blank" class="inline-block mt-3 bg-green-500 text-white text-xs font-black px-4 py-2 rounded-full">💬 Support: +91 73739 69064</a>
-  </footer>
+  <p class="notice">
+    Bookings and payments are coordinated directly with the tailor.
+    StitchCall does not currently provide pickup, delivery,
+    online payments or live tracking.
+  </p>
 
-  <script>
-    const SB_URL = 'https://rmfcnxxtzkatlxvkoptc.supabase.co';
-    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtZmNueHh0emthdGx4dmtvcHRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjU4NjcsImV4cCI6MjEwODY0MTg2N30.0QfPa91_8nD7xvbiPNCMp7FS8xQjQKHJBym69q06J_0';
-    const ADMIN_PH = '7373969064';
-    const db = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+</section>
 
-    const samples = [
-      { shop_name: "Kovai Classic Ladies Tailors", full_name: "K. Lakshmi", phone: "7373969064", area: "Ramanathapuram", address: "Trichy Road, Near Signal, Ramanathapuram", tailor_type: "Tailoring Shop", services: "Saree Blouse, Bridal & Aari Work, 1Hr & 3Hr Urgent", experience: "14 yrs", hours: "9:30 AM - 8:30 PM", rating: "4.9", price: "₹180" },
-      { shop_name: "Home Stitching Studio", full_name: "S. Revathi", phone: "7373969064", area: "RS Puram", address: "DB Road Cross, RS Puram, Coimbatore", tailor_type: "Home Tailor", services: "Saree Blouse, Chudithar, 1Hr Alterations", experience: "8 yrs", hours: "10:00 AM - 6:30 PM", rating: "4.8", price: "₹150" }
-    ];
 
-    let shops = [...samples];
-    let activeShop = null;
-    let loggedPh = '';
+<section id="authView" class="view hidden narrow">
 
-    const cleanPh = p => (p || '').replace(/\D/g, '').slice(-10);
+  <p class="eyebrow">WELCOME BACK</p>
+  <h1>Login / Create account</h1>
 
-    function renderShops() {
-      const grid = document.getElementById('shopsGrid');
-      document.getElementById('shopHeading').innerText = `🏪 Tailor Shops (${shops.length})`;
-      grid.innerHTML = '';
+  <form id="authForm" class="panel">
 
-      shops.forEach(s => {
-        const owner = s.full_name || s.owner_name || 'Expert Tailor';
-        const div = document.createElement('div');
-        div.className = 'bg-white p-5 rounded-3xl border-2 border-pink-100 shadow-sm flex flex-col justify-between cursor-pointer active:scale-[0.99]';
-        div.innerHTML = `
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900">${s.tailor_type || 'Tailor'}</span>
-              <span class="bg-emerald-600 text-white text-xs font-black px-2 py-0.5 rounded-lg">⭐ ${s.rating || '4.9'}</span>
-            </div>
-            <h4 class="text-lg font-black text-purple-950">${s.shop_name}</h4>
-            <p class="text-xs text-gray-600 font-semibold mt-0.5">👤 ${owner} • 📍 ${s.area} • ${s.experience || '10 yrs'}</p>
-            ${s.address ? `<p class="text-[11px] text-gray-500 mt-1">🏠 ${s.address}</p>` : ''}
-            <p class="text-xs font-bold text-pink-700 my-2.5">✂️ ${s.services}</p>
-          </div>
-          <div class="flex items-center justify-between pt-3 border-t">
-            <span class="text-sm font-black text-purple-950">Starts ${s.price || '₹150'}</span>
-            <span class="bg-pink-600 text-white text-xs font-black px-4 py-2 rounded-xl shadow">Open & Book →</span>
-          </div>
-        `;
-        div.onclick = () => openShop(s);
-        grid.appendChild(div);
-      });
-    }
+    <label>
+      Email
+      <input id="authEmail" type="email" required>
+    </label>
 
-    async function loadShops() {
-      renderShops();
-      if (!db) return;
-      const { data } = await db.from('tailors').select('*');
-      if (data && data.length) {
-        shops = [...data.reverse(), ...samples];
-        renderShops();
-      }
-    }
+    <label>
+      Password
+      <input id="authPassword" type="password" required minlength="6">
+    </label>
 
-    function openShop(s) {
-      activeShop = s;
-      document.getElementById('mType').innerText = s.tailor_type || 'Tailor';
-      document.getElementById('mStar').innerText = `⭐ ${s.rating || '4.9'}`;
-      document.getElementById('mName').innerText = s.shop_name;
-      document.getElementById('mSub').innerText = `👤 ${s.full_name || s.owner_name || 'Tailor'} • 📍 ${s.area}`;
-      document.getElementById('mAddr').innerText = s.address ? `🏠 ${s.address}` : '';
-      document.getElementById('mPrice').innerText = s.price || '₹150 onwards';
-      document.getElementById('mHours').innerText = s.hours || 'Open';
-      document.getElementById('mServ').innerText = s.services || '';
-      document.getElementById('shopModal').classList.remove('hidden');
-    }
+    <label id="signupRoleWrap" class="hidden">
+      Create account as
+      <select id="signupRole">
+        <option value="customer">Customer</option>
+        <option value="tailor">Tailor</option>
+      </select>
+    </label>
 
-    function closeShop() {
-      document.getElementById('shopModal').classList.add('hidden');
-    }
+    <div class="row">
+      <button class="primary" type="submit">Login</button>
 
-    function checkOtherDress() {
-      const isOther = document.getElementById('sbDress').value === 'OTHER';
-      const box = document.getElementById('sbOther');
-      box.classList.toggle('hidden', !isOther);
-      box.required = isOther;
-    }
+      <button class="secondary" type="button" onclick="toggleSignup()">
+        Create account
+      </button>
+    </div>
 
-    document.getElementById('sbForm').onsubmit = async function(e) {
-      e.preventDefault();
-      if (!activeShop) return;
-      const btn = document.getElementById('sbBtn');
-      btn.disabled = true;
-      btn.innerText = 'Booking...';
+    <p id="authMessage" class="form-message"></p>
 
-      const dress = document.getElementById('sbDress').value === 'OTHER'
-        ? document.getElementById('sbOther').value.trim()
-        : document.getElementById('sbDress').value;
+  </form>
+</section>
 
-      const orderRow = {
-        customer_name: document.getElementById('sbName').value.trim(),
-        customer_phone: cleanPh(document.getElementById('sbPhone').value),
-        area: activeShop.area,
-        dress_type: dress,
-        delivery_speed: document.getElementById('sbSpeed').value,
-        pickup_type: document.getElementById('sbPickup').value,
-        tailor_shop: activeShop.shop_name,
-        tailor_phone: cleanPh(activeShop.phone || activeShop.mobile || ADMIN_PH),
-        notes: document.getElementById('sbNotes').value.trim(),
-        status: 'Pending',
-        bill_amount: 0,
-        commission_amount: 0
-      };
 
-      const { error } = await db.from('orders').insert([orderRow]);
-      btn.disabled = false;
-      btn.innerText = '✅ Book Now';
+<section id="joinView" class="view hidden narrow">
 
-      if (error) {
-        alert('Error: ' + error.message);
-        return;
-      }
+  <p class="eyebrow">FREE TAILOR REGISTRATION</p>
+  <h1>Join StitchCall</h1>
 
-      this.reset();
-      checkOtherDress();
-      closeShop();
-      alert(`🎉 Booked! Ungal order ${activeShop.shop_name}-ku anuppapatulladhu.`);
-    };
+  <p class="muted">
+    Registration is free. Your listing appears only after admin approval.
+    StitchCall charges 10% commission on completed orders only.
+  </p>
 
-    document.getElementById('rForm').onsubmit = async function(e) {
-      e.preventDefault
+  <div class="panel">
+
+    <h3>Choose your account type</h3>
+
+    <div class="choice-row">
+
+      <button class="choice" onclick="startTailorSignup('shop')">
+        🏬
+        <b>Tailoring Shop</b>
+        <small>Register your shop</small>
+      </button>
+
+      <button class="choice" onclick="startTailorSignup('home')">
+        🧵
+        <b>Home Tailor</b>
+        <small>Work from home</small>
+      </button>
+
+    </div>
+
+    <p class="muted tiny">
+      Create a tailor login first, then submit your profile for review.
+    </p>
+
+  </div>
+</section>
+
+
+<section id="applyView" class="view hidden narrow">
+
+  <p class="eyebrow">TAILOR APPLICATION</p>
+  <h1>Tell us about your work</h1>
+
+  <form id="applyForm" class="panel">
+
+    <label>
+      Business type
+      <select id="businessType">
+        <option value="shop">Tailoring Shop</option>
+        <option value="home">Home Tailor</option>
+      </select>
+    </label>
+
+    <label>
+      Shop / Display name
+      <input id="businessName" required maxlength="100">
+    </label>
+
+    <label>
+      Owner / Tailor name
+      <input id="ownerName" required maxlength="100">
+    </label>
+
+    <label>
+      Area in Coimbatore
+      <input id="area" required maxlength="100"
+        placeholder="e.g. Ramanathapuram">
+    </label>
+
+    <label>
+      Contact phone
+      <input id="phone" required inputmode="tel" maxlength="15">
+    </label>
+
+    <label>
+      Services offered
+      <textarea id="services" required
+        placeholder="Blouse stitching, alterations, churidar…"></textarea>
+    </label>
+
+    <label>
+      Starting price (₹)
+      <input id="startingPrice" type="number" min="0" required>
+    </label>
+
+    <label>
+      About your work
+      <textarea id="description" maxlength="500"></textarea>
+    </label>
+
+    <button class="primary full" type="submit">
+      Submit for approval
+    </button>
+
+    <p id="applyMessage" class="form-message"></p>
+
+  </form>
+</section>
+
+
+<section id="detailView" class="view hidden narrow">
+
+  <button class="text-btn" onclick="showView('home')">
+    ← Back to tailors
+  </button>
+
+  <div id="tailorDetail"></div>
+
+</section>
+
+
+<section id="dashboardView" class="view hidden">
+
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">YOUR WORKSPACE</p>
+      <h1 id="dashboardTitle">Dashboard</h1>
+    </div>
+
+    <button class="secondary" onclick="loadDashboard()">
+      Refresh
+    </button>
+  </div>
+
+  <div id="dashboardContent"></div>
+
+</section>
+
+</main>
+
+
+<footer>
+  <span>StitchCall © 2026</span>
+  <span>Coimbatore, Tamil Nadu</span>
+  <span>Free tailor registration</span>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
