@@ -32,7 +32,7 @@
     ⚡ 1-HR & 3-HR URGENT DELIVERY • ALL COIMBATORE • ₹0 TAILOR JOINING
   </div>
 
-  <!-- Clean Header -->
+  <!-- Clean Header (No duplicate Book button) -->
   <header class="brand-gradient text-white shadow-lg sticky top-0 z-40">
     <div class="max-w-5xl mx-auto px-4 py-3.5 flex justify-between items-center">
       <div class="flex items-center gap-2.5">
@@ -44,12 +44,9 @@
           <p class="text-[11px] text-amber-200 font-semibold mt-0.5">📍 All Over Coimbatore</p>
         </div>
       </div>
-      <div class="flex gap-2">
-        <a href="#tailors-section" class="text-xs sm:text-sm bg-white/20 hover:bg-white/30 font-bold px-3.5 py-2 rounded-xl backdrop-blur-sm">
+      <div>
+        <a href="#tailors-section" class="text-xs sm:text-sm bg-white/25 hover:bg-white/35 font-extrabold px-4 py-2 rounded-xl backdrop-blur-sm">
           👗 Find Tailors
-        </a>
-        <a href="#booking-section" class="text-xs sm:text-sm bg-amber-300 hover:bg-amber-400 text-purple-950 font-extrabold px-3.5 py-2 rounded-xl shadow">
-          ⚡ Book Now
         </a>
       </div>
     </div>
@@ -97,249 +94,11 @@
   <!-- Urgent Speed Highlight Banner -->
   <section class="max-w-5xl mx-auto px-4 py-2 w-full">
     <div class="grid grid-cols-3 gap-2.5 sm:gap-4 text-center">
-      <button onclick="quickSelectSpeed('⚡ 1 Hour Express (Super Urgent)')" class="card-glow bg-gradient-to-br from-red-500 to-pink-600 text-white p-3.5 sm:p-4 rounded-2xl shadow-md">
+      <button type="button" onclick="quickSelectSpeed('⚡ 1 Hour Express (Super Urgent)')" class="card-glow bg-gradient-to-br from-red-500 to-pink-600 text-white p-3.5 sm:p-4 rounded-2xl shadow-md">
         <div class="text-2xl sm:text-3xl mb-0.5">⚡</div>
         <p class="font-black text-xs sm:text-base">1 Hour Express</p>
         <p class="text-[10px] sm:text-xs text-amber-200 font-bold">Alteration / Falls / Fix</p>
       </button>
 
-      <button onclick="quickSelectSpeed('🚀 3 Hours Urgent Delivery')" class="card-glow bg-gradient-to-br from-amber-400 to-orange-500 text-purple-950 p-3.5 sm:p-4 rounded-2xl shadow-md">
-        <div class="text-2xl sm:text-3xl mb-0.5">🚀</div>
-        <p class="font-black text-xs sm:text-base">3 Hours Urgent</p>
-        <p class="text-[10px] sm:text-xs text-purple-900 font-bold">Same-Day Blouse / Kurti</p>
-      </button>
-
-      <button onclick="quickSelectSpeed('📅 Normal Delivery (2–3 Days)')" class="card-glow bg-white border-2 border-purple-300 text-purple-950 p-3.5 sm:p-4 rounded-2xl shadow-sm">
-        <div class="text-2xl sm:text-3xl mb-0.5">📅</div>
-        <p class="font-black text-xs sm:text-base">Normal Delivery</p>
-        <p class="text-[10px] sm:text-xs text-gray-500 font-bold">Standard 2–3 Days</p>
-      </button>
-    </div>
-  </section>
-
-  <!-- Visual Service Cards -->
-  <section class="max-w-5xl mx-auto px-4 py-4 w-full">
-    <h3 class="text-lg sm:text-xl font-black text-purple-950 mb-3 flex items-center gap-2">
-      <span>🎨 Enna Thaikkanum?</span>
-      <span class="text-xs font-bold bg-pink-100 text-pink-700 px-2.5 py-0.5 rounded-full">Tap to Book</span>
-    </h3>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <button onclick="quickSelectService('Saree / Designer Blouse')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-pink-200 text-left shadow-sm">
-        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=500&q=80" alt="Saree Blouse" class="w-full h-28 object-cover bg-pink-100" />
-        <div class="p-3 bg-gradient-to-r from-pink-50 to-white">
-          <p class="font-extrabold text-sm text-purple-950">👚 Saree Blouse</p>
-          <p class="text-[11px] text-pink-600 font-bold">Lining • Bridal • Aari</p>
-        </div>
-      </button>
-
-      <button onclick="quickSelectService('Salwar / Churidar / Kurti')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-purple-200 text-left shadow-sm">
-        <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&w=500" onerror="this.src='https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=500&q=80'" alt="Chudithar Kurti" class="w-full h-28 object-cover bg-purple-100" />
-        <div class="p-3 bg-gradient-to-r from-purple-50 to-white">
-          <p class="font-extrabold text-sm text-purple-950">👗 Chudithar</p>
-          <p class="text-[11px] text-purple-700 font-bold">Salwar • Kurti • Frock</p>
-        </div>
-      </button>
-
-      <button onclick="quickSelectService('Men\'s Shirt / Trousers')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-amber-300 text-left shadow-sm">
-        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=500&q=80" alt="Mens Tailoring" class="w-full h-28 object-cover bg-amber-100" />
-        <div class="p-3 bg-gradient-to-r from-amber-50 to-white">
-          <p class="font-extrabold text-sm text-purple-950">👔 Men's Wear</p>
-          <p class="text-[11px] text-amber-700 font-bold">Shirt • Pant • Kurta</p>
-        </div>
-      </button>
-
-      <button onclick="quickSelectService('Alterations & Repairs')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-emerald-200 text-left shadow-sm">
-        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" alt="Alterations" class="w-full h-28 object-cover bg-emerald-100" />
-        <div class="p-3 bg-gradient-to-r from-emerald-50 to-white">
-          <p class="font-extrabold text-sm text-purple-950">✂️ Alterations</p>
-          <p class="text-[11px] text-emerald-700 font-bold">1Hr Zip • Fit • Falls</p>
-        </div>
-      </button>
-    </div>
-  </section>
-
-  <!-- Live Tailors Directory -->
-  <section id="tailors-section" class="max-w-5xl mx-auto px-4 py-6 w-full">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 bg-white p-4 rounded-2xl border-2 border-purple-200 shadow-sm">
-      <div>
-        <h3 class="text-lg sm:text-xl font-black text-purple-950">🏪 Coimbatore Tailors</h3>
-        <p class="text-xs text-pink-600 font-bold">📞 Help: +91 73739 69064</p>
-      </div>
-      <input type="text" id="areaSearchInput" oninput="filterTailors()" placeholder="🔍 Search Area (e.g. Ramanathapuram)" class="border-2 border-purple-300 rounded-xl px-3.5 py-2 text-sm font-bold text-purple-950 bg-purple-50 w-full sm:w-64" />
-    </div>
-
-    <div id="tailorsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-  </section>
-
-  <!-- Customer Quick Booking Card -->
-  <section id="booking-section" class="max-w-3xl mx-auto px-4 py-6 w-full">
-    <div class="bg-white p-6 rounded-3xl shadow-lg border-2 border-pink-300">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-2xl">👗</div>
-        <div>
-          <h3 class="text-xl font-black text-purple-950">Order Stitching Now</h3>
-          <p class="text-xs text-gray-500 font-semibold">1 Hr / 3 Hrs Urgent alladhu Normal delivery select pannunga</p>
-        </div>
-      </div>
-
-      <form id="bookingForm" class="space-y-3">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="custName" required placeholder="👤 Unga Peyar (Name) *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full" />
-          <input type="tel" id="custPhone" required placeholder="📱 WhatsApp Number *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full" />
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="custArea" list="cbeAreasList" required placeholder="📍 Unga Area Type Pannunga *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full" />
-          <select id="custService" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
-            <option value="Saree / Designer Blouse">👚 Saree / Designer Blouse</option>
-            <option value="Salwar / Churidar / Kurti">👗 Salwar / Churidar / Kurti</option>
-            <option value="Men's Shirt / Trousers">👔 Men's Shirt / Trousers</option>
-            <option value="Alterations & Repairs">✂️ Alterations & Repairs</option>
-          </select>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <select id="custSpeed" class="border-2 border-red-300 focus:border-red-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-red-50 text-red-900 font-extrabold">
-            <option value="⚡ 1 Hour Express (Super Urgent)">⚡ 1 Hour Express (Super Urgent)</option>
-            <option value="🚀 3 Hours Urgent Delivery">🚀 3 Hours Urgent Delivery</option>
-            <option value="📅 Normal Delivery (2–3 Days)" selected>📅 Normal Delivery (2–3 Days)</option>
-          </select>
-
-          <select id="custDelivery" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
-            <option value="Doorstep Pickup & Delivery">🛵 Veetla Pickup & Delivery</option>
-            <option value="Direct Shop Drop-off">🏪 Direct Shop Drop-off</option>
-          </select>
-        </div>
-
-        <textarea id="custNotes" rows="2" placeholder="✍️ Tailor name alladhu design details (Optional)" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3.5 py-2 text-sm w-full"></textarea>
-        <button type="submit" class="w-full bg-gradient-to-r from-pink-600 to-purple-700 text-white font-black py-3.5 rounded-2xl shadow-md hover:opacity-95 text-base">
-          📲 Book on WhatsApp
-        </button>
-      </form>
-    </div>
-  </section>
-
-  <!-- Tailor Direct Registration Form -->
-  <section id="register-section" class="max-w-3xl mx-auto px-4 py-6 w-full">
-    <div class="bg-gradient-to-br from-amber-100 via-yellow-50 to-pink-50 p-6 rounded-3xl shadow-lg border-2 border-amber-400">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 rounded-2xl bg-amber-400 flex items-center justify-center text-2xl shadow-sm">✂️</div>
-        <div>
-          <span class="bg-purple-800 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">₹0 FREE JOINING</span>
-          <h3 class="text-xl font-black text-purple-950 mt-0.5">Tailor Registration</h3>
-        </div>
-      </div>
-
-      <form id="tailorRegForm" class="space-y-3">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="tShopName" required placeholder="🏪 Kadai Peyar (Shop Name) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-          <input type="text" id="tOwnerName" required placeholder="👤 Tailor Peyar (Your Name) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="tel" id="tPhone" required placeholder="📱 WhatsApp Number *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-          <input type="text" id="tArea" list="cbeAreasList" required placeholder="📍 Area Type Pannunga (e.g. RS Puram) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <select id="tType" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
-            <option value="Tailoring Shop">🏪 Tailoring Shop</option>
-            <option value="Home Tailor">🏠 Home Tailor</option>
-          </select>
-          <input type="text" id="tExp" required placeholder="⭐ Experience (e.g. 10 yrs) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        </div>
-        <input type="text" id="tServices" required placeholder="👗 Enna Thaippeenga? (Blouse, Chudithar, Alterations) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="tHours" required placeholder="⏰ Time (e.g. 9:30 AM – 8:30 PM) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-
-        <!-- Urgent Delivery Support Option for Tailors -->
-        <div class="bg-amber-50 p-3.5 rounded-2xl border-2 border-amber-300 flex items-center gap-3">
-          <input type="checkbox" id="tUrgentCheck" checked class="w-5 h-5 accent-amber-600 cursor-pointer" />
-          <label for="tUrgentCheck" class="text-xs sm:text-sm font-bold text-purple-950 cursor-pointer">
-            ⚡ Naanga 1-Hour / 3-Hours Urgent Delivery orders-um eduthukkuvom
-          </label>
-        </div>
-
-        <!-- Mandatory 10% Commission Tick Box -->
-        <div class="bg-white p-4 rounded-2xl border-2 border-pink-400 flex items-start gap-3 shadow-sm">
-          <input type="checkbox" id="commissionCheck" required class="mt-1 w-5 h-5 accent-pink-600 cursor-pointer" />
-          <label for="commissionCheck" class="text-xs sm:text-sm text-gray-900 cursor-pointer leading-snug">
-            <strong>✅ 10% Commission Agreement:</strong> Joining ₹0 Free. StitchCall vazhiya varum orders-ku mattum <strong>10% website usage commission</strong> thara sammadhikkiren.
-          </label>
-        </div>
-
-        <button type="submit" id="regSubmitBtn" class="w-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-purple-950 font-black py-3.5 rounded-2xl shadow-md hover:opacity-95 text-base">
-          ✅ Accept & Join StitchCall
-        </button>
-      </form>
-    </div>
-  </section>
-
-  <!-- Autocomplete Suggestions for All Coimbatore Areas -->
-  <datalist id="cbeAreasList"></datalist>
-
-  <!-- Colorful Footer -->
-  <footer class="brand-gradient text-white text-center py-7 px-4 mt-8">
-    <p class="font-black text-lg">🪡 StitchCall — Coimbatore</p>
-    <p class="text-xs text-amber-200 mt-1 font-semibold">1-Hr & 3-Hrs Urgent Delivery • ₹0 Tailor Registration • Fast WhatsApp Booking</p>
-    <a href="https://wa.me/917373969064" target="_blank" class="inline-block mt-3 bg-green-500 hover:bg-green-600 text-white text-xs font-black px-5 py-2.5 rounded-full shadow-lg">
-      💬 WhatsApp Support: +91 73739 69064
-    </a>
-  </footer>
-
-  <script>
-    const SUPABASE_URL = 'https://rmfcnxxtzkatlxvkoptc.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtZmNueHh0emthdGx4dmtvcHRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjU4NjcsImV4cCI6MjEwODY0MTg2N30.0QfPa91_8nD7xvbiPNCMp7FS8xQjQKHJBym69q06J_0';
-    const ADMIN_WHATSAPP = '917373969064';
-
-    const COIMBATORE_AREAS = [
-      "Ramanathapuram", "RS Puram", "Gandhipuram", "Peelamedu", "Saibaba Colony",
-      "Singanallur", "Ukkadam", "Town Hall", "Podanur", "Sundarapuram",
-      "Kuniyamuthur", "Saravanampatti", "Ganapathy", "Vadavalli", "Thudiyalur",
-      "Hopes College", "Ondipudur", "Trichy Road", "Avinashi Road", "Race Course",
-      "Sungam", "Puliyakulam", "Nanjundapuram", "Sowripalayam", "Tatabad",
-      "Rathinapuri", "Sivananda Colony", "Koundampalayam", "Goundampalayam",
-      "Periyanaickenpalayam", "Karamadai", "Mettupalayam", "Sulur", "Neelambur",
-      "Kalapatti", "Vilankurichi", "Chinniampalayam", "Kovaipudur", "Madukkarai",
-      "Eachanari", "Malumichampatti", "Kinathukadavu", "Pollachi"
-    ];
-
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    function initAreas() {
-      const datalist = document.getElementById('cbeAreasList');
-      COIMBATORE_AREAS.forEach(area => {
-        datalist.innerHTML += `<option value="${area}">`;
-      });
-    }
-
-    const sampleTailors = [
-      {
-        shop_name: "Kovai Classic Ladies Tailors",
-        owner_name: "K. Lakshmi",
-        area: "Ramanathapuram",
-        tailor_type: "Tailoring Shop",
-        services: "Saree Blouse, Bridal & Aari Work, 1Hr & 3Hr Urgent",
-        experience: "14 yrs exp.",
-        hours: "9:30 AM – 8:30 PM",
-        isSample: true
-      },
-      {
-        shop_name: "Home Stitching Studio",
-        owner_name: "S. Revathi",
-        area: "Ramanathapuram",
-        tailor_type: "Home Tailor",
-        services: "Saree Blouse, Pattu Pavadai, 1Hr Alterations",
-        experience: "8 yrs exp.",
-        hours: "10:00 AM – 6:30 PM",
-        isSample: true
-      }
-    ];
-
-    let allTailors = [...sampleTailors];
-
-    function quickSelectService(serviceName) {
-      document.getElementById('custService').value = serviceName;
-      document.getElementById('booking-section').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function quickSelectSpeed(speedLabel) {
-      document.getElementById('custSpeed').value = speedLabel;
-      document.getElementById('booking-
+      <button type="button" onclick="quickSelectSpeed('🚀 3 Hours Urgent Delivery')" class="card-glow bg-gradient
+        
