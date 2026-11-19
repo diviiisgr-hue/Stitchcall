@@ -4,119 +4,90 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StitchCall — Coimbatore Tailors</title>
-  <link rel="manifest" href="manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     html { scroll-behavior: smooth; }
     body { background: #F7F6FB; color: #1E1B2E; font-family: system-ui, -apple-system, sans-serif; }
-    .swiggy-grad { background: linear-gradient(135deg, #581C87 0%, #BE185D 60%, #EA580C 100%); }
-    .shop-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
-    .shop-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -6px rgba(190, 24, 93, 0.2); }
+    .grad { background: linear-gradient(135deg, #581C87 0%, #BE185D 60%, #EA580C 100%); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- Top Strip -->
-  <div class="bg-amber-400 text-purple-950 text-center text-[11px] sm:text-xs font-black py-1.5 px-2">
+  <div class="bg-amber-400 text-purple-950 text-center text-[11px] font-black py-1.5 px-2">
     ⚡ 1-HR & 3-HR EXPRESS STITCHING • COIMBATORE • ₹0 TAILOR JOINING
   </div>
 
   <!-- Header -->
-  <header class="swiggy-grad text-white shadow-lg sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-2.5">
-        <div class="w-10 h-10 rounded-2xl bg-amber-300 text-purple-950 flex items-center justify-center text-2xl shadow">🪡</div>
+  <header class="grad text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <span class="w-9 h-9 rounded-xl bg-amber-300 text-purple-950 flex items-center justify-center text-xl shadow">🪡</span>
         <div>
-          <h1 class="text-lg sm:text-xl font-black tracking-tight leading-none">StitchCall</h1>
-          <p class="text-[11px] text-amber-200 font-semibold mt-0.5">📍 Coimbatore Tailors</p>
+          <h1 class="text-lg font-black leading-none">StitchCall</h1>
+          <p class="text-[11px] text-amber-200 font-semibold">📍 Coimbatore</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <a href="#reg-sec" class="text-xs bg-white/20 hover:bg-white/30 font-bold px-3 py-2 rounded-xl">✂️ Join Free</a>
-        <button type="button" onclick="openDashboardModal()" class="text-xs bg-amber-300 hover:bg-amber-400 text-purple-950 font-black px-3.5 py-2 rounded-xl shadow">
-          🔐 Partner Login
-        </button>
+        <a href="#reg-sec" class="text-xs bg-amber-300 text-purple-950 font-black px-3 py-2 rounded-xl shadow">✂️ Join as a Tailor</a>
+        <button type="button" onclick="openDash()" class="text-xs bg-white/20 font-bold px-3 py-2 rounded-xl">🔐 Login</button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 py-5 space-y-6 w-full">
+  <main class="max-w-4xl mx-auto px-4 py-5 space-y-6 w-full">
 
-    <!-- Compact Swiggy-Style Search & Filter Bar -->
-    <section class="bg-white p-4 sm:p-5 rounded-3xl shadow-sm border border-pink-100 space-y-3">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div>
-          <h2 class="text-xl sm:text-2xl font-black text-purple-950">Choose Your Tailor in Coimbatore</h2>
-          <p class="text-xs text-gray-500 font-semibold">Star rating, starting price & delivery speed paathu shop-ai tap pannunga</p>
-        </div>
-        <span class="w-fit bg-red-100 text-red-700 text-xs font-extrabold px-3 py-1 rounded-full">⚡ 1Hr & 3Hr Urgent Available</span>
+    <!-- Top Join as a Tailor Banner -->
+    <section class="bg-gradient-to-r from-purple-900 via-pink-700 to-amber-600 text-white p-4 rounded-3xl shadow flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        <span class="bg-amber-300 text-purple-950 text-[10px] font-black px-2.5 py-0.5 rounded-full">₹0 FREE JOINING</span>
+        <h2 class="text-base sm:text-lg font-black mt-1">Tailoring Shop or Home Tailor-aa?</h2>
+        <p class="text-xs text-amber-100">StitchCall-la free-aa join panni direct orders perunga!</p>
       </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-        <input type="text" id="searchInput" oninput="filterTailors()" placeholder="🔍 Search Area or Shop Name (e.g. Ramanathapuram)" class="border-2 border-purple-200 focus:border-pink-500 rounded-2xl px-4 py-2.5 text-sm font-bold w-full bg-purple-50/40" />
-        <select id="typeFilter" onchange="filterTailors()" class="border-2 border-purple-200 focus:border-pink-500 rounded-2xl px-4 py-2.5 text-sm font-bold w-full bg-white text-purple-950">
-          <option value="ALL">🏪 All Tailors (Shops & Home Tailors)</option>
-          <option value="Tailoring Shop">🏪 Tailoring Shops Only</option>
-          <option value="Home Tailor">🏠 Home Tailors Only</option>
-        </select>
-      </div>
+      <a href="#reg-sec" class="w-full sm:w-auto text-center bg-amber-300 hover:bg-amber-400 text-purple-950 font-black px-5 py-2.5 rounded-2xl text-xs sm:text-sm shadow whitespace-nowrap">
+        ✂️ Join as a Tailor →
+      </a>
     </section>
 
-    <!-- Tailors Feed (Swiggy / Zomato Card Style) -->
-    <section id="tailors-sec" class="space-y-3">
-      <div class="flex items-center justify-between px-1">
-        <h3 id="tailorCountLabel" class="text-base font-black text-purple-950">🏪 Available Tailors</h3>
-        <span class="text-xs text-pink-600 font-bold">Tap any shop to view prices & book →</span>
+    <!-- Tailor Shops Direct Feed -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 id="shopHeading" class="text-lg font-black text-purple-950">🏪 Tailor Shops in Coimbatore</h3>
+        <span class="text-xs text-pink-600 font-bold">Tap shop to view & book</span>
       </div>
-
-      <div id="tailorList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <p class="text-sm text-gray-500 col-span-full text-center py-6 font-semibold">Loading Coimbatore tailors...</p>
-      </div>
+      <div id="shopsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
     <!-- Tailor Registration Section -->
-    <section id="reg-sec" class="bg-amber-50 p-6 rounded-3xl shadow-md border-2 border-amber-400 mt-6">
+    <section id="reg-sec" class="bg-amber-50 p-5 rounded-3xl shadow border-2 border-amber-400">
       <span class="bg-purple-800 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">₹0 FREE PARTNER JOINING</span>
-      <h3 class="text-xl font-black text-purple-950 mt-1 mb-1">✂️ Own a Tailoring Shop or Stitch from Home?</h3>
-      <p class="text-xs text-gray-600 mb-4 font-semibold">Free-aa join panni Coimbatore customers kitta irundhu direct orders perunga</p>
-
+      <h3 class="text-xl font-black text-purple-950 mt-1 mb-3">✂️ Join as a Tailor</h3>
       <form id="rForm" class="space-y-3">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="rShop" required placeholder="🏪 Shop / Home Studio Name *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-          <input type="text" id="rOwner" required placeholder="👤 Tailor Full Name *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="tel" id="rPhone" required placeholder="📱 WhatsApp Number (For Login) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-          <select id="rType" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
-            <option value="Tailoring Shop">🏪 Tailoring Shop</option>
-            <option value="Home Tailor">🏠 Home Tailor</option>
-          </select>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="rArea" list="areas" required placeholder="📍 Area (e.g. Ramanathapuram) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
-          <input type="text" id="rPrice" required placeholder="💰 Starting Price (e.g. ₹150)" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
-        </div>
+        <input type="text" id="rShop" required placeholder="🏪 Shop / Home Studio Name *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <input type="text" id="rOwner" required placeholder="👤 Tailor Full Name *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <input type="tel" id="rPhone" required placeholder="📱 WhatsApp Number (Used for Login) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <select id="rType" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
+          <option value="Tailoring Shop">🏪 Tailoring Shop</option>
+          <option value="Home Tailor">🏠 Home Tailor</option>
+        </select>
+        <input type="text" id="rArea" list="areas" required placeholder="📍 Area (e.g. Ramanathapuram) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
+        <input type="text" id="rPrice" required placeholder="💰 Starting Price (e.g. ₹150) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
         <textarea id="rAddr" rows="2" required placeholder="🏠 Full Address (Door No, Street, Landmark) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2 text-sm w-full bg-white"></textarea>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <input type="text" id="rExp" required placeholder="⭐ Experience (e.g. 10 yrs) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-          <input type="text" id="rHours" required placeholder="⏰ Working Hours (e.g. 9 AM - 9 PM) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        </div>
+        <input type="text" id="rExp" required placeholder="⭐ Experience (e.g. 10 yrs) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <input type="text" id="rHours" required placeholder="⏰ Working Hours (e.g. 9 AM - 9 PM) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
         <input type="text" id="rServ" required placeholder="👗 Services (Blouse, Chudithar, Shirt, Pant) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
 
-        <label class="bg-white p-3 rounded-xl border border-amber-300 flex items-center gap-2.5 text-xs font-bold">
+        <label class="bg-white p-3 rounded-xl border border-amber-300 flex items-center gap-2 text-xs font-bold">
           <input type="checkbox" id="rUrgent" checked class="w-4 h-4 accent-amber-600" />
           ⚡ 1-Hour / 3-Hours Urgent Delivery orders accept pannuvom
         </label>
 
-        <label class="bg-white p-3 rounded-xl border-2 border-pink-400 flex items-start gap-2.5 text-xs">
+        <label class="bg-white p-3 rounded-xl border-2 border-pink-400 flex items-start gap-2 text-xs">
           <input type="checkbox" id="rComm" required class="mt-0.5 w-4 h-4 accent-pink-600" />
           <span><strong>✅ 10% Commission Agreement:</strong> Joining ₹0 Free. StitchCall orders-ku mattum <strong>10% commission</strong> thara sammadhikkiren.</span>
         </label>
 
-        <button type="submit" id="rBtn" class="w-full bg-amber-400 text-purple-950 font-black py-3.5 rounded-2xl shadow text-base">
-          ✅ Accept & Join StitchCall
-        </button>
+        <button type="submit" id="rBtn" class="w-full bg-amber-400 text-purple-950 font-black py-3.5 rounded-2xl shadow text-base">✅ Accept & Join StitchCall</button>
       </form>
     </section>
 
@@ -125,40 +96,26 @@
   <!-- SHOP DETAIL & IN-SHOP BOOKING MODAL -->
   <div id="shopModal" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
-      <!-- Shop Header -->
-      <div class="swiggy-grad text-white p-5 relative">
-        <button type="button" onclick="closeShopModal()" class="absolute top-4 right-4 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-xl font-black text-xs">✕ Close</button>
-        <div class="flex items-center gap-2 mb-1">
-          <span id="mTypeBadge" class="bg-amber-300 text-purple-950 text-[10px] font-black px-2.5 py-0.5 rounded-full"></span>
-          <span id="mRatingBadge" class="bg-emerald-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full"></span>
-        </div>
-        <h3 id="mShopName" class="text-xl font-black leading-tight"></h3>
-        <p id="mOwnerArea" class="text-xs text-amber-200 font-semibold mt-0.5"></p>
-        <p id="mAddress" class="text-xs text-white/90 mt-1"></p>
+      <div class="grad text-white p-5 relative">
+        <button type="button" onclick="closeShop()" class="absolute top-4 right-4 bg-white/20 px-3 py-1 rounded-xl font-black text-xs">✕ Close</button>
+        <span id="mType" class="bg-amber-300 text-purple-950 text-[10px] font-black px-2.5 py-0.5 rounded-full"></span>
+        <span id="mStar" class="bg-emerald-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full ml-1"></span>
+        <h3 id="mName" class="text-xl font-black mt-1"></h3>
+        <p id="mSub" class="text-xs text-amber-200 font-semibold"></p>
+        <p id="mAddr" class="text-xs text-white/90 mt-1"></p>
       </div>
 
-      <!-- Shop Info & Booking Form -->
       <div class="p-5 overflow-y-auto space-y-4">
-        <div class="bg-purple-50 p-3.5 rounded-2xl border border-purple-200 space-y-1.5">
-          <div class="flex justify-between text-xs font-extrabold text-purple-950">
-            <span>💰 Starting Price: <span id="mPrice" class="text-pink-600"></span></span>
-            <span>⏰ <span id="mHours"></span></span>
-          </div>
-          <p class="text-xs text-gray-700 font-semibold">✂️ <strong>Services:</strong> <span id="mServices"></span></p>
+        <div class="bg-purple-50 p-3.5 rounded-2xl border border-purple-200 space-y-1 text-xs">
+          <p class="font-extrabold text-purple-950">💰 Price: <span id="mPrice" class="text-pink-600"></span> • ⏰ <span id="mHours"></span></p>
+          <p class="text-gray-700">✂️ <strong>Services:</strong> <span id="mServ"></span></p>
         </div>
 
-        <form id="shopBookForm" class="space-y-3">
-          <h4 class="font-black text-sm text-purple-950">👗 Book Stitching with This Tailor</h4>
-          <input type="hidden" id="mTailorShop" />
-          <input type="hidden" id="mTailorPhone" />
-          <input type="hidden" id="mTailorArea" />
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <input type="text" id="sbName" required placeholder="👤 Your Name *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full" />
-            <input type="tel" id="sbPhone" required placeholder="📱 Your WhatsApp Number *" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full" />
-          </div>
-
-          <select id="sbDress" onchange="toggleShopCustomDress()" class="border-2 border-gray-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-white font-bold">
+        <form id="sbForm" class="space-y-2.5">
+          <h4 class="font-black text-sm text-purple-950">👗 Book This Tailor</h4>
+          <input type="text" id="sbName" required placeholder="👤 Your Name *" class="border-2 rounded-xl px-3 py-2 text-sm w-full" />
+          <input type="tel" id="sbPhone" required placeholder="📱 Your WhatsApp Number *" class="border-2 rounded-xl px-3 py-2 text-sm w-full" />
+          <select id="sbDress" onchange="checkOtherDress()" class="border-2 rounded-xl px-3 py-2 text-sm w-full bg-white font-bold">
             <option value="Saree Blouse (Normal)">👚 Saree Blouse (Normal)</option>
             <option value="Lining Blouse">👚 Lining Blouse</option>
             <option value="Bridal / Aari Blouse">👰 Bridal / Aari Blouse</option>
@@ -167,85 +124,57 @@
             <option value="Salwar / Pant Only">👖 Salwar / Pant Only</option>
             <option value="Mens Shirt">👔 Men's Shirt</option>
             <option value="Mens Pant / Trousers">👖 Men's Pant / Trousers</option>
-            <option value="Pattu Pavadai / Kids Dress">🧒 Pattu Pavadai / Kids Dress</option>
+            <option value="Pattu Pavadai / Kids">🧒 Pattu Pavadai / Kids</option>
             <option value="Saree Falls & Pico">🪡 Saree Falls & Pico</option>
-            <option value="Alterations / Zip / Fitting">✂️ Alterations / Zip / Fitting</option>
+            <option value="Alterations / Fitting">✂️ Alterations / Fitting</option>
             <option value="OTHER">✍️ Other (Type Dress Name)</option>
           </select>
-
-          <input type="text" id="sbCustomDress" placeholder="✍️ Type Dress Name (e.g. Lehenga, Gown) *" class="hidden border-2 border-pink-400 rounded-xl px-3 py-2 text-sm w-full bg-pink-50/40 font-semibold" />
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <select id="sbSpeed" class="border-2 border-red-300 rounded-xl px-3 py-2 text-sm w-full bg-red-50 text-red-900 font-extrabold">
-              <option value="⚡ 1 Hour Express">⚡ 1 Hour Express</option>
-              <option value="🚀 3 Hours Urgent">🚀 3 Hours Urgent</option>
-              <option value="📅 Normal Delivery" selected>📅 Normal (2–3 Days)</option>
-            </select>
-
-            <select id="sbDelivery" class="border-2 border-gray-200 rounded-xl px-3 py-2 text-sm w-full bg-white font-semibold">
-              <option value="Doorstep Pickup & Delivery">🛵 Home Pickup & Delivery</option>
-              <option value="Direct Shop Drop-off">🏪 Direct Shop Visit</option>
-            </select>
-          </div>
-
-          <textarea id="sbNotes" rows="2" placeholder="✍️ Design details / Customer address for pickup (Optional)" class="border-2 border-gray-200 rounded-xl px-3 py-2 text-sm w-full"></textarea>
-
-          <button type="submit" id="sbSubmitBtn" class="w-full bg-gradient-to-r from-pink-600 to-purple-700 text-white font-black py-3.5 rounded-2xl shadow text-sm">
-            ✅ Confirm Booking Now
+          <input type="text" id="sbOther" placeholder="✍️ Type Dress Name *" class="hidden border-2 border-pink-400 rounded-xl px-3 py-2 text-sm w-full bg-pink-50" />
+          <select id="sbSpeed" class="border-2 border-red-300 rounded-xl px-3 py-2 text-sm w-full bg-red-50 text-red-900 font-extrabold">
+            <option value="⚡ 1 Hour Express">⚡ 1 Hour Express</option>
+            <option value="🚀 3 Hours Urgent">🚀 3 Hours Urgent</option>
+            <option value="📅 Normal Delivery" selected>📅 Normal Delivery (2–3 Days)</option>
+          </select>
+          <select id="sbPickup" class="border-2 rounded-xl px-3 py-2 text-sm w-full bg-white font-semibold">
+            <option value="Home Pickup & Delivery">🛵 Home Pickup & Delivery</option>
+            <option value="Direct Shop Visit">🏪 Direct Shop Visit</option>
+          </select>
+          <textarea id="sbNotes" rows="2" placeholder="✍️ Design notes / Pickup address (Optional)" class="border-2 rounded-xl px-3 py-2 text-sm w-full"></textarea>
+          <button type="submit" id="sbBtn" class="w-full bg-gradient-to-r from-pink-600 to-purple-700 text-white font-black py-3.5 rounded-2xl shadow text-sm">
+            ✅ Book Now
           </button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- PRIVATE PARTNER & OWNER DASHBOARD MODAL -->
+  <!-- PARTNER & OWNER DASHBOARD MODAL -->
   <div id="dashModal" class="hidden fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
-      <div class="swiggy-grad text-white px-5 py-4 flex justify-between items-center">
-        <div>
-          <h3 class="font-black text-lg">🔐 StitchCall Partner Dashboard</h3>
-          <p class="text-[11px] text-amber-200">Private Shop & App Owner Order Portal</p>
-        </div>
-        <button type="button" onclick="closeDashboardModal()" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-xl font-black text-sm">✕ Close</button>
+      <div class="grad text-white px-5 py-4 flex justify-between items-center">
+        <h3 class="font-black text-base">🔐 Partner & Owner Dashboard</h3>
+        <button type="button" onclick="closeDash()" class="bg-white/20 px-3 py-1 rounded-xl font-black text-xs">✕ Close</button>
       </div>
-
       <div class="p-5 overflow-y-auto space-y-4">
-        <div id="loginBox" class="bg-purple-50 p-4 rounded-2xl border border-purple-200 space-y-3">
-          <p class="text-xs font-bold text-purple-950">Enter your registered WhatsApp number to view your private shop orders:</p>
+        <div id="loginBox" class="bg-purple-50 p-4 rounded-2xl border border-purple-200 space-y-2.5">
+          <p class="text-xs font-bold text-purple-950">Enter registered WhatsApp number:</p>
           <div class="flex gap-2">
-            <input type="tel" id="loginPhone" placeholder="📱 Enter 10-digit Phone Number" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full font-bold" />
-            <button type="button" onclick="loginDashboard()" class="bg-purple-800 text-white font-black px-5 py-2.5 rounded-xl text-sm whitespace-nowrap">
-              Open →
-            </button>
+            <input type="tel" id="loginPhone" placeholder="📱 10-digit Phone Number" class="border-2 border-purple-300 rounded-xl px-3 py-2 text-sm w-full font-bold" />
+            <button type="button" onclick="doLogin()" class="bg-purple-800 text-white font-black px-5 py-2 rounded-xl text-sm">Open</button>
           </div>
         </div>
-
-        <div id="dashContent" class="hidden space-y-4">
-          <div class="flex justify-between items-center bg-gray-100 px-4 py-2.5 rounded-xl">
-            <span id="dashRoleBadge" class="text-xs font-black text-purple-950"></span>
-            <button type="button" onclick="logoutDashboard()" class="text-xs text-red-600 font-bold underline">Logout</button>
+        <div id="dashBody" class="hidden space-y-4">
+          <div class="flex justify-between items-center bg-gray-100 px-3.5 py-2 rounded-xl">
+            <span id="roleLabel" class="text-xs font-black text-purple-950"></span>
+            <button type="button" onclick="doLogout()" class="text-xs text-red-600 font-bold underline">Logout</button>
           </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
-            <div class="bg-pink-50 border border-pink-200 p-3 rounded-2xl">
-              <p class="text-[11px] font-bold text-gray-500">Total Requests</p>
-              <p id="statTotal" class="text-xl font-black text-purple-950">0</p>
-            </div>
-            <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl">
-              <p class="text-[11px] font-bold text-gray-500">Accepted</p>
-              <p id="statAccepted" class="text-xl font-black text-amber-700">0</p>
-            </div>
-            <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl">
-              <p class="text-[11px] font-bold text-gray-500">Completed</p>
-              <p id="statCompleted" class="text-xl font-black text-emerald-700">0</p>
-            </div>
-            <div class="bg-purple-50 border border-purple-200 p-3 rounded-2xl">
-              <p class="text-[11px] font-bold text-gray-500">10% Commission</p>
-              <p id="statComm" class="text-xl font-black text-purple-900">₹0</p>
-            </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+            <div class="bg-pink-50 p-2.5 rounded-xl border border-pink-200"><p class="text-[10px] font-bold">Total</p><p id="sTot" class="text-lg font-black">0</p></div>
+            <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200"><p class="text-[10px] font-bold">Accepted</p><p id="sAcc" class="text-lg font-black text-amber-700">0</p></div>
+            <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200"><p class="text-[10px] font-bold">Completed</p><p id="sCom" class="text-lg font-black text-emerald-700">0</p></div>
+            <div class="bg-purple-50 p-2.5 rounded-xl border border-purple-200"><p class="text-[10px] font-bold">10% Comm</p><p id="sFee" class="text-lg font-black text-purple-900">₹0</p></div>
           </div>
-
-          <div id="dashOrdersList" class="space-y-3"></div>
+          <div id="ordersList" class="space-y-3"></div>
         </div>
       </div>
     </div>
@@ -264,75 +193,133 @@
     <option value="Kovaipudur"><option value="Eachanari"><option value="Pollachi">
   </datalist>
 
-  <footer class="swiggy-grad text-white text-center py-6 px-4 mt-8">
+  <footer class="grad text-white text-center py-6 px-4 mt-8">
     <p class="font-black">🪡 StitchCall — Coimbatore</p>
     <p class="text-xs text-amber-200 mt-1">1-Hr & 3-Hrs Express Delivery • ₹0 Tailor Registration</p>
-    <a href="https://wa.me/917373969064" target="_blank" class="inline-block mt-3 bg-green-500 text-white text-xs font-black px-4 py-2 rounded-full">💬 App Support: +91 73739 69064</a>
+    <a href="https://wa.me/917373969064" target="_blank" class="inline-block mt-3 bg-green-500 text-white text-xs font-black px-4 py-2 rounded-full">💬 Support: +91 73739 69064</a>
   </footer>
 
   <script>
     const SB_URL = 'https://rmfcnxxtzkatlxvkoptc.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtZmNueHh0emthdGx4dmtvcHRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjU4NjcsImV4cCI6MjEwODY0MTg2N30.0QfPa91_8nD7xvbiPNCMp7FS8xQjQKHJBym69q06J_0';
-    const OWNER_PHONE = '7373969064';
+    const ADMIN_PH = '7373969064';
     const db = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 
-    const defaultSamples = [
-      {
-        shop_name: "Kovai Classic Ladies Tailors",
-        full_name: "K. Lakshmi",
-        phone: "7373969064",
-        area: "Ramanathapuram",
-        address: "Trichy Road, Near Signal, Ramanathapuram",
-        tailor_type: "Tailoring Shop",
-        services: "Saree Blouse, Bridal & Aari Work, 1Hr & 3Hr Urgent",
-        experience: "14 yrs",
-        hours: "9:30 AM - 8:30 PM",
-        rating: "4.9",
-        price: "₹180",
-        isSample: true
-      },
-      {
-        shop_name: "Home Stitching Studio",
-        full_name: "S. Revathi",
-        phone: "7373969064",
-        area: "RS Puram",
-        address: "DB Road Cross, RS Puram, Coimbatore",
-        tailor_type: "Home Tailor",
-        services: "Saree Blouse, Chudithar, 1Hr Alterations",
-        experience: "8 yrs",
-        hours: "10:00 AM - 6:30 PM",
-        rating: "4.8",
-        price: "₹150",
-        isSample: true
-      }
+    const samples = [
+      { shop_name: "Kovai Classic Ladies Tailors", full_name: "K. Lakshmi", phone: "7373969064", area: "Ramanathapuram", address: "Trichy Road, Near Signal, Ramanathapuram", tailor_type: "Tailoring Shop", services: "Saree Blouse, Bridal & Aari Work, 1Hr & 3Hr Urgent", experience: "14 yrs", hours: "9:30 AM - 8:30 PM", rating: "4.9", price: "₹180" },
+      { shop_name: "Home Stitching Studio", full_name: "S. Revathi", phone: "7373969064", area: "RS Puram", address: "DB Road Cross, RS Puram, Coimbatore", tailor_type: "Home Tailor", services: "Saree Blouse, Chudithar, 1Hr Alterations", experience: "8 yrs", hours: "10:00 AM - 6:30 PM", rating: "4.8", price: "₹150" }
     ];
 
-    let allTailors = [...defaultSamples];
-    let currentLoggedPhone = '';
+    let shops = [...samples];
+    let activeShop = null;
+    let loggedPh = '';
 
-    function cleanPhone(p) {
-      return (p || '').replace(/\D/g, '').slice(-10);
+    const cleanPh = p => (p || '').replace(/\D/g, '').slice(-10);
+
+    function renderShops() {
+      const grid = document.getElementById('shopsGrid');
+      document.getElementById('shopHeading').innerText = `🏪 Tailor Shops (${shops.length})`;
+      grid.innerHTML = '';
+
+      shops.forEach(s => {
+        const owner = s.full_name || s.owner_name || 'Expert Tailor';
+        const div = document.createElement('div');
+        div.className = 'bg-white p-5 rounded-3xl border-2 border-pink-100 shadow-sm flex flex-col justify-between cursor-pointer active:scale-[0.99]';
+        div.innerHTML = `
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900">${s.tailor_type || 'Tailor'}</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-2 py-0.5 rounded-lg">⭐ ${s.rating || '4.9'}</span>
+            </div>
+            <h4 class="text-lg font-black text-purple-950">${s.shop_name}</h4>
+            <p class="text-xs text-gray-600 font-semibold mt-0.5">👤 ${owner} • 📍 ${s.area} • ${s.experience || '10 yrs'}</p>
+            ${s.address ? `<p class="text-[11px] text-gray-500 mt-1">🏠 ${s.address}</p>` : ''}
+            <p class="text-xs font-bold text-pink-700 my-2.5">✂️ ${s.services}</p>
+          </div>
+          <div class="flex items-center justify-between pt-3 border-t">
+            <span class="text-sm font-black text-purple-950">Starts ${s.price || '₹150'}</span>
+            <span class="bg-pink-600 text-white text-xs font-black px-4 py-2 rounded-xl shadow">Open & Book →</span>
+          </div>
+        `;
+        div.onclick = () => openShop(s);
+        grid.appendChild(div);
+      });
     }
 
-    function drawTailors(list) {
-      const box = document.getElementById('tailorList');
-      document.getElementById('tailorCountLabel').innerText = `🏪 Available Tailors (${list.length})`;
-      box.innerHTML = '';
+    async function loadShops() {
+      renderShops();
+      if (!db) return;
+      const { data } = await db.from('tailors').select('*');
+      if (data && data.length) {
+        shops = [...data.reverse(), ...samples];
+        renderShops();
+      }
+    }
 
-      if (!list.length) {
-        box.innerHTML = '<p class="text-sm text-gray-500 text-center col-span-full py-6 font-semibold">No tailors found matching your search.</p>';
+    function openShop(s) {
+      activeShop = s;
+      document.getElementById('mType').innerText = s.tailor_type || 'Tailor';
+      document.getElementById('mStar').innerText = `⭐ ${s.rating || '4.9'}`;
+      document.getElementById('mName').innerText = s.shop_name;
+      document.getElementById('mSub').innerText = `👤 ${s.full_name || s.owner_name || 'Tailor'} • 📍 ${s.area}`;
+      document.getElementById('mAddr').innerText = s.address ? `🏠 ${s.address}` : '';
+      document.getElementById('mPrice').innerText = s.price || '₹150 onwards';
+      document.getElementById('mHours').innerText = s.hours || 'Open';
+      document.getElementById('mServ').innerText = s.services || '';
+      document.getElementById('shopModal').classList.remove('hidden');
+    }
+
+    function closeShop() {
+      document.getElementById('shopModal').classList.add('hidden');
+    }
+
+    function checkOtherDress() {
+      const isOther = document.getElementById('sbDress').value === 'OTHER';
+      const box = document.getElementById('sbOther');
+      box.classList.toggle('hidden', !isOther);
+      box.required = isOther;
+    }
+
+    document.getElementById('sbForm').onsubmit = async function(e) {
+      e.preventDefault();
+      if (!activeShop) return;
+      const btn = document.getElementById('sbBtn');
+      btn.disabled = true;
+      btn.innerText = 'Booking...';
+
+      const dress = document.getElementById('sbDress').value === 'OTHER'
+        ? document.getElementById('sbOther').value.trim()
+        : document.getElementById('sbDress').value;
+
+      const orderRow = {
+        customer_name: document.getElementById('sbName').value.trim(),
+        customer_phone: cleanPh(document.getElementById('sbPhone').value),
+        area: activeShop.area,
+        dress_type: dress,
+        delivery_speed: document.getElementById('sbSpeed').value,
+        pickup_type: document.getElementById('sbPickup').value,
+        tailor_shop: activeShop.shop_name,
+        tailor_phone: cleanPh(activeShop.phone || activeShop.mobile || ADMIN_PH),
+        notes: document.getElementById('sbNotes').value.trim(),
+        status: 'Pending',
+        bill_amount: 0,
+        commission_amount: 0
+      };
+
+      const { error } = await db.from('orders').insert([orderRow]);
+      btn.disabled = false;
+      btn.innerText = '✅ Book Now';
+
+      if (error) {
+        alert('Error: ' + error.message);
         return;
       }
 
-      list.forEach(t => {
-        const owner = t.full_name || t.owner_name || 'Expert Tailor';
-        const rating = t.rating || '4.9';
-        const startPrice = t.price || '₹150';
-        const isHome = (t.tailor_type || '').toLowerCase().includes('home');
-        const hasUrgent = (t.services || '').toLowerCase().includes('urgent') || (t.services || '').toLowerCase().includes('1hr');
+      this.reset();
+      checkOtherDress();
+      closeShop();
+      alert(`🎉 Booked! Ungal order ${activeShop.shop_name}-ku anuppapatulladhu.`);
+    };
 
-        const card = document.createElement('div');
-        card.className = 'shop-card bg-white p-5 rounded-3xl border-2 border-pink-100 shadow-sm flex flex-col justify-between cursor-pointer';
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-center mb-2 gap-1 flex
+    document.getElementById('rForm').onsubmit = async function(e) {
+      e.preventDefault
