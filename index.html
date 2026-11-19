@@ -32,7 +32,7 @@
     ⚡ 1-HR & 3-HR URGENT DELIVERY • ALL COIMBATORE • ₹0 TAILOR JOINING
   </div>
 
-  <!-- Clean Header (Single Action) -->
+  <!-- Clean Header -->
   <header class="brand-gradient text-white shadow-lg sticky top-0 z-40">
     <div class="max-w-5xl mx-auto px-4 py-3.5 flex justify-between items-center">
       <div class="flex items-center gap-2.5">
@@ -125,7 +125,7 @@
     </h3>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
       <button onclick="quickSelectService('Saree / Designer Blouse')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-pink-200 text-left shadow-sm">
-        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=500&q=80" alt="Saree Blouse" class="w-full h-28 object-cover" />
+        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=500&q=80" alt="Saree Blouse" class="w-full h-28 object-cover bg-pink-100" />
         <div class="p-3 bg-gradient-to-r from-pink-50 to-white">
           <p class="font-extrabold text-sm text-purple-950">👚 Saree Blouse</p>
           <p class="text-[11px] text-pink-600 font-bold">Lining • Bridal • Aari</p>
@@ -133,7 +133,7 @@
       </button>
 
       <button onclick="quickSelectService('Salwar / Churidar / Kurti')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-purple-200 text-left shadow-sm">
-        <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=500&q=80" alt="Chudithar Kurti" class="w-full h-28 object-cover" />
+        <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&w=500" onerror="this.src='https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=500&q=80'" alt="Chudithar Kurti" class="w-full h-28 object-cover bg-purple-100" />
         <div class="p-3 bg-gradient-to-r from-purple-50 to-white">
           <p class="font-extrabold text-sm text-purple-950">👗 Chudithar</p>
           <p class="text-[11px] text-purple-700 font-bold">Salwar • Kurti • Frock</p>
@@ -141,7 +141,7 @@
       </button>
 
       <button onclick="quickSelectService('Men\'s Shirt / Trousers')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-amber-300 text-left shadow-sm">
-        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=500&q=80" alt="Mens Tailoring" class="w-full h-28 object-cover" />
+        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=500&q=80" alt="Mens Tailoring" class="w-full h-28 object-cover bg-amber-100" />
         <div class="p-3 bg-gradient-to-r from-amber-50 to-white">
           <p class="font-extrabold text-sm text-purple-950">👔 Men's Wear</p>
           <p class="text-[11px] text-amber-700 font-bold">Shirt • Pant • Kurta</p>
@@ -149,7 +149,7 @@
       </button>
 
       <button onclick="quickSelectService('Alterations & Repairs')" class="card-glow bg-white rounded-2xl overflow-hidden border-2 border-emerald-200 text-left shadow-sm">
-        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" alt="Alterations" class="w-full h-28 object-cover" />
+        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80" alt="Alterations" class="w-full h-28 object-cover bg-emerald-100" />
         <div class="p-3 bg-gradient-to-r from-emerald-50 to-white">
           <p class="font-extrabold text-sm text-purple-950">✂️ Alterations</p>
           <p class="text-[11px] text-emerald-700 font-bold">1Hr Zip • Fit • Falls</p>
@@ -168,9 +168,7 @@
       <input type="text" id="areaSearchInput" oninput="filterTailors()" placeholder="🔍 Search Area (e.g. Ramanathapuram)" class="border-2 border-purple-300 rounded-xl px-3.5 py-2 text-sm font-bold text-purple-950 bg-purple-50 w-full sm:w-64" />
     </div>
 
-    <div id="tailorsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <p class="text-sm font-bold text-purple-700 col-span-full text-center py-6">Loading tailors...</p>
-    </div>
+    <div id="tailorsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
   </section>
 
   <!-- Customer Quick Booking Card -->
@@ -238,7 +236,6 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input type="tel" id="tPhone" required placeholder="📱 WhatsApp Number *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-          <!-- Direct Type + Autocomplete Area Input (No dropdown blocking!) -->
           <input type="text" id="tArea" list="cbeAreasList" required placeholder="📍 Area Type Pannunga (e.g. RS Puram) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
         </div>
 
@@ -336,7 +333,7 @@
       }
     ];
 
-    let allTailors = [];
+    let allTailors = [...sampleTailors];
 
     function quickSelectService(serviceName) {
       document.getElementById('custService').value = serviceName;
@@ -345,4 +342,4 @@
 
     function quickSelectSpeed(speedLabel) {
       document.getElementById('custSpeed').value = speedLabel;
-      document.getElem
+      document.getElementById('booking-
