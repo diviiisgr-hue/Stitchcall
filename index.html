@@ -145,14 +145,15 @@
       <span class="bg-purple-800 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full">₹0 FREE JOINING</span>
       <h3 class="text-xl font-black text-purple-950 mt-1 mb-3">✂️ Tailor Registration</h3>
       <form id="rForm" class="space-y-3">
-        <input type="text" id="rShop" required placeholder="🏪 Kadai Peyar (Shop Name) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="rOwner" required placeholder="👤 Tailor Peyar (Your Name) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <input type="text" id="rShop" required placeholder="🏪 Kadai / Home Studio Peyar (Shop Name) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <input type="text" id="rOwner" required placeholder="👤 Tailor Full Name *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
         <input type="tel" id="rPhone" required placeholder="📱 WhatsApp Number *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="rArea" list="areas" required placeholder="📍 Area Type Pannunga (e.g. RS Puram) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
         <select id="rType" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold">
           <option value="Tailoring Shop">🏪 Tailoring Shop</option>
           <option value="Home Tailor">🏠 Home Tailor</option>
         </select>
+        <input type="text" id="rArea" list="areas" required placeholder="📍 Area (e.g. Ramanathapuram) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
+        <textarea id="rAddr" rows="2" required placeholder="🏠 Shop / Home Full Address (Door No, Street, Landmark) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2 text-sm w-full bg-white"></textarea>
         <input type="text" id="rExp" required placeholder="⭐ Experience (e.g. 10 yrs) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
         <input type="text" id="rServ" required placeholder="👗 Enna Thaippeenga? (Blouse, Chudithar) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
         <input type="text" id="rHours" required placeholder="⏰ Time (e.g. 9:30 AM - 8:30 PM) *" class="border-2 border-amber-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
@@ -199,8 +200,8 @@
     const db = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 
     let tailors = [
-      { shop_name: "Kovai Classic Ladies Tailors", owner_name: "K. Lakshmi", area: "Ramanathapuram", tailor_type: "Tailoring Shop", services: "Saree Blouse, Aari Work, 1Hr Urgent", experience: "14 yrs", hours: "9:30 AM - 8:30 PM", sample: true },
-      { shop_name: "Home Stitching Studio", owner_name: "S. Revathi", area: "Ramanathapuram", tailor_type: "Home Tailor", services: "Saree Blouse, Chudithar, 1Hr Alterations", experience: "8 yrs", hours: "10:00 AM - 6:30 PM", sample: true }
+      { shop_name: "Kovai Classic Ladies Tailors", full_name: "K. Lakshmi", area: "Ramanathapuram", address: "Trichy Road, Near Signal, Ramanathapuram", tailor_type: "Tailoring Shop", services: "Saree Blouse, Aari Work, 1Hr Urgent", experience: "14 yrs", hours: "9:30 AM - 8:30 PM", sample: true },
+      { shop_name: "Home Stitching Studio", full_name: "S. Revathi", area: "Ramanathapuram", address: "Nanjundapuram Road, Ramanathapuram", tailor_type: "Home Tailor", services: "Saree Blouse, Chudithar, 1Hr Alterations", experience: "8 yrs", hours: "10:00 AM - 6:30 PM", sample: true }
     ];
 
     function setService(v) {
@@ -227,6 +228,7 @@
         return;
       }
       list.forEach(t => {
+        const owner = t.full_name || t.owner_name || 'Tailor';
         const div = document.createElement('div');
         div.className = 'bg-white p-4 rounded-2xl border-2 border-pink-200 shadow-sm flex flex-col justify-between';
         div.innerHTML = `
@@ -236,7 +238,8 @@
               <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${t.sample ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-800'}">${t.sample ? 'SAMPLE' : '✅ VERIFIED'}</span>
             </div>
             <h4 class="font-black text-base text-purple-950">${t.shop_name}</h4>
-            <p class="text-xs text-gray-600 mb-2">👤 ${t.owner_name} • 📍 ${t.area} • ⭐ ${t.experience}</p>
+            <p class="text-xs text-gray-700 font-semibold mb-1">👤 ${owner} • 📍 ${t.area} • ⭐ ${t.experience}</p>
+            ${t.address ? `<p class="text-xs text-gray-500 mb-2">🏠 ${t.address}</p>` : ''}
             <p class="text-xs font-semibold text-pink-700 mb-3">✂️ ${t.services}</p>
           </div>
           <div class="flex justify-between items-center pt-2 border-t">
@@ -251,7 +254,7 @@
 
     function filterList() {
       const q = document.getElementById('searchArea').value.toLowerCase();
-      draw(q ? tailors.filter(t => (t.area || '').toLowerCase().includes(q)) : tailors);
+      draw(q ? tailors.filter(t => (t.area || '').toLowerCase().includes(q) || (t.address || '').toLowerCase().includes(q)) : tailors);
     }
 
     async function fetchTailors() {
@@ -273,11 +276,14 @@
       let serv = document.getElementById('rServ').value.trim();
       if (document.getElementById('rUrgent').checked) serv += ', 1Hr & 3Hr Urgent';
 
+      const ownerName = document.getElementById('rOwner').value.trim();
       const row = {
         shop_name: document.getElementById('rShop').value.trim(),
-        owner_name: document.getElementById('rOwner').value.trim(),
+        full_name: ownerName,
+        owner_name: ownerName,
         phone: document.getElementById('rPhone').value.trim(),
         area: document.getElementById('rArea').value.trim(),
+        address: document.getElementById('rAddr').value.trim(),
         tailor_type: document.getElementById('rType').value,
         services: serv,
         experience: document.getElementById('rExp').value.trim(),
@@ -302,7 +308,7 @@
       btn.innerText = '✅ Accept & Join StitchCall';
       alert('🎉 Success! Unga shop live aayiduchu.');
 
-      const txt = `*New Tailor — StitchCall*%0AShop: ${row.shop_name}%0AName: ${row.owner_name}%0APhone: ${row.phone}%0AArea: ${row.area}%0AServices: ${row.services}%0A10% Commission: YES`;
+      const txt = `*New Tailor — StitchCall*%0AShop: ${row.shop_name}%0AType: ${row.tailor_type}%0AName: ${row.full_name}%0APhone: ${row.phone}%0AArea: ${row.area}%0AAddress: ${row.address}%0AServices: ${row.services}%0A10% Commission: YES`;
       window.open(`https://wa.me/${WA_NUM}?text=${txt}`, '_blank');
     };
 
@@ -315,5 +321,4 @@
     fetchTailors();
   </script>
 </body>
-          </html>
-          
+</html>
