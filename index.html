@@ -59,7 +59,7 @@
       </a>
     </section>
 
-    <!-- Tailor Shops Direct Feed (Only Shops With Zero Unpaid Commission Shown) -->
+    <!-- Tailor Shops Direct Feed -->
     <section class="space-y-3">
       <div class="flex items-center justify-between bg-white/80 backdrop-blur px-4 py-2.5 rounded-2xl border border-purple-200 shadow-sm">
         <h3 id="shopHeading" class="text-base sm:text-lg font-black text-indigo-950">🏪 Tailor Shops in Coimbatore</h3>
@@ -192,20 +192,25 @@
             <option value="🚀 3 Hours Urgent" data-extra="50">🚀 3 Hours Urgent (+₹50 Urgent Fee)</option>
             <option value="📅 Normal Delivery" data-extra="0" selected>📅 Normal Delivery (2–3 Days) — Standard Rate</option>
           </select>
-          <select id="sbPickup" class="border-2 border-blue-200 rounded-xl px-3 py-2 text-sm w-full bg-blue-50/50 font-bold text-blue-950">
-            <option value="Home Pickup & Delivery">🛵 Home Pickup & Delivery</option>
-            <option value="Direct Shop Visit">🏪 Direct Shop Visit</option>
+
+          <!-- SHORT PICKUP / DROP OPTION -->
+          <select id="sbPickup" class="border-2 border-blue-300 rounded-xl px-3 py-2 text-xs sm:text-sm w-full bg-blue-50/70 font-bold text-blue-950">
+            <option value="Rapido / Porter Bike Delivery (Customer Pays)">🛵 Rapido / Porter Delivery (Customer Pays)</option>
+            <option value="Direct Shop Drop & Pickup">🏪 Direct Shop-la Vanthu Koduthu Vaangikalam</option>
           </select>
+          <p class="text-[11px] text-blue-900 font-semibold px-1">
+            ℹ️ Pickup & Drop-ku <strong>Rapido / Porter</strong> use pannikalam (delivery charge customer pay pannanum), illati direct shop-la vanthu vaangikalam.
+          </p>
 
           <div class="bg-gradient-to-r from-yellow-100 to-pink-100 border-2 border-pink-400 rounded-2xl p-3 flex justify-between items-center">
             <div>
               <p class="text-[11px] font-bold text-gray-600">Estimated Stitching Charge</p>
-              <p class="text-[10px] text-gray-500">As per shop rate card</p>
+              <p class="text-[10px] text-gray-500">Delivery charge separate (if Rapido/Porter)</p>
             </div>
             <div id="liveEstPrice" class="text-xl font-black text-pink-700">₹0</div>
           </div>
 
-          <textarea id="sbNotes" rows="2" placeholder="✍️ Design notes / Pickup address (Optional)" class="border-2 border-purple-200 rounded-xl px-3 py-2 text-sm w-full bg-white"></textarea>
+          <textarea id="sbNotes" rows="2" placeholder="✍️ Design notes / Sample dress details (Optional)" class="border-2 border-purple-200 rounded-xl px-3 py-2 text-sm w-full bg-white"></textarea>
 
           <button type="submit" id="sbBtn" class="w-full vivid-btn text-white font-black py-3.5 rounded-2xl shadow-lg text-sm">
             ✅ Confirm & Book Now
@@ -247,7 +252,6 @@
             </div>
           </div>
 
-          <!-- AUTOMATIC COMMISSION LOCK WARNING FOR TAILORS -->
           <div id="tailorLockBanner" class="hidden bg-red-100 border-2 border-red-600 text-red-950 p-4 rounded-2xl space-y-1">
             <p class="text-xs font-black">🔒 NEW ORDERS PAUSED — PENDING COMMISSION PAYMENT</p>
             <p class="text-[11px] font-semibold">Ungal mudinja order-kaana 10% StitchCall commission pay pannina udane, unga shop automatically unlock aagi next order varum!</p>
@@ -272,7 +276,6 @@
             </div>
           </div>
 
-          <!-- ADMIN ONLY: MANAGE SHOPS -->
           <div id="adminShopManager" class="hidden bg-white border-2 border-pink-300 rounded-2xl overflow-hidden shadow-sm">
             <div class="bg-pink-700 text-white px-4 py-2.5 flex justify-between items-center">
               <h4 class="text-xs font-black">🛡️ Tailor Shops Status (Auto-Locked if Unpaid Commission)</h4>
@@ -281,7 +284,6 @@
             <div id="adminShopsList" class="divide-y divide-gray-100 max-h-60 overflow-y-auto"></div>
           </div>
 
-          <!-- ADMIN ONLY: SHOP-WISE EARNINGS & COMMISSION -->
           <div id="adminShopBreakdown" class="hidden bg-white border-2 border-indigo-200 rounded-2xl overflow-hidden shadow-sm">
             <div class="bg-indigo-900 text-white px-4 py-2.5 flex justify-between items-center">
               <h4 class="text-xs font-black">🏪 Shop-wise Earnings & Commission Report</h4>
@@ -333,7 +335,7 @@
     const SB_URL = 'https://rmfcnxxtzkatlxvkoptc.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtZmNueHh0emthdGx4dmtvcHRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjU4NjcsImV4cCI6MjEwODY0MTg2N30.0QfPa91_8nD7xvbiPNCMp7FS8xQjQKHJBym69q06J_0';
     const ADMIN_PH = '7373969064';
-    const ADMIN_UPI = '7373969064@ybl'; // Unga UPI ID-ai inga maathikkalam
+    const ADMIN_UPI = '7373969064@ybl';
     const db = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 
     let allDbShops = [];
@@ -370,7 +372,6 @@
     }
 
     function renderPublicShops() {
-      // Hide shops manually held by admin OR having unpaid commission from previous completed order
       const visibleShops = allDbShops.filter(s => {
         if (s.is_active === false) return false;
         if (hasUnpaidCommission(s.phone || s.mobile)) return false;
@@ -521,7 +522,7 @@
       updateLivePrice();
       closeShop();
       await loadInitialData();
-      alert(`🎉 Booked with ${activeShop.shop_name}! Charge: ₹${currentEstAmount}`);
+      alert(`🎉 Booked with ${activeShop.shop_name}!\nCharge: ₹${currentEstAmount}\n(Rapido/Porter delivery charges customer pay pannanum, illati direct shop-la vaangikalam)`);
     };
 
     document.getElementById('rForm').onsubmit = async function(e) {
@@ -652,7 +653,6 @@
       document.getElementById('dashBody').classList.remove('hidden');
       document.getElementById('roleLabel').innerText = isAdmin ? '👑 STITCHCALL OWNER ADMIN' : `✂️ Shop Login (${loggedPh})`;
 
-      // Show Lock Banner to Tailor if any completed order has Unpaid Commission OR shop is held
       const lockBanner = document.getElementById('tailorLockBanner');
       if (!isAdmin) {
         const myShop = allDbShops.find(s => cleanPh(s.phone || s.mobile) === loggedPh);
