@@ -13,22 +13,11 @@
       color: #1E1B4B;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    .vivid-header {
-      background: linear-gradient(135deg, #312E81 0%, #701A75 50%, #DB2777 100%);
-    }
-    .vivid-banner {
-      background: linear-gradient(120deg, #4338CA 0%, #A21CAF 50%, #E11D48 100%);
-    }
-    .vivid-btn {
-      background: linear-gradient(90deg, #DB2777 0%, #7C3AED 50%, #2563EB 100%);
-    }
-    .shop-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .shop-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 28px -6px rgba(124, 58, 237, 0.25);
-    }
+    .vivid-header { background: linear-gradient(135deg, #312E81 0%, #701A75 50%, #DB2777 100%); }
+    .vivid-banner { background: linear-gradient(120deg, #4338CA 0%, #A21CAF 50%, #E11D48 100%); }
+    .vivid-btn { background: linear-gradient(90deg, #DB2777 0%, #7C3AED 50%, #2563EB 100%); }
+    .shop-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .shop-card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -6px rgba(124, 58, 237, 0.25); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -38,7 +27,7 @@
     ⚡ 1-HR & 3-HR EXPRESS STITCHING • COIMBATORE • ₹0 TAILOR JOINING
   </div>
 
-  <!-- Clean Vivid Header (Only StitchCall & Login) -->
+  <!-- Clean Vivid Header -->
   <header class="vivid-header text-white shadow-xl sticky top-0 z-40">
     <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-2.5">
@@ -58,7 +47,7 @@
 
   <main class="max-w-4xl mx-auto px-4 py-5 space-y-6 w-full">
 
-    <!-- Colorful Join as a Tailor Banner -->
+    <!-- Join as a Tailor Banner -->
     <section class="vivid-banner text-white p-5 rounded-3xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 border-2 border-pink-300/40">
       <div>
         <span class="bg-yellow-300 text-indigo-950 text-[10px] font-black px-3 py-0.5 rounded-full shadow-sm">₹0 FREE JOINING</span>
@@ -74,29 +63,83 @@
     <section class="space-y-3">
       <div class="flex items-center justify-between bg-white/80 backdrop-blur px-4 py-2.5 rounded-2xl border border-purple-200 shadow-sm">
         <h3 id="shopHeading" class="text-base sm:text-lg font-black text-indigo-950">🏪 Tailor Shops in Coimbatore</h3>
-        <span class="text-xs bg-pink-100 text-pink-700 font-extrabold px-2.5 py-1 rounded-full">Tap shop to book</span>
+        <span class="text-xs bg-pink-100 text-pink-700 font-extrabold px-2.5 py-1 rounded-full">Tap shop to see rate card & book</span>
       </div>
       <div id="shopsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- Colorful Tailor Registration Section -->
+    <!-- Tailor Registration Section WITH MANDATORY DRESS RATE CARD -->
     <section id="reg-sec" class="bg-gradient-to-br from-yellow-100 via-pink-50 to-purple-100 p-6 rounded-3xl shadow-lg border-2 border-pink-400">
       <span class="bg-indigo-900 text-yellow-300 text-[10px] font-black px-3 py-0.5 rounded-full">₹0 FREE PARTNER JOINING</span>
       <h3 class="text-xl font-black text-indigo-950 mt-1.5 mb-3">✂️ Join as a Tailor</h3>
+
       <form id="rForm" class="space-y-3">
-        <input type="text" id="rShop" required placeholder="🏪 Shop / Home Studio Name *" class="border-2 border-purple-300 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="rOwner" required placeholder="👤 Tailor Full Name *" class="border-2 border-purple-300 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="tel" id="rPhone" required placeholder="📱 WhatsApp Number (Used for Login) *" class="border-2 border-purple-300 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <select id="rType" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-bold text-indigo-950">
-          <option value="Tailoring Shop">🏪 Tailoring Shop</option>
-          <option value="Home Tailor">🏠 Home Tailor</option>
-        </select>
-        <input type="text" id="rArea" list="areas" required placeholder="📍 Area (e.g. Ramanathapuram) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
-        <input type="text" id="rPrice" required placeholder="💰 Starting Price (e.g. ₹150) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
-        <textarea id="rAddr" rows="2" required placeholder="🏠 Full Address (Door No, Street, Landmark) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2 text-sm w-full bg-white"></textarea>
-        <input type="text" id="rExp" required placeholder="⭐ Experience (e.g. 10 yrs) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input type="text" id="rShop" required placeholder="🏪 Shop / Home Studio Name *" class="border-2 border-purple-300 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+          <input type="text" id="rOwner" required placeholder="👤 Tailor Full Name *" class="border-2 border-purple-300 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input type="tel" id="rPhone" required placeholder="📱 WhatsApp Number (Used for Login) *" class="border-2 border-purple-300 focus:border-pink-500 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+          <select id="rType" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-bold text-indigo-950">
+            <option value="Tailoring Shop">🏪 Tailoring Shop</option>
+            <option value="Home Tailor">🏠 Home Tailor</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input type="text" id="rArea" list="areas" required placeholder="📍 Area (e.g. Ramanathapuram) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white font-semibold" />
+          <input type="text" id="rExp" required placeholder="⭐ Experience (e.g. 10 yrs) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        </div>
         <input type="text" id="rHours" required placeholder="⏰ Working Hours (e.g. 9 AM - 9 PM) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
-        <input type="text" id="rServ" required placeholder="👗 Services (Blouse, Chudithar, Shirt, Pant) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2.5 text-sm w-full bg-white" />
+        <textarea id="rAddr" rows="2" required placeholder="🏠 Full Address (Door No, Street, Landmark) *" class="border-2 border-purple-300 rounded-xl px-3.5 py-2 text-sm w-full bg-white"></textarea>
+
+        <!-- MANDATORY RATE CARD BOX -->
+        <div class="bg-white p-4 rounded-2xl border-2 border-indigo-300 space-y-3 shadow-sm">
+          <div>
+            <h4 class="text-sm font-black text-indigo-950">💰 Dress Stitching Charges (Rate Card) *</h4>
+            <p class="text-[11px] text-gray-500 font-semibold">Neenga thaikkira dress designs-ku mattum price (₹) enter pannunga (Minimum 1 dress price compulsory):</p>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+            <div class="bg-pink-50/70 p-2 rounded-xl border border-pink-200">
+              <label class="font-bold text-indigo-950 block mb-1">👚 Normal Blouse</label>
+              <input type="number" id="rate_blouse" placeholder="₹ e.g. 180" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-pink-50/70 p-2 rounded-xl border border-pink-200">
+              <label class="font-bold text-indigo-950 block mb-1">👚 Lining Blouse</label>
+              <input type="number" id="rate_lining" placeholder="₹ e.g. 300" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-pink-50/70 p-2 rounded-xl border border-pink-200">
+              <label class="font-bold text-indigo-950 block mb-1">👰 Bridal / Aari</label>
+              <input type="number" id="rate_aari" placeholder="₹ e.g. 850" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-purple-50/70 p-2 rounded-xl border border-purple-200">
+              <label class="font-bold text-indigo-950 block mb-1">👗 Chudithar Set</label>
+              <input type="number" id="rate_chudi" placeholder="₹ e.g. 350" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-purple-50/70 p-2 rounded-xl border border-purple-200">
+              <label class="font-bold text-indigo-950 block mb-1">👘 Kurti Top</label>
+              <input type="number" id="rate_kurti" placeholder="₹ e.g. 220" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-purple-50/70 p-2 rounded-xl border border-purple-200">
+              <label class="font-bold text-indigo-950 block mb-1">👖 Salwar / Pant</label>
+              <input type="number" id="rate_salwar" placeholder="₹ e.g. 180" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-blue-50/70 p-2 rounded-xl border border-blue-200">
+              <label class="font-bold text-indigo-950 block mb-1">👔 Men's Shirt</label>
+              <input type="number" id="rate_shirt" placeholder="₹ e.g. 280" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-blue-50/70 p-2 rounded-xl border border-blue-200">
+              <label class="font-bold text-indigo-950 block mb-1">👖 Men's Pant</label>
+              <input type="number" id="rate_pant" placeholder="₹ e.g. 350" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+            <div class="bg-emerald-50/70 p-2 rounded-xl border border-emerald-200">
+              <label class="font-bold text-indigo-950 block mb-1">✂️ Alterations / Falls</label>
+              <input type="number" id="rate_alt" placeholder="₹ e.g. 100" class="rate-input border border-purple-300 rounded-lg px-2.5 py-1.5 w-full bg-white font-bold" />
+            </div>
+          </div>
+
+          <input type="text" id="rExtraDesigns" placeholder="✍️ Extra Designs & Charges (Optional, e.g. Pattu Pavadai ₹300, Lehenga ₹750)" class="border border-purple-300 rounded-xl px-3 py-2 text-xs w-full bg-purple-50/30" />
+        </div>
 
         <label class="bg-blue-50 p-3 rounded-xl border border-blue-300 flex items-center gap-2 text-xs font-extrabold text-blue-950">
           <input type="checkbox" id="rUrgent" checked class="w-4 h-4 accent-pink-600" />
@@ -116,7 +159,7 @@
 
   </main>
 
-  <!-- SHOP DETAIL & IN-SHOP BOOKING MODAL -->
+  <!-- SHOP DETAIL & IN-SHOP BOOKING MODAL WITH SHOP'S OWN RATE CARD -->
   <div id="shopModal" class="hidden fixed inset-0 bg-indigo-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 overflow-y-auto">
     <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col border-2 border-pink-300">
       <div class="vivid-header text-white p-5 relative">
@@ -129,55 +172,67 @@
       </div>
 
       <div class="p-5 overflow-y-auto space-y-4 bg-gradient-to-b from-pink-50/40 to-blue-50/40">
-        <div class="bg-white p-3.5 rounded-2xl border-2 border-purple-200 space-y-1 text-xs shadow-sm">
-          <p class="font-extrabold text-indigo-950">💰 Price: <span id="mPrice" class="text-pink-600"></span> • ⏰ <span id="mHours" class="text-blue-700"></span></p>
-          <p class="text-gray-700">✂️ <strong>Services:</strong> <span id="mServ"></span></p>
+        <!-- Tailor's Exact Rate Card Display -->
+        <div class="bg-white p-3.5 rounded-2xl border-2 border-purple-200 space-y-2 text-xs shadow-sm">
+          <div class="flex justify-between items-center border-b pb-1.5">
+            <span class="font-black text-indigo-950">📋 Shop Stitching Rate Card</span>
+            <span class="text-blue-700 font-bold">⏰ <span id="mHours"></span></span>
+          </div>
+          <div id="mRateBadges" class="flex flex-wrap gap-1.5"></div>
+          <p id="mExtraNote" class="text-[11px] text-purple-800 font-bold"></p>
         </div>
 
         <form id="sbForm" class="space-y-2.5">
           <h4 class="font-black text-sm text-indigo-950">👗 Book This Tailor</h4>
           <input type="text" id="sbName" required placeholder="👤 Your Name *" class="border-2 border-purple-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-white" />
           <input type="tel" id="sbPhone" required placeholder="📱 Your WhatsApp Number *" class="border-2 border-purple-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-white" />
-          <select id="sbDress" onchange="checkOtherDress()" class="border-2 border-purple-200 rounded-xl px-3 py-2 text-sm w-full bg-white font-bold text-indigo-950">
-            <option value="Saree Blouse (Normal)">👚 Saree Blouse (Normal)</option>
-            <option value="Lining Blouse">👚 Lining Blouse</option>
-            <option value="Bridal / Aari Blouse">👰 Bridal / Aari Blouse</option>
-            <option value="Chudithar Full Set">👗 Chudithar Full Set</option>
-            <option value="Kurti Top">👘 Kurti Top</option>
-            <option value="Salwar / Pant Only">👖 Salwar / Pant Only</option>
-            <option value="Mens Shirt">👔 Men's Shirt</option>
-            <option value="Mens Pant / Trousers">👖 Men's Pant / Trousers</option>
-            <option value="Pattu Pavadai / Kids">🧒 Pattu Pavadai / Kids</option>
-            <option value="Saree Falls & Pico">🪡 Saree Falls & Pico</option>
-            <option value="Alterations / Fitting">✂️ Alterations / Fitting</option>
-            <option value="OTHER">✍️ Other (Type Dress Name)</option>
+
+          <!-- Dynamic Dress Options From This Tailor's Rate Card -->
+          <select id="sbDress" onchange="updateLivePrice()" class="border-2 border-purple-200 rounded-xl px-3 py-2 text-sm w-full bg-white font-bold text-indigo-950"></select>
+
+          <input type="text" id="sbOther" placeholder="✍️ Type Custom Dress Name *" class="hidden border-2 border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-pink-50" />
+
+          <select id="sbSpeed" onchange="updateLivePrice()" class="border-2 border-pink-400 rounded-xl px-3 py-2 text-sm w-full bg-pink-50 text-pink-900 font-extrabold">
+            <option value="⚡ 1 Hour Express" data-extra="100">⚡ 1 Hour Express (+₹100 Urgent Fee)</option>
+            <option value="🚀 3 Hours Urgent" data-extra="50">🚀 3 Hours Urgent (+₹50 Urgent Fee)</option>
+            <option value="📅 Normal Delivery" data-extra="0" selected>📅 Normal Delivery (2–3 Days) — Standard Rate</option>
           </select>
-          <input type="text" id="sbOther" placeholder="✍️ Type Dress Name *" class="hidden border-2 border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-pink-50" />
-          <select id="sbSpeed" class="border-2 border-pink-400 rounded-xl px-3 py-2 text-sm w-full bg-pink-50 text-pink-900 font-extrabold">
-            <option value="⚡ 1 Hour Express">⚡ 1 Hour Express</option>
-            <option value="🚀 3 Hours Urgent">🚀 3 Hours Urgent</option>
-            <option value="📅 Normal Delivery" selected>📅 Normal Delivery (2–3 Days)</option>
-          </select>
+
           <select id="sbPickup" class="border-2 border-blue-200 rounded-xl px-3 py-2 text-sm w-full bg-blue-50/50 font-bold text-blue-950">
             <option value="Home Pickup & Delivery">🛵 Home Pickup & Delivery</option>
             <option value="Direct Shop Visit">🏪 Direct Shop Visit</option>
           </select>
+
+          <!-- LIVE ESTIMATED PRICE DISPLAY -->
+          <div class="bg-gradient-to-r from-yellow-100 to-pink-100 border-2 border-pink-400 rounded-2xl p-3 flex justify-between items-center">
+            <div>
+              <p class="text-[11px] font-bold text-gray-600">Estimated Stitching Charge</p>
+              <p class="text-[10px] text-gray-500">As per shop rate card</p>
+            </div>
+            <div id="liveEstPrice" class="text-xl font-black text-pink-700">₹0</div>
+          </div>
+
           <textarea id="sbNotes" rows="2" placeholder="✍️ Design notes / Pickup address (Optional)" class="border-2 border-purple-200 rounded-xl px-3 py-2 text-sm w-full bg-white"></textarea>
+
           <button type="submit" id="sbBtn" class="w-full vivid-btn text-white font-black py-3.5 rounded-2xl shadow-lg text-sm">
-            ✅ Book Now
+            ✅ Confirm & Book Now
           </button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- PARTNER & OWNER DASHBOARD MODAL -->
+  <!-- PARTNER & STITCHCALL OWNER DASHBOARD MODAL -->
   <div id="dashModal" class="hidden fixed inset-0 bg-indigo-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 overflow-y-auto">
-    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col border-2 border-purple-300">
+    <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col border-2 border-purple-300">
       <div class="vivid-header text-white px-5 py-4 flex justify-between items-center">
-        <h3 class="font-black text-base">🔐 Partner & Owner Dashboard</h3>
+        <div>
+          <h3 class="font-black text-base">🔐 StitchCall Partner & Admin Dashboard</h3>
+          <p class="text-[11px] text-yellow-200">Monthly Shop-wise Orders, Earnings & Commission</p>
+        </div>
         <button type="button" onclick="closeDash()" class="bg-white/25 px-3 py-1 rounded-xl font-black text-xs">✕ Close</button>
       </div>
+
       <div class="p-5 overflow-y-auto space-y-4">
         <div id="loginBox" class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-2xl border-2 border-purple-200 space-y-2.5">
           <p class="text-xs font-extrabold text-indigo-950">Enter registered WhatsApp number:</p>
@@ -186,17 +241,60 @@
             <button type="button" onclick="doLogin()" class="vivid-btn text-white font-black px-5 py-2 rounded-xl text-sm">Open</button>
           </div>
         </div>
+
         <div id="dashBody" class="hidden space-y-4">
-          <div class="flex justify-between items-center bg-indigo-50 px-3.5 py-2 rounded-xl border border-indigo-200">
+          <div class="flex flex-wrap justify-between items-center gap-2 bg-indigo-50 px-3.5 py-2.5 rounded-xl border border-indigo-200">
             <span id="roleLabel" class="text-xs font-black text-indigo-950"></span>
-            <button type="button" onclick="doLogout()" class="text-xs text-pink-600 font-extrabold underline">Logout</button>
+            <div class="flex items-center gap-2">
+              <select id="monthFilter" onchange="refreshDash()" class="border border-purple-300 rounded-lg px-2 py-1 text-xs font-bold bg-white text-indigo-950">
+                <option value="THIS_MONTH">📅 This Month</option>
+                <option value="ALL">📊 All Time</option>
+              </select>
+              <button type="button" onclick="doLogout()" class="text-xs text-pink-600 font-extrabold underline">Logout</button>
+            </div>
           </div>
+
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-            <div class="bg-pink-100 p-2.5 rounded-xl border border-pink-300"><p class="text-[10px] font-extrabold text-pink-900">Total</p><p id="sTot" class="text-lg font-black text-pink-950">0</p></div>
-            <div class="bg-yellow-100 p-2.5 rounded-xl border border-yellow-300"><p class="text-[10px] font-extrabold text-yellow-900">Accepted</p><p id="sAcc" class="text-lg font-black text-yellow-950">0</p></div>
-            <div class="bg-emerald-100 p-2.5 rounded-xl border border-emerald-300"><p class="text-[10px] font-extrabold text-emerald-900">Completed</p><p id="sCom" class="text-lg font-black text-emerald-950">0</p></div>
-            <div class="bg-blue-100 p-2.5 rounded-xl border border-blue-300"><p class="text-[10px] font-extrabold text-blue-900">10% Comm</p><p id="sFee" class="text-lg font-black text-blue-950">₹0</p></div>
+            <div class="bg-pink-100 p-3 rounded-xl border border-pink-300">
+              <p class="text-[10px] font-extrabold text-pink-900">Total Orders</p>
+              <p id="sTot" class="text-lg font-black text-pink-950">0</p>
+            </div>
+            <div class="bg-emerald-100 p-3 rounded-xl border border-emerald-300">
+              <p class="text-[10px] font-extrabold text-emerald-900">Completed</p>
+              <p id="sCom" class="text-lg font-black text-emerald-950">0</p>
+            </div>
+            <div class="bg-yellow-100 p-3 rounded-xl border border-yellow-300">
+              <p class="text-[10px] font-extrabold text-yellow-900">Total Shop Billing</p>
+              <p id="sBill" class="text-lg font-black text-yellow-950">₹0</p>
+            </div>
+            <div class="bg-blue-100 p-3 rounded-xl border border-blue-300">
+              <p class="text-[10px] font-extrabold text-blue-900">StitchCall 10% Comm</p>
+              <p id="sFee" class="text-lg font-black text-blue-950">₹0</p>
+            </div>
           </div>
+
+          <div id="adminShopBreakdown" class="hidden bg-white border-2 border-indigo-200 rounded-2xl overflow-hidden shadow-sm">
+            <div class="bg-indigo-900 text-white px-4 py-2.5 flex justify-between items-center">
+              <h4 class="text-xs font-black">🏪 Shop-wise Monthly Earnings & Commission Report</h4>
+              <span class="text-[10px] text-yellow-300 font-bold">Owner View</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-indigo-50 text-indigo-950 font-black border-b">
+                  <tr>
+                    <th class="p-2.5">Shop Name</th>
+                    <th class="p-2.5 text-center">Orders</th>
+                    <th class="p-2.5 text-center">Done</th>
+                    <th class="p-2.5 text-right">Shop Total</th>
+                    <th class="p-2.5 text-right text-pink-700">10% Comm</th>
+                  </tr>
+                </thead>
+                <tbody id="shopSummaryBody" class="divide-y divide-gray-100"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <h4 class="text-xs font-black text-indigo-950 pt-1">📋 Order Details</h4>
           <div id="ordersList" class="space-y-3"></div>
         </div>
       </div>
@@ -229,15 +327,69 @@
     const db = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 
     const samples = [
-      { shop_name: "Kovai Classic Ladies Tailors", full_name: "K. Lakshmi", phone: "7373969064", area: "Ramanathapuram", address: "Trichy Road, Near Signal, Ramanathapuram", tailor_type: "Tailoring Shop", services: "Saree Blouse, Bridal & Aari Work, 1Hr & 3Hr Urgent", experience: "14 yrs", hours: "9:30 AM - 8:30 PM", rating: "4.9", price: "₹180" },
-      { shop_name: "Home Stitching Studio", full_name: "S. Revathi", phone: "7373969064", area: "RS Puram", address: "DB Road Cross, RS Puram, Coimbatore", tailor_type: "Home Tailor", services: "Saree Blouse, Chudithar, 1Hr Alterations", experience: "8 yrs", hours: "10:00 AM - 6:30 PM", rating: "4.8", price: "₹150" }
+      {
+        shop_name: "Kovai Classic Ladies Tailors",
+        full_name: "K. Lakshmi",
+        phone: "7373969064",
+        area: "Ramanathapuram",
+        address: "Trichy Road, Near Signal, Ramanathapuram",
+        tailor_type: "Tailoring Shop",
+        services: "Normal Blouse ₹180, Lining Blouse ₹300, Bridal/Aari ₹850",
+        experience: "14 yrs",
+        hours: "9:30 AM - 8:30 PM",
+        rating: "4.9",
+        price: "₹180",
+        rate_card: {
+          "Normal Blouse": 180,
+          "Lining Blouse": 300,
+          "Bridal / Aari Blouse": 850,
+          "Chudithar Set": 380,
+          "Alterations / Falls": 100
+        }
+      },
+      {
+        shop_name: "Home Stitching Studio",
+        full_name: "S. Revathi",
+        phone: "7373969064",
+        area: "RS Puram",
+        address: "DB Road Cross, RS Puram, Coimbatore",
+        tailor_type: "Home Tailor",
+        services: "Normal Blouse ₹150, Chudithar ₹320, Kurti ₹200",
+        experience: "8 yrs",
+        hours: "10:00 AM - 6:30 PM",
+        rating: "4.8",
+        price: "₹150",
+        rate_card: {
+          "Normal Blouse": 150,
+          "Lining Blouse": 260,
+          "Chudithar Set": 320,
+          "Kurti Top": 200,
+          "Salwar / Pant": 160
+        }
+      }
     ];
 
     let shops = [...samples];
     let activeShop = null;
     let loggedPh = '';
+    let currentEstAmount = 0;
 
     const cleanPh = p => (p || '').replace(/\D/g, '').slice(-10);
+
+    function getShopRateList(s) {
+      if (s.rate_card && typeof s.rate_card === 'object' && Object.keys(s.rate_card).length > 0) {
+        return s.rate_card;
+      }
+      return {
+        "Normal Blouse": 180,
+        "Lining Blouse": 300,
+        "Chudithar Set": 350,
+        "Kurti Top": 220,
+        "Men's Shirt": 280,
+        "Men's Pant": 350,
+        "Alterations / Falls": 100
+      };
+    }
 
     function renderShops() {
       const grid = document.getElementById('shopsGrid');
@@ -247,6 +399,14 @@
       shops.forEach((s, idx) => {
         const owner = s.full_name || s.owner_name || 'Expert Tailor';
         const isEven = idx % 2 === 0;
+        const rates = getShopRateList(s);
+        const rateValues = Object.values(rates).map(Number).filter(n => n > 0);
+        const minPrice = rateValues.length ? '₹' + Math.min(...rateValues) : (s.price || '₹150');
+
+        const rateTags = Object.entries(rates).slice(0, 4).map(([k, v]) =>
+          `<span class="text-[11px] font-bold bg-purple-50 text-indigo-900 border border-purple-200 px-2 py-0.5 rounded-lg">${k}: ₹${v}</span>`
+        ).join('');
+
         const div = document.createElement('div');
         div.className = `shop-card bg-white p-5 rounded-3xl border-2 ${isEven ? 'border-pink-300' : 'border-blue-300'} shadow-md flex flex-col justify-between cursor-pointer`;
         div.innerHTML = `
@@ -258,11 +418,11 @@
             <h4 class="text-lg font-black text-indigo-950">${s.shop_name}</h4>
             <p class="text-xs text-gray-600 font-bold mt-0.5">👤 ${owner} • 📍 ${s.area} • ${s.experience || '10 yrs'}</p>
             ${s.address ? `<p class="text-[11px] text-gray-500 mt-1">🏠 ${s.address}</p>` : ''}
-            <p class="text-xs font-extrabold text-purple-700 my-2.5">✂️ ${s.services}</p>
+            <div class="flex flex-wrap gap-1.5 my-3">${rateTags}</div>
           </div>
           <div class="flex items-center justify-between pt-3 border-t border-purple-100">
-            <span class="text-sm font-black text-indigo-950">Starts <span class="text-pink-600">${s.price || '₹150'}</span></span>
-            <span class="vivid-btn text-white text-xs font-black px-4 py-2 rounded-xl shadow">Open & Book →</span>
+            <span class="text-sm font-black text-indigo-950">Starts <span class="text-pink-600">${minPrice}</span></span>
+            <span class="vivid-btn text-white text-xs font-black px-4 py-2 rounded-xl shadow">View Rates & Book →</span>
           </div>
         `;
         div.onclick = () => openShop(s);
@@ -287,9 +447,26 @@
       document.getElementById('mName').innerText = s.shop_name;
       document.getElementById('mSub').innerText = `👤 ${s.full_name || s.owner_name || 'Tailor'} • 📍 ${s.area}`;
       document.getElementById('mAddr').innerText = s.address ? `🏠 ${s.address}` : '';
-      document.getElementById('mPrice').innerText = s.price || '₹150 onwards';
       document.getElementById('mHours').innerText = s.hours || 'Open';
-      document.getElementById('mServ').innerText = s.services || '';
+
+      const rates = getShopRateList(s);
+      const badgeBox = document.getElementById('mRateBadges');
+      const dressSel = document.getElementById('sbDress');
+
+      badgeBox.innerHTML = '';
+      dressSel.innerHTML = '';
+
+      Object.entries(rates).forEach(([dressName, price]) => {
+        badgeBox.innerHTML += `<span class="bg-pink-50 border border-pink-200 text-indigo-950 font-bold px-2.5 py-1 rounded-lg">${dressName}: <strong class="text-pink-700">₹${price}</strong></span>`;
+        dressSel.innerHTML += `<option value="${dressName}" data-price="${price}">👗 ${dressName} — ₹${price}</option>`;
+      });
+
+      dressSel.innerHTML += `<option value="OTHER" data-price="250">✍️ Other Custom Design (Starts ₹250)</option>`;
+
+      const extraNote = (s.services || '').includes('Extra:') ? s.services.split('Extra:')[1] : '';
+      document.getElementById('mExtraNote').innerText = extraNote ? `✨ Special Designs: ${extraNote}` : '';
+
+      updateLivePrice();
       document.getElementById('shopModal').classList.remove('hidden');
     }
 
@@ -297,11 +474,20 @@
       document.getElementById('shopModal').classList.add('hidden');
     }
 
-    function checkOtherDress() {
-      const isOther = document.getElementById('sbDress').value === 'OTHER';
+    function updateLivePrice() {
+      const dressSel = document.getElementById('sbDress');
+      const isOther = dressSel.value === 'OTHER';
       const box = document.getElementById('sbOther');
       box.classList.toggle('hidden', !isOther);
       box.required = isOther;
+
+      const selectedOpt = dressSel.options[dressSel.selectedIndex];
+      const basePrice = Number(selectedOpt ? selectedOpt.getAttribute('data-price') : 180);
+      const speedSel = document.getElementById('sbSpeed');
+      const extraFee = Number(speedSel.options[speedSel.selectedIndex].getAttribute('data-extra') || 0);
+
+      currentEstAmount = basePrice + extraFee;
+      document.getElementById('liveEstPrice').innerText = '₹' + currentEstAmount;
     }
 
     document.getElementById('sbForm').onsubmit = async function(e) {
@@ -319,20 +505,20 @@
         customer_name: document.getElementById('sbName').value.trim(),
         customer_phone: cleanPh(document.getElementById('sbPhone').value),
         area: activeShop.area,
-        dress_type: dress,
+        dress_type: `${dress} (₹${currentEstAmount})`,
         delivery_speed: document.getElementById('sbSpeed').value,
         pickup_type: document.getElementById('sbPickup').value,
         tailor_shop: activeShop.shop_name,
         tailor_phone: cleanPh(activeShop.phone || activeShop.mobile || ADMIN_PH),
         notes: document.getElementById('sbNotes').value.trim(),
         status: 'Pending',
-        bill_amount: 0,
-        commission_amount: 0
+        bill_amount: currentEstAmount,
+        commission_amount: Math.round(currentEstAmount * 0.1)
       };
 
       const { error } = await db.from('orders').insert([orderRow]);
       btn.disabled = false;
-      btn.innerText = '✅ Book Now';
+      btn.innerText = '✅ Confirm & Book Now';
 
       if (error) {
         alert('Error: ' + error.message);
@@ -340,23 +526,54 @@
       }
 
       this.reset();
-      checkOtherDress();
+      updateLivePrice();
       closeShop();
-      alert(`🎉 Booked! Ungal order ${activeShop.shop_name}-ku anuppapatulladhu.`);
+      alert(`🎉 Booked with ${activeShop.shop_name}! Charge: ₹${currentEstAmount}`);
     };
 
+    // TAILOR REGISTRATION WITH MANDATORY RATE CARD VALIDATION
     document.getElementById('rForm').onsubmit = async function(e) {
       e.preventDefault();
+
+      const rateFields = [
+        { id: 'rate_blouse', label: 'Normal Blouse' },
+        { id: 'rate_lining', label: 'Lining Blouse' },
+        { id: 'rate_aari', label: 'Bridal / Aari Blouse' },
+        { id: 'rate_chudi', label: 'Chudithar Set' },
+        { id: 'rate_kurti', label: 'Kurti Top' },
+        { id: 'rate_salwar', label: 'Salwar / Pant' },
+        { id: 'rate_shirt', label: "Men's Shirt" },
+        { id: 'rate_pant', label: "Men's Pant" },
+        { id: 'rate_alt', label: 'Alterations / Falls' }
+      ];
+
+      const rateCardObj = {};
+      const summaryParts = [];
+
+      rateFields.forEach(f => {
+        const val = Number(document.getElementById(f.id).value);
+        if (val && val > 0) {
+          rateCardObj[f.label] = val;
+          summaryParts.push(`${f.label} ₹${val}`);
+        }
+      });
+
+      if (Object.keys(rateCardObj).length === 0) {
+        alert('⚠️ Please enter stitching charge (₹) for at least one dress design before registering!');
+        return;
+      }
+
       const btn = document.getElementById('rBtn');
       btn.disabled = true;
       btn.innerText = 'Saving...';
 
-      let serv = document.getElementById('rServ').value.trim();
-      if (document.getElementById('rUrgent').checked) serv += ', 1Hr & 3Hr Urgent';
+      const extraDesigns = document.getElementById('rExtraDesigns').value.trim();
+      if (document.getElementById('rUrgent').checked) summaryParts.push('1Hr & 3Hr Urgent');
+      if (extraDesigns) summaryParts.push('Extra: ' + extraDesigns);
 
+      const minCharge = Math.min(...Object.values(rateCardObj));
       const owner = document.getElementById('rOwner').value.trim();
       const ph = cleanPh(document.getElementById('rPhone').value);
-      const price = document.getElementById('rPrice').value.trim();
 
       const row = {
         shop_name: document.getElementById('rShop').value.trim(),
@@ -367,7 +584,9 @@
         area: document.getElementById('rArea').value.trim(),
         address: document.getElementById('rAddr').value.trim(),
         tailor_type: document.getElementById('rType').value,
-        services: serv + ` (${price})`,
+        price: '₹' + minCharge,
+        rate_card: rateCardObj,
+        services: summaryParts.join(', '),
         experience: document.getElementById('rExp').value.trim(),
         hours: document.getElementById('rHours').value.trim(),
         commission_agreed: true
@@ -385,7 +604,7 @@
       this.reset();
       btn.disabled = false;
       btn.innerText = '✅ Accept & Join StitchCall';
-      alert(`🎉 Registered! Login-la ${ph} pottu orders paakkalam.`);
+      alert(`🎉 Registered with Rate Card! Login-la ${ph} pottu orders paakkalam.`);
     };
 
     function openDash() { document.getElementById('dashModal').classList.remove('hidden'); }
@@ -414,17 +633,71 @@
 
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('dashBody').classList.remove('hidden');
-      document.getElementById('roleLabel').innerText = isAdmin ? '👑 OWNER ADMIN (All Shops)' : `✂️ Shop Login (${loggedPh})`;
+      document.getElementById('roleLabel').innerText = isAdmin ? '👑 STITCHCALL OWNER ADMIN' : `✂️ Shop Login (${loggedPh})`;
 
-      const list = data || [];
+      const filterType = document.getElementById('monthFilter').value;
+      const now = new Date();
+      let list = data || [];
+      if (filterType === 'THIS_MONTH') {
+        list = list.filter(o => {
+          if (!o.created_at) return true;
+          const d = new Date(o.created_at);
+          return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        });
+      }
+
+      const completedOrders = list.filter(o => o.status === 'Completed');
+      const totalBill = completedOrders.reduce((a, b) => a + Number(b.bill_amount || 0), 0);
+      const totalComm = completedOrders.reduce((a, b) => a + Number(b.commission_amount || 0), 0);
+
       document.getElementById('sTot').innerText = list.length;
-      document.getElementById('sAcc').innerText = list.filter(o => o.status === 'Accepted').length;
-      document.getElementById('sCom').innerText = list.filter(o => o.status === 'Completed').length;
-      document.getElementById('sFee').innerText = '₹' + list.reduce((a, b) => a + Number(b.commission_amount || 0), 0);
+      document.getElementById('sCom').innerText = completedOrders.length;
+      document.getElementById('sBill').innerText = '₹' + totalBill;
+      document.getElementById('sFee').innerText = '₹' + totalComm;
+
+      const adminSection = document.getElementById('adminShopBreakdown');
+      if (isAdmin) {
+        adminSection.classList.remove('hidden');
+        const shopMap = {};
+
+        list.forEach(o => {
+          const key = `${o.tailor_shop || 'Unknown Shop'} (${o.tailor_phone || ''})`;
+          if (!shopMap[key]) {
+            shopMap[key] = { name: o.tailor_shop || 'Unknown Shop', phone: o.tailor_phone || '', totalOrders: 0, doneOrders: 0, earnings: 0, comm: 0 };
+          }
+          shopMap[key].totalOrders += 1;
+          if (o.status === 'Completed') {
+            shopMap[key].doneOrders += 1;
+            shopMap[key].earnings += Number(o.bill_amount || 0);
+            shopMap[key].comm += Number(o.commission_amount || 0);
+          }
+        });
+
+        const summaryRows = Object.values(shopMap);
+        const tbody = document.getElementById('shopSummaryBody');
+        if (!summaryRows.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-gray-400">No shop activity in this period</td></tr>';
+        } else {
+          tbody.innerHTML = summaryRows.map(s => `
+            <tr class="hover:bg-purple-50/50">
+              <td class="p-2.5 font-extrabold text-indigo-950">
+                ${s.name}
+                <span class="block text-[10px] text-gray-500 font-normal">📞 ${s.phone}</span>
+              </td>
+              <td class="p-2.5 text-center font-bold">${s.totalOrders}</td>
+              <td class="p-2.5 text-center font-bold text-emerald-700">${s.doneOrders}</td>
+              <td class="p-2.5 text-right font-extrabold text-indigo-950">₹${s.earnings}</td>
+              <td class="p-2.5 text-right font-black text-pink-700">₹${s.comm}</td>
+            </tr>
+          `).join('');
+        }
+      } else {
+        adminSection.classList.add('hidden');
+      }
 
       const box = document.getElementById('ordersList');
       if (!list.length) {
-        box.innerHTML = '<p class="text-center text-xs text-gray-500 py-5 font-semibold">No orders yet.</p>';
+        box.innerHTML = '<p class="text-center text-xs text-gray-500 py-5 font-semibold">No orders in this period.</p>';
         return;
       }
 
@@ -437,12 +710,12 @@
           <p class="font-black text-sm text-indigo-950">${o.dress_type} — ${o.customer_name}</p>
           <p class="text-gray-600 font-semibold">📍 ${o.area} • 📞 ${o.customer_phone} • ${o.pickup_type}</p>
           ${isAdmin ? `<p class="font-bold text-purple-800">🏪 ${o.tailor_shop} (${o.tailor_phone})</p>` : ''}
-          <div class="flex flex-wrap gap-2 pt-2 border-t">
+          <div class="flex flex-wrap items-center gap-2 pt-2 border-t">
             ${o.status === 'Pending' ? `<button type="button" onclick="setStatus(${o.id},'Accepted')" class="bg-yellow-300 text-indigo-950 font-black px-3 py-1.5 rounded-lg">✅ Accept</button>` : ''}
             ${o.status !== 'Completed' ? `
-              <input type="number" id="bill_${o.id}" placeholder="Bill ₹" class="border-2 border-purple-200 rounded-lg px-2 py-1 w-20 font-bold" />
+              <input type="number" id="bill_${o.id}" value="${o.bill_amount || ''}" placeholder="Final Bill ₹" class="border-2 border-purple-200 rounded-lg px-2 py-1 w-24 font-bold" />
               <button type="button" onclick="doneOrder(${o.id})" class="bg-emerald-600 text-white font-black px-3 py-1.5 rounded-lg">🎉 Complete</button>
-            ` : `<span class="font-extrabold text-emerald-800">💰 Bill: ₹${o.bill_amount} | 10% Comm: ₹${o.commission_amount}</span>`}
+            ` : `<span class="font-extrabold text-emerald-800">💰 Final Bill: ₹${o.bill_amount} | 10% Comm: ₹${o.commission_amount}</span>`}
           </div>
         </div>
       `).join('');
@@ -455,7 +728,7 @@
 
     async function doneOrder(id) {
       const bill = Number(document.getElementById('bill_' + id)?.value || 0);
-      if (!bill) return alert('Enter bill amount (₹)');
+      if (!bill) return alert('Enter final bill amount (₹)');
       await db.from('orders').update({ status: 'Completed', bill_amount: bill, commission_amount: Math.round(bill * 0.1) }).eq('id', id);
       await refreshDash();
     }
