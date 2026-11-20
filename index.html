@@ -59,7 +59,7 @@
       </a>
     </section>
 
-    <!-- Tailor Shops Direct Feed (Only Active Shops Shown) -->
+    <!-- Tailor Shops Direct Feed (Only Shops With Zero Unpaid Commission Shown) -->
     <section class="space-y-3">
       <div class="flex items-center justify-between bg-white/80 backdrop-blur px-4 py-2.5 rounded-2xl border border-purple-200 shadow-sm">
         <h3 id="shopHeading" class="text-base sm:text-lg font-black text-indigo-950">🏪 Tailor Shops in Coimbatore</h3>
@@ -148,7 +148,7 @@
 
         <label class="bg-white p-3 rounded-xl border-2 border-pink-500 flex items-start gap-2 text-xs">
           <input type="checkbox" id="rComm" required class="mt-0.5 w-4 h-4 accent-pink-600" />
-          <span><strong>✅ 10% Commission Agreement:</strong> Joining ₹0 Free. StitchCall orders-ku mattum <strong>10% commission</strong> thara sammadhikkiren.</span>
+          <span><strong>✅ Per-Order 10% Commission Rule:</strong> Joining ₹0 Free. Ovvoru order mudinjadhum <strong>10% commission</strong> pay pannina thaan next order varum.</span>
         </label>
 
         <button type="submit" id="rBtn" class="w-full vivid-btn text-white font-black py-3.5 rounded-2xl shadow-lg text-base">
@@ -221,7 +221,7 @@
       <div class="vivid-header text-white px-5 py-4 flex justify-between items-center">
         <div>
           <h3 class="font-black text-base">🔐 StitchCall Partner & Admin Dashboard</h3>
-          <p class="text-[11px] text-yellow-200">Orders, Commission & Shop Approval Controls</p>
+          <p class="text-[11px] text-yellow-200">Per-Order Commission Gate & Shop Controls</p>
         </div>
         <button type="button" onclick="closeDash()" class="bg-white/25 px-3 py-1 rounded-xl font-black text-xs">✕ Close</button>
       </div>
@@ -240,16 +240,17 @@
             <span id="roleLabel" class="text-xs font-black text-indigo-950"></span>
             <div class="flex items-center gap-2">
               <select id="monthFilter" onchange="refreshDash()" class="border border-purple-300 rounded-lg px-2 py-1 text-xs font-bold bg-white text-indigo-950">
-                <option value="THIS_MONTH">📅 This Month</option>
                 <option value="ALL">📊 All Time</option>
+                <option value="THIS_MONTH">📅 This Month</option>
               </select>
               <button type="button" onclick="doLogout()" class="text-xs text-pink-600 font-extrabold underline">Logout</button>
             </div>
           </div>
 
-          <!-- Tailor Hold/Blocked Warning Banner -->
-          <div id="tailorHoldBanner" class="hidden bg-red-100 border-2 border-red-500 text-red-900 p-3.5 rounded-2xl text-xs font-extrabold">
-            ⚠️ Your shop is currently ON HOLD / PAUSED from receiving new orders due to pending StitchCall commission or admin review. Please contact +91 73739 69064 to reactivate.
+          <!-- AUTOMATIC COMMISSION LOCK WARNING FOR TAILORS -->
+          <div id="tailorLockBanner" class="hidden bg-red-100 border-2 border-red-600 text-red-950 p-4 rounded-2xl space-y-1">
+            <p class="text-xs font-black">🔒 NEW ORDERS PAUSED — PENDING COMMISSION PAYMENT</p>
+            <p class="text-[11px] font-semibold">Ungal mudinja order-kaana 10% StitchCall commission pay pannina udane, unga shop automatically unlock aagi next order varum!</p>
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
@@ -266,24 +267,24 @@
               <p id="sBill" class="text-lg font-black text-yellow-950">₹0</p>
             </div>
             <div class="bg-blue-100 p-3 rounded-xl border border-blue-300">
-              <p class="text-[10px] font-extrabold text-blue-900">StitchCall 10% Comm</p>
+              <p class="text-[10px] font-extrabold text-blue-900">10% Comm Earned</p>
               <p id="sFee" class="text-lg font-black text-blue-950">₹0</p>
             </div>
           </div>
 
-          <!-- ADMIN ONLY: MANAGE SHOPS (HOLD / REJECT / ACTIVATE) -->
+          <!-- ADMIN ONLY: MANAGE SHOPS -->
           <div id="adminShopManager" class="hidden bg-white border-2 border-pink-300 rounded-2xl overflow-hidden shadow-sm">
             <div class="bg-pink-700 text-white px-4 py-2.5 flex justify-between items-center">
-              <h4 class="text-xs font-black">🛡️ Manage Tailor Shops (Approve / Hold Commission Defaulters / Reject)</h4>
+              <h4 class="text-xs font-black">🛡️ Tailor Shops Status (Auto-Locked if Unpaid Commission)</h4>
               <span class="text-[10px] text-yellow-200 font-bold">Admin Control</span>
             </div>
             <div id="adminShopsList" class="divide-y divide-gray-100 max-h-60 overflow-y-auto"></div>
           </div>
 
-          <!-- ADMIN ONLY: SHOP-WISE MONTHLY EARNINGS & COMMISSION -->
+          <!-- ADMIN ONLY: SHOP-WISE EARNINGS & COMMISSION -->
           <div id="adminShopBreakdown" class="hidden bg-white border-2 border-indigo-200 rounded-2xl overflow-hidden shadow-sm">
             <div class="bg-indigo-900 text-white px-4 py-2.5 flex justify-between items-center">
-              <h4 class="text-xs font-black">🏪 Shop-wise Monthly Earnings & Commission Report</h4>
+              <h4 class="text-xs font-black">🏪 Shop-wise Earnings & Commission Report</h4>
               <span class="text-[10px] text-yellow-300 font-bold">Owner View</span>
             </div>
             <div class="overflow-x-auto">
@@ -302,7 +303,7 @@
             </div>
           </div>
 
-          <h4 class="text-xs font-black text-indigo-950 pt-1">📋 Order Details</h4>
+          <h4 class="text-xs font-black text-indigo-950 pt-1">📋 Order Details & Commission Settlement</h4>
           <div id="ordersList" class="space-y-3"></div>
         </div>
       </div>
@@ -332,14 +333,26 @@
     const SB_URL = 'https://rmfcnxxtzkatlxvkoptc.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtZmNueHh0emthdGx4dmtvcHRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjU4NjcsImV4cCI6MjEwODY0MTg2N30.0QfPa91_8nD7xvbiPNCMp7FS8xQjQKHJBym69q06J_0';
     const ADMIN_PH = '7373969064';
+    const ADMIN_UPI = '7373969064@ybl'; // Unga UPI ID-ai inga maathikkalam
     const db = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 
     let allDbShops = [];
+    let allOrdersCache = [];
     let activeShop = null;
     let loggedPh = '';
     let currentEstAmount = 0;
 
     const cleanPh = p => (p || '').replace(/\D/g, '').slice(-10);
+
+    function hasUnpaidCommission(tailorPhone) {
+      const ph = cleanPh(tailorPhone);
+      if (!ph || ph === ADMIN_PH) return false;
+      return allOrdersCache.some(o =>
+        cleanPh(o.tailor_phone) === ph &&
+        o.status === 'Completed' &&
+        o.commission_status !== 'Done'
+      );
+    }
 
     function getShopRateList(s) {
       if (s.rate_card && typeof s.rate_card === 'object' && Object.keys(s.rate_card).length > 0) {
@@ -357,13 +370,19 @@
     }
 
     function renderPublicShops() {
-      const visibleShops = allDbShops.filter(s => s.is_active !== false);
+      // Hide shops manually held by admin OR having unpaid commission from previous completed order
+      const visibleShops = allDbShops.filter(s => {
+        if (s.is_active === false) return false;
+        if (hasUnpaidCommission(s.phone || s.mobile)) return false;
+        return true;
+      });
+
       const grid = document.getElementById('shopsGrid');
       document.getElementById('shopHeading').innerText = `🏪 Tailor Shops (${visibleShops.length})`;
       grid.innerHTML = '';
 
       if (!visibleShops.length) {
-        grid.innerHTML = '<p class="text-sm text-gray-500 text-center col-span-full py-8 font-bold bg-white/70 rounded-2xl">No active tailor shops listed yet. Join below as a tailor!</p>';
+        grid.innerHTML = '<p class="text-sm text-gray-500 text-center col-span-full py-8 font-bold bg-white/70 rounded-2xl">No active tailor shops available right now.</p>';
         return;
       }
 
@@ -401,10 +420,14 @@
       });
     }
 
-    async function loadShops() {
+    async function loadInitialData() {
       if (!db) return;
-      const { data } = await db.from('tailors').select('*').order('id', { ascending: false });
-      allDbShops = data || [];
+      const [shopsRes, ordersRes] = await Promise.all([
+        db.from('tailors').select('*').order('id', { ascending: false }),
+        db.from('orders').select('*').order('id', { ascending: false })
+      ]);
+      allDbShops = shopsRes.data || [];
+      allOrdersCache = ordersRes.data || [];
       renderPublicShops();
     }
 
@@ -481,7 +504,8 @@
         notes: document.getElementById('sbNotes').value.trim(),
         status: 'Pending',
         bill_amount: currentEstAmount,
-        commission_amount: Math.round(currentEstAmount * 0.1)
+        commission_amount: Math.round(currentEstAmount * 0.1),
+        commission_status: 'Pending'
       };
 
       const { error } = await db.from('orders').insert([orderRow]);
@@ -496,6 +520,7 @@
       this.reset();
       updateLivePrice();
       closeShop();
+      await loadInitialData();
       alert(`🎉 Booked with ${activeShop.shop_name}! Charge: ₹${currentEstAmount}`);
     };
 
@@ -568,7 +593,7 @@
         return;
       }
 
-      await loadShops();
+      await loadInitialData();
       this.reset();
       btn.disabled = false;
       btn.innerText = '✅ Accept & Join StitchCall';
@@ -582,7 +607,7 @@
       const ph = cleanPh(document.getElementById('loginPhone').value);
       if (ph.length < 10) return alert('Enter 10-digit WhatsApp number');
       loggedPh = ph;
-      await loadShops();
+      await loadInitialData();
       await refreshDash();
     }
 
@@ -595,7 +620,7 @@
     async function toggleShopStatus(shopId, newStatus) {
       const { error } = await db.from('tailors').update({ is_active: newStatus }).eq('id', shopId);
       if (error) return alert('Error: ' + error.message);
-      await loadShops();
+      await loadInitialData();
       await refreshDash();
     }
 
@@ -603,8 +628,16 @@
       if (!confirm(`Are you sure you want to permanently reject & delete "${shopName}"?`)) return;
       const { error } = await db.from('tailors').delete().eq('id', shopId);
       if (error) return alert('Error: ' + error.message);
-      await loadShops();
+      await loadInitialData();
       await refreshDash();
+    }
+
+    async function markCommissionDone(orderId) {
+      const { error } = await db.from('orders').update({ commission_status: 'Done' }).eq('id', orderId);
+      if (error) return alert('Error: ' + error.message);
+      await loadInitialData();
+      await refreshDash();
+      alert('✅ Commission Done! Tailor shop is now unlocked for next orders.');
     }
 
     async function refreshDash() {
@@ -619,13 +652,14 @@
       document.getElementById('dashBody').classList.remove('hidden');
       document.getElementById('roleLabel').innerText = isAdmin ? '👑 STITCHCALL OWNER ADMIN' : `✂️ Shop Login (${loggedPh})`;
 
-      // Show warning banner if tailor is put ON HOLD by Admin
-      const holdBanner = document.getElementById('tailorHoldBanner');
+      // Show Lock Banner to Tailor if any completed order has Unpaid Commission OR shop is held
+      const lockBanner = document.getElementById('tailorLockBanner');
       if (!isAdmin) {
         const myShop = allDbShops.find(s => cleanPh(s.phone || s.mobile) === loggedPh);
-        holdBanner.classList.toggle('hidden', !(myShop && myShop.is_active === false));
+        const locked = (myShop && myShop.is_active === false) || hasUnpaidCommission(loggedPh);
+        lockBanner.classList.toggle('hidden', !locked);
       } else {
-        holdBanner.classList.add('hidden');
+        lockBanner.classList.add('hidden');
       }
 
       const filterType = document.getElementById('monthFilter').value;
@@ -648,7 +682,6 @@
       document.getElementById('sBill').innerText = '₹' + totalBill;
       document.getElementById('sFee').innerText = '₹' + totalComm;
 
-      // ADMIN SHOP MANAGER (HOLD / ACTIVATE / REJECT)
       const managerSection = document.getElementById('adminShopManager');
       const adminSection = document.getElementById('adminShopBreakdown');
 
@@ -659,19 +692,20 @@
           shopsListBox.innerHTML = '<p class="p-3 text-center text-xs text-gray-400">No registered tailors yet.</p>';
         } else {
           shopsListBox.innerHTML = allDbShops.map(s => {
-            const active = s.is_active !== false;
+            const unpaidLock = hasUnpaidCommission(s.phone || s.mobile);
+            const active = s.is_active !== false && !unpaidLock;
             return `
-              <div class="p-3 flex flex-wrap items-center justify-between gap-2 text-xs ${active ? 'bg-white' : 'bg-red-50/70'}">
+              <div class="p-3 flex flex-wrap items-center justify-between gap-2 text-xs ${active ? 'bg-white' : 'bg-red-50/80'}">
                 <div>
                   <span class="font-black text-indigo-950">${s.shop_name}</span>
                   <span class="ml-1.5 text-[10px] font-black px-2 py-0.5 rounded-full ${active ? 'bg-emerald-100 text-emerald-800' : 'bg-red-600 text-white'}">
-                    ${active ? '● LIVE' : '⏸️ ON HOLD'}
+                    ${unpaidLock ? '🔒 LOCKED (UNPAID COMM)' : active ? '● LIVE' : '⏸️ ON HOLD'}
                   </span>
                   <p class="text-[11px] text-gray-500">📍 ${s.area} • 📞 ${s.phone || s.mobile}</p>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  ${active
-                    ? `<button type="button" onclick="toggleShopStatus(${s.id}, false)" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-black px-2.5 py-1.5 rounded-lg">⏸️ Hold Orders</button>`
+                  ${s.is_active !== false
+                    ? `<button type="button" onclick="toggleShopStatus(${s.id}, false)" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-black px-2.5 py-1.5 rounded-lg">⏸️ Hold</button>`
                     : `<button type="button" onclick="toggleShopStatus(${s.id}, true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-2.5 py-1.5 rounded-lg">✅ Activate</button>`
                   }
                   <button type="button" onclick="deleteShop(${s.id}, '${(s.shop_name || '').replace(/'/g, '')}')" class="bg-red-600 hover:bg-red-700 text-white font-black px-2.5 py-1.5 rounded-lg">🗑️ Reject</button>
@@ -681,7 +715,6 @@
           }).join('');
         }
 
-        // SHOP-WISE MONTHLY BREAKDOWN
         adminSection.classList.remove('hidden');
         const shopMap = {};
         list.forEach(o => {
@@ -726,39 +759,77 @@
         return;
       }
 
-      box.innerHTML = list.map(o => `
-        <div class="border-2 border-purple-200 bg-purple-50/30 p-3.5 rounded-2xl space-y-2 text-xs">
-          <div class="flex justify-between font-black">
-            <span class="text-pink-700">${o.status.toUpperCase()}</span>
-            <span class="text-blue-700">${o.delivery_speed}</span>
+      box.innerHTML = list.map(o => {
+        const isCommDone = o.commission_status === 'Done';
+        const upiLink = `upi://pay?pa=${ADMIN_UPI}&pn=StitchCall&am=${o.commission_amount}&cu=INR&tn=Order${o.id}Comm`;
+        const waProofLink = `https://wa.me/91${ADMIN_PH}?text=${encodeURIComponent(`✅ StitchCall Commission Paid!\nOrder #${o.id} (${o.tailor_shop})\nBill: ₹${o.bill_amount} | 10% Comm: ₹${o.commission_amount}\nPlease unlock my shop for next orders.`)}`;
+
+        return `
+          <div class="border-2 ${o.status === 'Completed' && !isCommDone ? 'border-red-400 bg-red-50/40' : 'border-purple-200 bg-purple-50/30'} p-3.5 rounded-2xl space-y-2 text-xs">
+            <div class="flex justify-between items-center font-black">
+              <span class="text-pink-700">${o.status.toUpperCase()}</span>
+              <span class="text-blue-700">${o.delivery_speed}</span>
+            </div>
+            <p class="font-black text-sm text-indigo-950">${o.dress_type} — ${o.customer_name}</p>
+            <p class="text-gray-600 font-semibold">📍 ${o.area} • 📞 ${o.customer_phone} • ${o.pickup_type}</p>
+            ${isAdmin ? `<p class="font-bold text-purple-800">🏪 ${o.tailor_shop} (${o.tailor_phone})</p>` : ''}
+
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t">
+              ${o.status === 'Pending' ? `<button type="button" onclick="setStatus(${o.id},'Accepted')" class="bg-yellow-300 text-indigo-950 font-black px-3 py-1.5 rounded-lg">✅ Accept</button>` : ''}
+
+              ${o.status !== 'Completed' ? `
+                <input type="number" id="bill_${o.id}" value="${o.bill_amount || ''}" placeholder="Final Bill ₹" class="border-2 border-purple-200 rounded-lg px-2 py-1 w-24 font-bold" />
+                <button type="button" onclick="doneOrder(${o.id})" class="bg-emerald-600 text-white font-black px-3 py-1.5 rounded-lg">🎉 Complete</button>
+              ` : `
+                <div class="w-full space-y-2">
+                  <div class="flex flex-wrap justify-between items-center gap-1">
+                    <span class="font-extrabold text-indigo-950">💰 Bill: ₹${o.bill_amount} | 10% Comm: ₹${o.commission_amount}</span>
+                    <span class="px-2 py-0.5 rounded-full font-black text-[10px] ${isCommDone ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}">
+                      ${isCommDone ? '✅ COMMISSION DONE' : '⏳ COMMISSION UNPAID (SHOP LOCKED)'}
+                    </span>
+                  </div>
+
+                  ${!isCommDone && !isAdmin ? `
+                    <div class="flex flex-wrap gap-2 pt-1">
+                      <a href="${upiLink}" class="bg-indigo-800 text-white font-black px-3 py-1.5 rounded-lg">💳 Pay ₹${o.commission_amount} UPI</a>
+                      <a href="${waProofLink}" target="_blank" class="bg-emerald-600 text-white font-black px-3 py-1.5 rounded-lg">📲 Send Paid Proof</a>
+                    </div>
+                  ` : ''}
+
+                  ${!isCommDone && isAdmin ? `
+                    <button type="button" onclick="markCommissionDone(${o.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3.5 py-1.5 rounded-lg shadow">
+                      ✅ Mark Commission Done (Unlock Shop)
+                    </button>
+                  ` : ''}
+                </div>
+              `}
+            </div>
           </div>
-          <p class="font-black text-sm text-indigo-950">${o.dress_type} — ${o.customer_name}</p>
-          <p class="text-gray-600 font-semibold">📍 ${o.area} • 📞 ${o.customer_phone} • ${o.pickup_type}</p>
-          ${isAdmin ? `<p class="font-bold text-purple-800">🏪 ${o.tailor_shop} (${o.tailor_phone})</p>` : ''}
-          <div class="flex flex-wrap items-center gap-2 pt-2 border-t">
-            ${o.status === 'Pending' ? `<button type="button" onclick="setStatus(${o.id},'Accepted')" class="bg-yellow-300 text-indigo-950 font-black px-3 py-1.5 rounded-lg">✅ Accept</button>` : ''}
-            ${o.status !== 'Completed' ? `
-              <input type="number" id="bill_${o.id}" value="${o.bill_amount || ''}" placeholder="Final Bill ₹" class="border-2 border-purple-200 rounded-lg px-2 py-1 w-24 font-bold" />
-              <button type="button" onclick="doneOrder(${o.id})" class="bg-emerald-600 text-white font-black px-3 py-1.5 rounded-lg">🎉 Complete</button>
-            ` : `<span class="font-extrabold text-emerald-800">💰 Final Bill: ₹${o.bill_amount} | 10% Comm: ₹${o.commission_amount}</span>`}
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     async function setStatus(id, st) {
       await db.from('orders').update({ status: st }).eq('id', id);
+      await loadInitialData();
       await refreshDash();
     }
 
     async function doneOrder(id) {
       const bill = Number(document.getElementById('bill_' + id)?.value || 0);
       if (!bill) return alert('Enter final bill amount (₹)');
-      await db.from('orders').update({ status: 'Completed', bill_amount: bill, commission_amount: Math.round(bill * 0.1) }).eq('id', id);
+      await db.from('orders').update({
+        status: 'Completed',
+        bill_amount: bill,
+        commission_amount: Math.round(bill * 0.1),
+        commission_status: 'Unpaid'
+      }).eq('id', id);
+      await loadInitialData();
       await refreshDash();
+      alert('🎉 Order Completed! Please pay 10% commission in your dashboard to unlock next orders.');
     }
 
-    loadShops();
+    loadInitialData();
   </script>
 </body>
 </html>
