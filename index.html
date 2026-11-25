@@ -420,7 +420,6 @@
 
     const cleanPh = p => (p || '').replace(/\D/g, '').slice(-10);
 
-    // Get exact status of a single shop ('Live', 'Hold', or 'Rejected')
     function getShopState(s) {
       if (!s) return 'Rejected';
       if (s.shop_status === 'Rejected') return 'Rejected';
@@ -668,7 +667,6 @@
       btn.disabled = true;
       btn.innerText = 'Checking & Booking...';
 
-      // STRICT DATABASE CHECK: Block if THIS specific shop ID is Hold or Rejected
       const { data: freshShop, error: checkErr } = await db
         .from('tailors')
         .select('*')
@@ -811,7 +809,6 @@
       document.getElementById('dashBody').classList.add('hidden');
     }
 
-    // TOGGLE SINGLE SHOP BY ITS EXACT ARRAY INDEX (WORKS EVEN IF PHONE NUMBERS ARE SAME!)
     async function toggleShopHold(idx) {
       const shop = allDbShops[idx];
       if (!shop || !shop.id) return alert('Error: Shop ID not found');
@@ -931,7 +928,6 @@
             const isHold = state === 'Hold';
             const isRejected = state === 'Rejected';
 
-            // DISTINCT ROW CARD STYLING
             let rowStyle = 'bg-white border-l-4 border-emerald-500';
             let statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">● LIVE</span>';
 
@@ -943,14 +939,11 @@
               statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2 py-0.5 rounded-full bg-red-600 text-white">🚫 REJECTED</span>';
             }
 
-            // HIGH-CONTRAST TOGGLE BUTTON COLORS:
-            // Hold Button: Blue when inactive -> Bright Amber/Yellow when active!
             const holdBtnClass = isHold
               ? 'bg-amber-400 text-indigo-950 ring-2 ring-amber-600 font-black px-3 py-1.5 rounded-lg shadow'
               : 'bg-blue-600 hover:bg-blue-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm';
             const holdBtnLabel = isHold ? '⏸️ ON HOLD (Release)' : '⏸️ Hold';
 
-            // Reject Button: Purple/Slate when inactive -> Bright Red when active!
             const rejectBtnClass = isRejected
               ? 'bg-red-600 text-white ring-2 ring-red-900 font-black px-3 py-1.5 rounded-lg shadow'
               : 'bg-purple-700 hover:bg-purple-800 text-white font-black px-3 py-1.5 rounded-lg shadow-sm';
@@ -959,7 +952,7 @@
             return `
               <div class="p-3 flex flex-wrap items-center justify-between gap-2 text-xs ${rowStyle}">
                 <div>
-                  <span class="font-black text-indigo-950">#${s.id} ${s.shop_name}</span>
+                  <span class="font-black text-indigo-950">${s.shop_name}</span>
                   ${statusBadge}
                   <p class="text-[11px] text-gray-600 font-semibold mt-0.5">📍 ${s.area} • 📞 ${s.phone || s.mobile}</p>
                 </div>
