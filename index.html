@@ -300,8 +300,8 @@
 
           <div id="adminShopManager" class="hidden bg-white border-2 border-pink-300 rounded-2xl overflow-hidden shadow-sm">
             <div class="bg-pink-700 text-white px-4 py-2.5 flex justify-between items-center">
-              <h4 class="text-xs font-black">🛡️ Tailor Shops Status (Individual Shop Control)</h4>
-              <span class="text-[10px] text-yellow-200 font-bold">Live / Hold / Reject</span>
+              <h4 class="text-xs font-black">🛡️ Tailor Shops Status (Each Shop Controlled Separately)</h4>
+              <span class="text-[10px] text-yellow-200 font-bold">Blue=Hold • Purple=Reject</span>
             </div>
             <div id="adminShopsList" class="divide-y divide-gray-200 max-h-72 overflow-y-auto"></div>
           </div>
@@ -420,7 +420,7 @@
 
     const cleanPh = p => (p || '').replace(/\D/g, '').slice(-10);
 
-    // Helper: Get exact status of a single shop ('Live', 'Hold', or 'Rejected')
+    // Get exact status of a single shop ('Live', 'Hold', or 'Rejected')
     function getShopState(s) {
       if (!s) return 'Rejected';
       if (s.shop_status === 'Rejected') return 'Rejected';
@@ -668,7 +668,7 @@
       btn.disabled = true;
       btn.innerText = 'Checking & Booking...';
 
-      // STRICT DATABASE CHECK: Block if shop is Hold or Rejected
+      // STRICT DATABASE CHECK: Block if THIS specific shop ID is Hold or Rejected
       const { data: freshShop, error: checkErr } = await db
         .from('tailors')
         .select('*')
@@ -811,42 +811,59 @@
       document.getElementById('dashBody').classList.add('hidden');
     }
 
-    // INDIVIDUAL SHOP ACTION: Only updates the exact clicked shop ID!
-    async function setShopState(shopId, newState, shopName) {
-      if (!shopId) {
-        alert('⚠️ Error: This shop has no valid ID in database.');
-        return;
-      }
+    // TOGGLE SINGLE SHOP BY ITS EXACT ARRAY INDEX (WORKS EVEN IF PHONE NUMBERS ARE SAME!)
+    async function toggleShopHold(idx) {
+      const shop = allDbShops[idx];
+      if (!shop || !shop.id) return alert('Error: Shop ID not found');
 
-      if (newState === 'Rejected') {
-        if (!confirm(`Reject "${shopName}"? Customers will NOT be able to book this shop.`)) return;
-      }
-
-      const isActiveBool = (newState === 'Live');
+      const currentState = getShopState(shop);
+      const nextState = (currentState === 'Hold') ? 'Live' : 'Hold';
 
       const { data, error } = await db
         .from('tailors')
-        .update({ shop_status: newState, is_active: isActiveBool })
-        .eq('id', shopId)
+        .update({ shop_status: nextState, is_active: nextState === 'Live' })
+        .eq('id', shop.id)
         .select();
 
-      if (error) {
-        alert('Database Error: ' + error.message);
-        return;
-      }
-      if (!data || data.length === 0) {
-        alert('⚠️ Database permission missing! Please run the SQL UPDATE policy in Supabase first.');
-        return;
-      }
+      if (error) return alert('Database Error: ' + error.message);
+      if (!data || !data.length) return alert('⚠️ Run the SQL UPDATE policy in Supabase first!');
 
       await loadInitialData();
       await refreshDash();
     }
 
-    async function deleteShopForever(shopId, shopName) {
-      if (!confirm(`Permanently DELETE "${shopName}" from database?`)) return;
-      const { error } = await db.from('tailors').delete().eq('id', shopId);
+    async function toggleShopReject(idx) {
+      const shop = allDbShops[idx];
+      if (!shop || !shop.id) return alert('Error: Shop ID not found');
+
+      const currentState = getShopState(shop);
+      const nextState = (currentState === 'Rejected') ? 'Live' : 'Rejected';
+
+      if (nextState === 'Rejected') {
+        if (!confirm(`Reject "${shop.shop_name}"? Customers cannot book this shop.`)) return;
+      }
+
+      const { data, error } = await db
+        .from('tailors')
+        .update({ shop_status: nextState, is_active: nextState === 'Live' })
+        .eq('id', shop.id)
+        .select();
+
+      if (error) return alert('Database Error: ' + error.message);
+      if (!data || !data.length) return alert('⚠️ Run the SQL UPDATE policy in Supabase first!');
+
+      await loadInitialData();
+      await refreshDash();
+    }
+
+    async function deleteShopForever(idx) {
+      const shop = allDbShops[idx];
+      if (!shop || !shop.id) return;
+      if (!confirm(`Permanently DELETE "${shop.shop_name}" from database?`)) return;
+
+      const { error } = await db.from('tailors').delete().eq('id', shop.id);
       if (error) return alert('Error: ' + error.message);
+
       await loadInitialData();
       await refreshDash();
     }
@@ -909,55 +926,53 @@
         if (!allDbShops.length) {
           shopsListBox.innerHTML = '<p class="p-3 text-center text-xs text-gray-400">No registered tailors yet.</p>';
         } else {
-          shopsListBox.innerHTML = allDbShops.map(s => {
+          shopsListBox.innerHTML = allDbShops.map((s, idx) => {
             const state = getShopState(s);
-            const unpaidLock = hasUnpaidCommission(s.phone || s.mobile);
-            const safeName = (s.shop_name || 'Shop').replace(/'/g, '');
+            const isHold = state === 'Hold';
+            const isRejected = state === 'Rejected';
 
-            let rowBg = 'bg-white';
-            let statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-500 text-white">● LIVE</span>';
+            // DISTINCT ROW CARD STYLING
+            let rowStyle = 'bg-white border-l-4 border-emerald-500';
+            let statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">● LIVE</span>';
 
-            if (state === 'Rejected') {
-              rowBg = 'bg-red-100/90 border-l-4 border-red-600';
-              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-red-700 text-white">🚫 REJECTED</span>';
-            } else if (state === 'Hold') {
-              rowBg = 'bg-amber-100/90 border-l-4 border-amber-500';
-              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-500 text-indigo-950">⏸️ ON HOLD</span>';
-            } else if (unpaidLock) {
-              rowBg = 'bg-orange-100/90 border-l-4 border-orange-600';
-              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-orange-600 text-white">🔒 UNPAID COMM</span>';
+            if (isHold) {
+              rowStyle = 'bg-amber-50 border-l-4 border-amber-500';
+              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-400 text-indigo-950">⏸️ ON HOLD</span>';
+            } else if (isRejected) {
+              rowStyle = 'bg-red-50 border-l-4 border-red-600';
+              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2 py-0.5 rounded-full bg-red-600 text-white">🚫 REJECTED</span>';
             }
 
+            // HIGH-CONTRAST TOGGLE BUTTON COLORS:
+            // Hold Button: Blue when inactive -> Bright Amber/Yellow when active!
+            const holdBtnClass = isHold
+              ? 'bg-amber-400 text-indigo-950 ring-2 ring-amber-600 font-black px-3 py-1.5 rounded-lg shadow'
+              : 'bg-blue-600 hover:bg-blue-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm';
+            const holdBtnLabel = isHold ? '⏸️ ON HOLD (Release)' : '⏸️ Hold';
+
+            // Reject Button: Purple/Slate when inactive -> Bright Red when active!
+            const rejectBtnClass = isRejected
+              ? 'bg-red-600 text-white ring-2 ring-red-900 font-black px-3 py-1.5 rounded-lg shadow'
+              : 'bg-purple-700 hover:bg-purple-800 text-white font-black px-3 py-1.5 rounded-lg shadow-sm';
+            const rejectBtnLabel = isRejected ? '🚫 REJECTED (Restore)' : '🚫 Reject';
+
             return `
-              <div class="p-3 flex flex-wrap items-center justify-between gap-2 text-xs ${rowBg}">
+              <div class="p-3 flex flex-wrap items-center justify-between gap-2 text-xs ${rowStyle}">
                 <div>
-                  <span class="font-black text-indigo-950">${s.shop_name}</span>
+                  <span class="font-black text-indigo-950">#${s.id} ${s.shop_name}</span>
                   ${statusBadge}
                   <p class="text-[11px] text-gray-600 font-semibold mt-0.5">📍 ${s.area} • 📞 ${s.phone || s.mobile}</p>
                 </div>
-                <div class="flex items-center gap-1.5">
-                  ${state === 'Live' ? `
-                    <button type="button" onclick="setShopState(${s.id}, 'Hold', '${safeName}')" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-black px-3 py-1.5 rounded-lg shadow-sm">
-                      ⏸️ Hold
-                    </button>
-                    <button type="button" onclick="setShopState(${s.id}, 'Rejected', '${safeName}')" class="bg-red-600 hover:bg-red-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
-                      🚫 Reject
-                    </button>
-                  ` : state === 'Hold' ? `
-                    <button type="button" onclick="setShopState(${s.id}, 'Live', '${safeName}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
-                      ✅ Release Hold
-                    </button>
-                    <button type="button" onclick="setShopState(${s.id}, 'Rejected', '${safeName}')" class="bg-red-600 hover:bg-red-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
-                      🚫 Reject
-                    </button>
-                  ` : `
-                    <button type="button" onclick="setShopState(${s.id}, 'Live', '${safeName}')" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
-                      🔄 Restore Live
-                    </button>
-                    <button type="button" onclick="deleteShopForever(${s.id}, '${safeName}')" class="bg-gray-800 hover:bg-black text-white font-black px-2.5 py-1.5 rounded-lg shadow-sm">
-                      🗑️ Delete
-                    </button>
-                  `}
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <button type="button" onclick="toggleShopHold(${idx})" class="${holdBtnClass}">
+                    ${holdBtnLabel}
+                  </button>
+                  <button type="button" onclick="toggleShopReject(${idx})" class="${rejectBtnClass}">
+                    ${rejectBtnLabel}
+                  </button>
+                  <button type="button" onclick="deleteShopForever(${idx})" title="Delete Forever" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-black px-2 py-1.5 rounded-lg">
+                    🗑️
+                  </button>
                 </div>
               </div>
             `;
