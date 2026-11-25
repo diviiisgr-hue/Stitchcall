@@ -275,8 +275,8 @@
           </div>
 
           <div id="tailorLockBanner" class="hidden bg-red-100 border-2 border-red-600 text-red-950 p-4 rounded-2xl space-y-1">
-            <p class="text-xs font-black">🔒 SHOP PAUSED — HOLD / REJECTED / PENDING COMMISSION</p>
-            <p class="text-[11px] font-semibold">Unga shop ippo Hold/Rejected-la irukku allathu 10% commission pending-la irukku. Live aana udane orders varum.</p>
+            <p class="text-xs font-black">🔒 SHOP PAUSED — PENDING COMMISSION / HOLD</p>
+            <p class="text-[11px] font-semibold">Keela unga completed order-ku <strong>Pay 10% Commission (UPI)</strong> button click panni pay pannunga. Admin verify panna udane shop unlock aagum!</p>
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
@@ -866,11 +866,18 @@
     }
 
     async function markCommissionDone(orderId) {
-      const { error } = await db.from('orders').update({ commission_status: 'Done' }).eq('id', orderId);
-      if (error) return alert('Error: ' + error.message);
+      const { data, error } = await db
+        .from('orders')
+        .update({ commission_status: 'Done' })
+        .eq('id', orderId)
+        .select();
+
+      if (error) return alert('Database Error: ' + error.message);
+      if (!data || !data.length) return alert('⚠️ Run the SQL UPDATE policy on "orders" table in Supabase first!');
+
       await loadInitialData();
       await refreshDash();
-      alert('✅ Commission Done! Tailor shop is now unlocked for next orders.');
+      alert('✅ Commission Verified & Done! Tailor shop is now unlocked.');
     }
 
     async function refreshDash() {
@@ -1018,13 +1025,14 @@
 
       box.innerHTML = list.map(o => {
         const isCommDone = o.commission_status === 'Done';
-        const upiLink = `upi://pay?pa=${ADMIN_UPI}&pn=StitchCall&am=${o.commission_amount}&cu=INR&tn=Order${o.id}Comm`;
-        const waProofLink = `https://wa.me/91${ADMIN_PH}?text=${encodeURIComponent(`✅ StitchCall Commission Paid!\nOrder #${o.id} (${o.tailor_shop})\nBill: ₹${o.bill_amount} | 10% Comm: ₹${o.commission_amount}\nPlease unlock my shop for next orders.`)}`;
+        const commAmt = Number(o.commission_amount || Math.round(Number(o.bill_amount || 0) * 0.1));
+        const upiLink = `upi://pay?pa=${ADMIN_UPI}&pn=StitchCall&am=${commAmt}&cu=INR&tn=Order${o.id}Comm`;
+        const waProofLink = `https://wa.me/91${ADMIN_PH}?text=${encodeURIComponent(`✅ StitchCall Commission Paid!\nOrder: ${o.dress_type}\nShop: ${o.tailor_shop}\nBill: ₹${o.bill_amount} | 10% Comm: ₹${commAmt}\nPlease unlock my shop for next orders.`)}`;
 
         return `
-          <div class="border-2 ${o.status === 'Completed' && !isCommDone ? 'border-red-400 bg-red-50/40' : 'border-purple-200 bg-purple-50/30'} p-3.5 rounded-2xl space-y-2 text-xs">
+          <div class="border-2 ${o.status === 'Completed' && !isCommDone ? 'border-red-500 bg-red-50/50' : 'border-purple-200 bg-purple-50/30'} p-3.5 rounded-2xl space-y-2 text-xs">
             <div class="flex justify-between items-center font-black">
-              <span class="text-pink-700">${o.status.toUpperCase()}</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] ${o.status === 'Completed' ? 'bg-emerald-600 text-white' : 'bg-pink-100 text-pink-800'}">${o.status.toUpperCase()}</span>
               <span class="text-blue-700">${o.delivery_speed}</span>
             </div>
             <p class="font-black text-sm text-indigo-950">${o.dress_type} — ${o.customer_name}</p>
@@ -1032,31 +1040,33 @@
             ${isAdmin ? `<p class="font-bold text-purple-800">🏪 ${o.tailor_shop} (${o.tailor_phone})</p>` : ''}
 
             <div class="flex flex-wrap items-center gap-2 pt-2 border-t">
-              ${o.status === 'Pending' ? `<button type="button" onclick="setStatus(${o.id},'Accepted')" class="bg-yellow-300 text-indigo-950 font-black px-3 py-1.5 rounded-lg">✅ Accept</button>` : ''}
+              ${o.status === 'Pending' ? `<button type="button" onclick="setStatus('${o.id}','Accepted')" class="bg-yellow-300 text-indigo-950 font-black px-3 py-1.5 rounded-lg">✅ Accept</button>` : ''}
 
               ${o.status !== 'Completed' ? `
                 <input type="number" id="bill_${o.id}" value="${o.bill_amount || ''}" placeholder="Final Bill ₹" class="border-2 border-purple-200 rounded-lg px-2 py-1 w-24 font-bold" />
-                <button type="button" onclick="doneOrder(${o.id})" class="bg-emerald-600 text-white font-black px-3 py-1.5 rounded-lg">🎉 Complete</button>
+                <button type="button" onclick="doneOrder('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3 py-1.5 rounded-lg shadow">🎉 Complete</button>
               ` : `
-                <div class="w-full space-y-2">
+                <div class="w-full space-y-2.5 bg-white p-3 rounded-xl border border-pink-200">
                   <div class="flex flex-wrap justify-between items-center gap-1">
-                    <span class="font-extrabold text-indigo-950">💰 Bill: ₹${o.bill_amount} | 10% Comm: ₹${o.commission_amount}</span>
-                    <span class="px-2 py-0.5 rounded-full font-black text-[10px] ${isCommDone ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}">
-                      ${isCommDone ? '✅ COMMISSION DONE' : '⏳ COMMISSION UNPAID (SHOP LOCKED)'}
+                    <span class="font-extrabold text-indigo-950">💰 Bill: ₹${o.bill_amount} | 10% Comm: <strong class="text-pink-700 text-sm">₹${commAmt}</strong></span>
+                    <span class="px-2.5 py-0.5 rounded-full font-black text-[10px] ${isCommDone ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}">
+                      ${isCommDone ? '✅ COMMISSION PAID' : '⏳ COMMISSION UNPAID'}
                     </span>
                   </div>
 
-                  ${!isCommDone && !isAdmin ? `
-                    <div class="flex flex-wrap gap-2 pt-1">
-                      <a href="${upiLink}" class="bg-indigo-800 text-white font-black px-3 py-1.5 rounded-lg">💳 Pay ₹${o.commission_amount} UPI</a>
-                      <a href="${waProofLink}" target="_blank" class="bg-emerald-600 text-white font-black px-3 py-1.5 rounded-lg">📲 Send Paid Proof</a>
+                  ${!isCommDone ? `
+                    <div class="bg-amber-50 p-2 rounded-lg border border-amber-300 text-[11px] font-bold text-amber-950">
+                      📲 UPI ID: <span class="select-all font-black text-indigo-900">${ADMIN_UPI}</span> (Pay ₹${commAmt} to unlock next orders)
                     </div>
-                  ` : ''}
-
-                  ${!isCommDone && isAdmin ? `
-                    <button type="button" onclick="markCommissionDone(${o.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3.5 py-1.5 rounded-lg shadow">
-                      ✅ Mark Commission Done (Unlock Shop)
-                    </button>
+                    <div class="flex flex-wrap gap-2 pt-0.5">
+                      <a href="${upiLink}" class="bg-indigo-800 hover:bg-indigo-900 text-white font-black px-3.5 py-2 rounded-xl shadow">💳 Pay ₹${commAmt} via UPI App</a>
+                      <a href="${waProofLink}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3.5 py-2 rounded-xl shadow">📲 Send Paid Proof (WhatsApp)</a>
+                      ${isAdmin ? `
+                        <button type="button" onclick="markCommissionDone('${o.id}')" class="bg-pink-600 hover:bg-pink-700 text-white font-black px-3.5 py-2 rounded-xl shadow">
+                          ✅ Verify & Mark Paid (Admin)
+                        </button>
+                      ` : ''}
+                    </div>
                   ` : ''}
                 </div>
               `}
@@ -1067,7 +1077,9 @@
     }
 
     async function setStatus(id, st) {
-      await db.from('orders').update({ status: st }).eq('id', id);
+      const { data, error } = await db.from('orders').update({ status: st }).eq('id', id).select();
+      if (error) return alert('Error: ' + error.message);
+      if (!data || !data.length) return alert('⚠️ Run the SQL UPDATE policy on "orders" table in Supabase first!');
       await loadInitialData();
       await refreshDash();
     }
@@ -1075,15 +1087,21 @@
     async function doneOrder(id) {
       const bill = Number(document.getElementById('bill_' + id)?.value || 0);
       if (!bill) return alert('Enter final bill amount (₹)');
-      await db.from('orders').update({
+      const comm = Math.round(bill * 0.1);
+
+      const { data, error } = await db.from('orders').update({
         status: 'Completed',
         bill_amount: bill,
-        commission_amount: Math.round(bill * 0.1),
+        commission_amount: comm,
         commission_status: 'Unpaid'
-      }).eq('id', id);
+      }).eq('id', id).select();
+
+      if (error) return alert('Database Error: ' + error.message);
+      if (!data || !data.length) return alert('⚠️ Run the SQL UPDATE policy on "orders" table in Supabase first!');
+
       await loadInitialData();
       await refreshDash();
-      alert('🎉 Order Completed! Please pay 10% commission in your dashboard to unlock next orders.');
+      alert(`🎉 Order Completed!\n10% Commission: ₹${comm}\nKeela ulla "Pay ₹${comm} via UPI App" button click panni pay pannunga!`);
     }
 
     loadInitialData();
