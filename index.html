@@ -378,9 +378,9 @@
   </footer>
 
   <script>
-    const APP_URL = 'https://diviiisgr-hue.github.io/';
+    const APP_URL = 'https://diviiisgr-hue.github.io/Stitchcall/';
     const ADMIN_PH = '7373969064';
-    const GPAY_UPI = '7373969064@okicici'; // Works with GPay, PhonePe, Paytm via UPI / Mobile Number 7373969064
+    const GPAY_UPI = '7373969064@okicici';
 
     // 1. GENERATE CUSTOM STITCHCALL APP ICON & SCANNABLE QR CODE
     (function initBrandingAndQR() {
@@ -414,7 +414,7 @@
       document.getElementById('appIconLink').href = pngUrl;
       document.getElementById('appleIconLink').href = pngUrl;
 
-      // High-reliability scannable QR pointing directly to StitchCall live URL
+      // Exact live URL QR Code
       const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=12&color=1E1B4B&bgcolor=FFFFFF&data=${encodeURIComponent(APP_URL)}`;
       document.getElementById('liveQrImg').src = qrApiUrl;
     })();
@@ -432,7 +432,6 @@
       canvas.height = 1350;
       const ctx = canvas.getContext('2d');
 
-      // Multi-color vibrant background (Yellow -> Pink -> Purple -> Blue)
       const bg = ctx.createLinearGradient(0, 0, 1080, 1350);
       bg.addColorStop(0, '#FDE047');
       bg.addColorStop(0.32, '#EC4899');
@@ -441,13 +440,11 @@
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, 1080, 1350);
 
-      // White inner card frame
       ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
       ctx.beginPath();
       ctx.roundRect(55, 55, 970, 1240, 56);
       ctx.fill();
 
-      // Top Header Ribbon
       const headGrad = ctx.createLinearGradient(55, 55, 1025, 310);
       headGrad.addColorStop(0, '#312E81');
       headGrad.addColorStop(0.5, '#701A75');
@@ -466,7 +463,6 @@
       ctx.font = '800 34px system-ui, sans-serif';
       ctx.fillText('COIMBATORE • 1-HR & 3-HRS EXPRESS TAILORING', 540, 245);
 
-      // Highlight Pill
       ctx.fillStyle = '#FEF08A';
       ctx.beginPath();
       ctx.roundRect(140, 365, 800, 74, 37);
@@ -475,7 +471,6 @@
       ctx.font = '900 32px system-ui, sans-serif';
       ctx.fillText('⚡ Blouse • Kurti • Chudithar • Shirt • Pant', 540, 413);
 
-      // QR Code Box
       ctx.fillStyle = '#FDF2F8';
       ctx.strokeStyle = '#DB2777';
       ctx.lineWidth = 8;
@@ -497,7 +492,6 @@
       ctx.fillText('🛵 Rapido / Porter Pickup & Drop Available', 540, 1070);
       ctx.fillText('✂️ Tailors Join FREE (₹0 Joining Fee)', 540, 1125);
 
-      // Bottom Contact Bar
       ctx.fillStyle = '#1E1B4B';
       ctx.beginPath();
       ctx.roundRect(120, 1170, 840, 85, 42);
