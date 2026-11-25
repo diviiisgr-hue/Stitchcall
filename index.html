@@ -170,6 +170,27 @@
       </form>
     </section>
 
+    <!-- SCAN & SHARE QR + POSTER CARD SECTION -->
+    <section class="bg-white p-5 rounded-3xl shadow-lg border-2 border-purple-300 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="space-y-1.5 text-center sm:text-left">
+        <span class="bg-pink-100 text-pink-800 text-[10px] font-black px-3 py-0.5 rounded-full">📲 SCAN & BOOK / SHARE POSTER</span>
+        <h3 class="text-lg font-black text-indigo-950">StitchCall Official QR & Promo Poster</h3>
+        <p class="text-xs text-gray-600 font-semibold">Customers camera-la scan panna direct-ah app open aagum. Shop-la otta Poster Card download pannikonga:</p>
+        <div class="pt-1 flex flex-wrap justify-center sm:justify-start gap-2">
+          <button type="button" onclick="downloadPosterCard()" class="vivid-btn text-white text-xs font-black px-4 py-2.5 rounded-xl shadow">
+            🖼️ Download Poster Card (PNG)
+          </button>
+          <button type="button" onclick="copyAppLink()" class="bg-yellow-300 hover:bg-yellow-400 text-indigo-950 text-xs font-black px-4 py-2.5 rounded-xl shadow">
+            🔗 Copy App Link
+          </button>
+        </div>
+      </div>
+      <div class="bg-gradient-to-br from-yellow-200 via-pink-200 to-purple-200 p-2.5 rounded-2xl border-2 border-pink-400 shadow-md flex flex-col items-center">
+        <img id="liveQrImg" alt="StitchCall QR Code" class="w-32 h-32 rounded-xl bg-white p-1.5 shadow-sm" crossorigin="anonymous" />
+        <span class="text-[10px] font-black text-indigo-950 mt-1">Scan to Book Tailor</span>
+      </div>
+    </section>
+
   </main>
 
   <!-- SHOP DETAIL & IN-SHOP BOOKING MODAL -->
@@ -265,18 +286,21 @@
         <div id="dashBody" class="hidden space-y-4">
           <div class="flex flex-wrap justify-between items-center gap-2 bg-indigo-50 px-3.5 py-2.5 rounded-xl border border-indigo-200">
             <span id="roleLabel" class="text-xs font-black text-indigo-950"></span>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
               <select id="monthFilter" onchange="refreshDash()" class="border border-purple-300 rounded-lg px-2 py-1 text-xs font-bold bg-white text-indigo-950">
                 <option value="ALL">📊 All Time</option>
                 <option value="THIS_MONTH">📅 This Month</option>
               </select>
+              <button type="button" id="resetOrdersBtn" onclick="resetAllOrdersToZero()" class="hidden bg-red-600 hover:bg-red-700 text-white text-[11px] font-black px-2.5 py-1 rounded-lg shadow">
+                🗑️ Reset Orders (0)
+              </button>
               <button type="button" onclick="doLogout()" class="text-xs text-pink-600 font-extrabold underline">Logout</button>
             </div>
           </div>
 
           <div id="tailorLockBanner" class="hidden bg-red-100 border-2 border-red-600 text-red-950 p-4 rounded-2xl space-y-1">
             <p class="text-xs font-black">🔒 SHOP PAUSED — PENDING COMMISSION / HOLD</p>
-            <p class="text-[11px] font-semibold">Keela unga completed order-ku <strong>Pay 10% Commission (UPI)</strong> button click panni pay pannunga. Admin verify panna udane shop unlock aagum!</p>
+            <p class="text-[11px] font-semibold">Keela unga completed order-ku <strong>GPay / UPI (7373969064)</strong>-la 10% commission pay pannunga. Admin verify panna udane shop unlock aagum!</p>
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
@@ -350,12 +374,16 @@
   <footer class="vivid-header text-white text-center py-6 px-4 mt-8">
     <p class="font-black">🪡 StitchCall — Coimbatore</p>
     <p class="text-xs text-yellow-200 mt-1 font-semibold">1-Hr & 3-Hrs Express Delivery • ₹0 Tailor Registration</p>
-    <a href="https://wa.me/917373969064" target="_blank" class="inline-block mt-3 bg-emerald-400 text-indigo-950 text-xs font-black px-4 py-2 rounded-full shadow">💬 Support: +91 73739 69064</a>
+    <a href="https://wa.me/917373969064" target="_blank" class="inline-block mt-3 bg-emerald-400 text-indigo-950 text-xs font-black px-4 py-2 rounded-full shadow">💬 GPay & Support: +91 73739 69064</a>
   </footer>
 
   <script>
-    // 1. GENERATE CUSTOM STITCHCALL APP ICON
-    (function generateCustomLogo() {
+    const APP_URL = 'https://diviiisgr-hue.github.io/';
+    const ADMIN_PH = '7373969064';
+    const GPAY_UPI = '7373969064@okicici'; // Works with GPay, PhonePe, Paytm via UPI / Mobile Number 7373969064
+
+    // 1. GENERATE CUSTOM STITCHCALL APP ICON & SCANNABLE QR CODE
+    (function initBrandingAndQR() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
       const ctx = c.getContext('2d');
@@ -385,7 +413,104 @@
       const pngUrl = c.toDataURL('image/png');
       document.getElementById('appIconLink').href = pngUrl;
       document.getElementById('appleIconLink').href = pngUrl;
+
+      // High-reliability scannable QR pointing directly to StitchCall live URL
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=12&color=1E1B4B&bgcolor=FFFFFF&data=${encodeURIComponent(APP_URL)}`;
+      document.getElementById('liveQrImg').src = qrApiUrl;
     })();
+
+    function copyAppLink() {
+      navigator.clipboard?.writeText(APP_URL);
+      alert('✅ App Link Copied: ' + APP_URL);
+    }
+
+    // GENERATE & DOWNLOAD VIBRANT COLORFUL PROMO POSTER CARD WITH WORKING QR
+    function downloadPosterCard() {
+      const qrImg = document.getElementById('liveQrImg');
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1350;
+      const ctx = canvas.getContext('2d');
+
+      // Multi-color vibrant background (Yellow -> Pink -> Purple -> Blue)
+      const bg = ctx.createLinearGradient(0, 0, 1080, 1350);
+      bg.addColorStop(0, '#FDE047');
+      bg.addColorStop(0.32, '#EC4899');
+      bg.addColorStop(0.68, '#7C3AED');
+      bg.addColorStop(1, '#1D4ED8');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1080, 1350);
+
+      // White inner card frame
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+      ctx.beginPath();
+      ctx.roundRect(55, 55, 970, 1240, 56);
+      ctx.fill();
+
+      // Top Header Ribbon
+      const headGrad = ctx.createLinearGradient(55, 55, 1025, 310);
+      headGrad.addColorStop(0, '#312E81');
+      headGrad.addColorStop(0.5, '#701A75');
+      headGrad.addColorStop(1, '#DB2777');
+      ctx.fillStyle = headGrad;
+      ctx.beginPath();
+      ctx.roundRect(55, 55, 970, 270, [56, 56, 0, 0]);
+      ctx.fill();
+
+      ctx.fillStyle = '#FDE047';
+      ctx.font = '900 78px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🪡 StitchCall', 540, 175);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 34px system-ui, sans-serif';
+      ctx.fillText('COIMBATORE • 1-HR & 3-HRS EXPRESS TAILORING', 540, 245);
+
+      // Highlight Pill
+      ctx.fillStyle = '#FEF08A';
+      ctx.beginPath();
+      ctx.roundRect(140, 365, 800, 74, 37);
+      ctx.fill();
+      ctx.fillStyle = '#1E1B4B';
+      ctx.font = '900 32px system-ui, sans-serif';
+      ctx.fillText('⚡ Blouse • Kurti • Chudithar • Shirt • Pant', 540, 413);
+
+      // QR Code Box
+      ctx.fillStyle = '#FDF2F8';
+      ctx.strokeStyle = '#DB2777';
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.roundRect(310, 480, 460, 460, 36);
+      ctx.fill();
+      ctx.stroke();
+
+      if (qrImg && qrImg.complete && qrImg.naturalWidth > 0) {
+        ctx.drawImage(qrImg, 340, 510, 400, 400);
+      }
+
+      ctx.fillStyle = '#701A75';
+      ctx.font = '900 40px system-ui, sans-serif';
+      ctx.fillText('📲 SCAN QR TO BOOK TAILOR NOW!', 540, 1010);
+
+      ctx.fillStyle = '#1E1B4B';
+      ctx.font = '700 30px system-ui, sans-serif';
+      ctx.fillText('🛵 Rapido / Porter Pickup & Drop Available', 540, 1070);
+      ctx.fillText('✂️ Tailors Join FREE (₹0 Joining Fee)', 540, 1125);
+
+      // Bottom Contact Bar
+      ctx.fillStyle = '#1E1B4B';
+      ctx.beginPath();
+      ctx.roundRect(120, 1170, 840, 85, 42);
+      ctx.fill();
+      ctx.fillStyle = '#FDE047';
+      ctx.font = '900 34px system-ui, sans-serif';
+      ctx.fillText('📞 Support & Partner Join: 73739 69064', 540, 1224);
+
+      const link = document.createElement('a');
+      link.download = 'StitchCall-Promo-Poster.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
 
     // 2. PWA INSTALL PROMPT HANDLER
     let deferredPrompt;
@@ -408,8 +533,6 @@
     // 3. SUPABASE & APP LOGIC
     const SB_URL = 'https://rmfcnxxtzkatlxvkoptc.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtZmNueHh0emthdGx4dmtvcHRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNjU4NjcsImV4cCI6MjEwODY0MTg2N30.0QfPa91_8nD7xvbiPNCMp7FS8xQjQKHJBym69q06J_0';
-    const ADMIN_PH = '7373969064';
-    const ADMIN_UPI = '7373969064@ybl';
     const db = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 
     let allDbShops = [];
@@ -809,6 +932,18 @@
       document.getElementById('dashBody').classList.add('hidden');
     }
 
+    async function resetAllOrdersToZero() {
+      if (!confirm('⚠️ Are you sure you want to DELETE ALL ORDERS and reset dashboard counts to 0?')) return;
+      const { error } = await db.from('orders').delete().neq('status', 'NONE_MATCH');
+      if (error) {
+        alert('Database Error: ' + error.message + '\nRun the SQL DELETE policy in Supabase first!');
+        return;
+      }
+      await loadInitialData();
+      await refreshDash();
+      alert('✅ All test orders cleared! Dashboard counts are now 0.');
+    }
+
     async function toggleShopHold(idx) {
       const shop = allDbShops[idx];
       if (!shop || !shop.id) return alert('Error: Shop ID not found');
@@ -891,6 +1026,7 @@
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('dashBody').classList.remove('hidden');
       document.getElementById('roleLabel').innerText = isAdmin ? '👑 STITCHCALL OWNER ADMIN' : `✂️ Shop Login (${loggedPh})`;
+      document.getElementById('resetOrdersBtn').classList.toggle('hidden', !isAdmin);
 
       const lockBanner = document.getElementById('tailorLockBanner');
       if (!isAdmin) {
@@ -1019,15 +1155,16 @@
 
       const box = document.getElementById('ordersList');
       if (!list.length) {
-        box.innerHTML = '<p class="text-center text-xs text-gray-500 py-5 font-semibold">No orders in this period.</p>';
+        box.innerHTML = '<p class="text-center text-xs text-gray-500 py-5 font-semibold">No orders yet (0 Orders).</p>';
         return;
       }
 
       box.innerHTML = list.map(o => {
         const isCommDone = o.commission_status === 'Done';
         const commAmt = Number(o.commission_amount || Math.round(Number(o.bill_amount || 0) * 0.1));
-        const upiLink = `upi://pay?pa=${ADMIN_UPI}&pn=StitchCall&am=${commAmt}&cu=INR&tn=Order${o.id}Comm`;
-        const waProofLink = `https://wa.me/91${ADMIN_PH}?text=${encodeURIComponent(`✅ StitchCall Commission Paid!\nOrder: ${o.dress_type}\nShop: ${o.tailor_shop}\nBill: ₹${o.bill_amount} | 10% Comm: ₹${commAmt}\nPlease unlock my shop for next orders.`)}`;
+        const gpayDeepLink = `tez://upi/pay?pa=${GPAY_UPI}&pn=StitchCall&am=${commAmt}&cu=INR&tn=StitchCallComm`;
+        const upiLink = `upi://pay?pa=${GPAY_UPI}&pn=StitchCall&am=${commAmt}&cu=INR&tn=StitchCallComm`;
+        const waProofLink = `https://wa.me/91${ADMIN_PH}?text=${encodeURIComponent(`✅ StitchCall GPay Commission Paid!\nOrder: ${o.dress_type}\nShop: ${o.tailor_shop}\nBill: ₹${o.bill_amount} | 10% Comm: ₹${commAmt}\nPlease unlock my shop for next orders.`)}`;
 
         return `
           <div class="border-2 ${o.status === 'Completed' && !isCommDone ? 'border-red-500 bg-red-50/50' : 'border-purple-200 bg-purple-50/30'} p-3.5 rounded-2xl space-y-2 text-xs">
@@ -1055,15 +1192,16 @@
                   </div>
 
                   ${!isCommDone ? `
-                    <div class="bg-amber-50 p-2 rounded-lg border border-amber-300 text-[11px] font-bold text-amber-950">
-                      📲 UPI ID: <span class="select-all font-black text-indigo-900">${ADMIN_UPI}</span> (Pay ₹${commAmt} to unlock next orders)
+                    <div class="bg-blue-50 p-2.5 rounded-xl border border-blue-300 text-[11px] font-bold text-indigo-950 space-y-1">
+                      <div>💳 GPay Number: <span class="select-all font-black text-blue-700 text-xs">${ADMIN_PH}</span></div>
+                      <div>🏦 UPI ID: <span class="select-all font-black text-indigo-900">${GPAY_UPI}</span></div>
                     </div>
                     <div class="flex flex-wrap gap-2 pt-0.5">
-                      <a href="${upiLink}" class="bg-indigo-800 hover:bg-indigo-900 text-white font-black px-3.5 py-2 rounded-xl shadow">💳 Pay ₹${commAmt} via UPI App</a>
-                      <a href="${waProofLink}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3.5 py-2 rounded-xl shadow">📲 Send Paid Proof (WhatsApp)</a>
+                      <a href="${gpayDeepLink}" onclick="setTimeout(()=>window.location.href='${upiLink}',400)" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-3.5 py-2 rounded-xl shadow">💳 Pay ₹${commAmt} via GPay</a>
+                      <a href="${waProofLink}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3.5 py-2 rounded-xl shadow">📲 Send Paid Proof</a>
                       ${isAdmin ? `
                         <button type="button" onclick="markCommissionDone('${o.id}')" class="bg-pink-600 hover:bg-pink-700 text-white font-black px-3.5 py-2 rounded-xl shadow">
-                          ✅ Verify & Mark Paid (Admin)
+                          ✅ Verify & Unlock Shop
                         </button>
                       ` : ''}
                     </div>
@@ -1101,7 +1239,7 @@
 
       await loadInitialData();
       await refreshDash();
-      alert(`🎉 Order Completed!\n10% Commission: ₹${comm}\nKeela ulla "Pay ₹${comm} via UPI App" button click panni pay pannunga!`);
+      alert(`🎉 Order Completed!\n10% Commission: ₹${comm}\nKeela ulla "Pay ₹${comm} via GPay" button click panni GPay (${ADMIN_PH})-ku pay pannunga!`);
     }
 
     loadInitialData();
