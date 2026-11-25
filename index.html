@@ -34,7 +34,7 @@
     ⚡ 1-HR & 3-HR EXPRESS STITCHING • COIMBATORE • ₹0 TAILOR JOINING
   </div>
 
-  <!-- Vivid Header with Custom Logo & Install App Button -->
+  <!-- Vivid Header -->
   <header class="vivid-header text-white shadow-xl sticky top-0 z-40">
     <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-2.5">
@@ -275,8 +275,8 @@
           </div>
 
           <div id="tailorLockBanner" class="hidden bg-red-100 border-2 border-red-600 text-red-950 p-4 rounded-2xl space-y-1">
-            <p class="text-xs font-black">🔒 NEW ORDERS PAUSED — PENDING COMMISSION PAYMENT</p>
-            <p class="text-[11px] font-semibold">Ungal mudinja order-kaana 10% StitchCall commission pay pannina udane, unga shop automatically unlock aagi next order varum!</p>
+            <p class="text-xs font-black">🔒 SHOP PAUSED — HOLD / REJECTED / PENDING COMMISSION</p>
+            <p class="text-[11px] font-semibold">Unga shop ippo Hold/Rejected-la irukku allathu 10% commission pending-la irukku. Live aana udane orders varum.</p>
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
@@ -300,10 +300,10 @@
 
           <div id="adminShopManager" class="hidden bg-white border-2 border-pink-300 rounded-2xl overflow-hidden shadow-sm">
             <div class="bg-pink-700 text-white px-4 py-2.5 flex justify-between items-center">
-              <h4 class="text-xs font-black">🛡️ Tailor Shops Status (Auto-Locked if Unpaid Commission)</h4>
-              <span class="text-[10px] text-yellow-200 font-bold">Admin Control</span>
+              <h4 class="text-xs font-black">🛡️ Tailor Shops Status (Individual Shop Control)</h4>
+              <span class="text-[10px] text-yellow-200 font-bold">Live / Hold / Reject</span>
             </div>
-            <div id="adminShopsList" class="divide-y divide-gray-100 max-h-60 overflow-y-auto"></div>
+            <div id="adminShopsList" class="divide-y divide-gray-200 max-h-72 overflow-y-auto"></div>
           </div>
 
           <div id="adminShopBreakdown" class="hidden bg-white border-2 border-indigo-200 rounded-2xl overflow-hidden shadow-sm">
@@ -354,7 +354,7 @@
   </footer>
 
   <script>
-    // 1. GENERATE CUSTOM STITCHCALL APP ICON FOR HOME SCREEN
+    // 1. GENERATE CUSTOM STITCHCALL APP ICON
     (function generateCustomLogo() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
@@ -420,6 +420,14 @@
 
     const cleanPh = p => (p || '').replace(/\D/g, '').slice(-10);
 
+    // Helper: Get exact status of a single shop ('Live', 'Hold', or 'Rejected')
+    function getShopState(s) {
+      if (!s) return 'Rejected';
+      if (s.shop_status === 'Rejected') return 'Rejected';
+      if (s.shop_status === 'Hold' || s.is_active === false) return 'Hold';
+      return 'Live';
+    }
+
     function hasUnpaidCommission(tailorPhone) {
       const ph = cleanPh(tailorPhone);
       if (!ph || ph === ADMIN_PH) return false;
@@ -447,7 +455,8 @@
 
     function renderPublicShops() {
       const visibleShops = allDbShops.filter(s => {
-        if (s.is_active === false) return false;
+        const state = getShopState(s);
+        if (state !== 'Live') return false;
         if (hasUnpaidCommission(s.phone || s.mobile)) return false;
         return true;
       });
@@ -507,8 +516,8 @@
     }
 
     function openShop(s) {
-      if (s.is_active === false || hasUnpaidCommission(s.phone || s.mobile)) {
-        alert('⛔ Sorry! This tailor shop is currently on HOLD or unavailable.');
+      if (getShopState(s) !== 'Live' || hasUnpaidCommission(s.phone || s.mobile)) {
+        alert('⛔ Sorry! This tailor shop is currently on HOLD or REJECTED.');
         return;
       }
 
@@ -527,13 +536,11 @@
       badgeBox.innerHTML = '';
       garmentList.innerHTML = '';
 
-      // All dresses start at 0 and unchecked
       Object.entries(rates).forEach(([dressName, price]) => {
         badgeBox.innerHTML += `<span class="bg-pink-50 border border-pink-200 text-indigo-950 font-bold px-2.5 py-1 rounded-lg">${dressName}: <strong class="text-pink-700">₹${price}</strong></span>`;
         garmentList.innerHTML += createGarmentRowHTML(dressName, price, false);
       });
 
-      // Custom Dress Option starting at 0
       garmentList.innerHTML += createGarmentRowHTML('OTHER', 250, false, '✍️ Other Custom Design (₹250+)');
 
       const extraNote = (s.services || '').includes('Extra:') ? s.services.split('Extra:')[1] : '';
@@ -661,19 +668,19 @@
       btn.disabled = true;
       btn.innerText = 'Checking & Booking...';
 
-      // LIVE CHECK IN DATABASE: Block booking if shop was put on HOLD or REJECTED
+      // STRICT DATABASE CHECK: Block if shop is Hold or Rejected
       const { data: freshShop, error: checkErr } = await db
         .from('tailors')
-        .select('id, is_active, phone, mobile')
+        .select('*')
         .eq('id', activeShop.id)
         .maybeSingle();
 
-      if (checkErr || !freshShop || freshShop.is_active === false || hasUnpaidCommission(freshShop.phone || freshShop.mobile)) {
+      if (checkErr || !freshShop || getShopState(freshShop) !== 'Live' || hasUnpaidCommission(freshShop.phone || freshShop.mobile)) {
         btn.disabled = false;
         btn.innerText = '✅ Confirm & Book Now';
         closeShop();
         await loadInitialData();
-        alert('⛔ Sorry! This tailor shop is currently on HOLD or no longer available. Please choose another shop.');
+        alert('⛔ Sorry! This tailor shop is currently on HOLD or REJECTED. Booking is blocked.');
         return;
       }
 
@@ -768,7 +775,8 @@
         experience: document.getElementById('rExp').value.trim(),
         hours: document.getElementById('rHours').value.trim(),
         commission_agreed: true,
-        is_active: true
+        is_active: true,
+        shop_status: 'Live'
       };
 
       const { error } = await db.from('tailors').insert([row]);
@@ -803,10 +811,22 @@
       document.getElementById('dashBody').classList.add('hidden');
     }
 
-    async function toggleShopStatus(shopId, newStatus) {
+    // INDIVIDUAL SHOP ACTION: Only updates the exact clicked shop ID!
+    async function setShopState(shopId, newState, shopName) {
+      if (!shopId) {
+        alert('⚠️ Error: This shop has no valid ID in database.');
+        return;
+      }
+
+      if (newState === 'Rejected') {
+        if (!confirm(`Reject "${shopName}"? Customers will NOT be able to book this shop.`)) return;
+      }
+
+      const isActiveBool = (newState === 'Live');
+
       const { data, error } = await db
         .from('tailors')
-        .update({ is_active: newStatus })
+        .update({ shop_status: newState, is_active: isActiveBool })
         .eq('id', shopId)
         .select();
 
@@ -815,36 +835,20 @@
         return;
       }
       if (!data || data.length === 0) {
-        alert('⚠️ Database permission (RLS UPDATE policy) missing on "tailors" table! Run the SQL policy in Supabase first.');
+        alert('⚠️ Database permission missing! Please run the SQL UPDATE policy in Supabase first.');
         return;
       }
 
       await loadInitialData();
       await refreshDash();
-      alert(newStatus ? '✅ Shop Activated & Live!' : '⏸️ Shop Put on HOLD! Customers cannot book now.');
     }
 
-    async function deleteShop(shopId, shopName) {
-      if (!confirm(`Are you sure you want to permanently reject & delete "${shopName}"?`)) return;
-
-      const { data, error } = await db
-        .from('tailors')
-        .delete()
-        .eq('id', shopId)
-        .select();
-
-      if (error) {
-        alert('Database Error: ' + error.message);
-        return;
-      }
-      if (!data || data.length === 0) {
-        alert('⚠️ Database permission (RLS DELETE policy) missing on "tailors" table! Run the SQL policy in Supabase first.');
-        return;
-      }
-
+    async function deleteShopForever(shopId, shopName) {
+      if (!confirm(`Permanently DELETE "${shopName}" from database?`)) return;
+      const { error } = await db.from('tailors').delete().eq('id', shopId);
+      if (error) return alert('Error: ' + error.message);
       await loadInitialData();
       await refreshDash();
-      alert(`🗑️ "${shopName}" has been rejected & deleted.`);
     }
 
     async function markCommissionDone(orderId) {
@@ -870,7 +874,7 @@
       const lockBanner = document.getElementById('tailorLockBanner');
       if (!isAdmin) {
         const myShop = allDbShops.find(s => cleanPh(s.phone || s.mobile) === loggedPh);
-        const locked = (myShop && myShop.is_active === false) || hasUnpaidCommission(loggedPh);
+        const locked = (myShop && getShopState(myShop) !== 'Live') || hasUnpaidCommission(loggedPh);
         lockBanner.classList.toggle('hidden', !locked);
       } else {
         lockBanner.classList.add('hidden');
@@ -906,23 +910,54 @@
           shopsListBox.innerHTML = '<p class="p-3 text-center text-xs text-gray-400">No registered tailors yet.</p>';
         } else {
           shopsListBox.innerHTML = allDbShops.map(s => {
+            const state = getShopState(s);
             const unpaidLock = hasUnpaidCommission(s.phone || s.mobile);
-            const active = s.is_active !== false && !unpaidLock;
+            const safeName = (s.shop_name || 'Shop').replace(/'/g, '');
+
+            let rowBg = 'bg-white';
+            let statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-500 text-white">● LIVE</span>';
+
+            if (state === 'Rejected') {
+              rowBg = 'bg-red-100/90 border-l-4 border-red-600';
+              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-red-700 text-white">🚫 REJECTED</span>';
+            } else if (state === 'Hold') {
+              rowBg = 'bg-amber-100/90 border-l-4 border-amber-500';
+              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-500 text-indigo-950">⏸️ ON HOLD</span>';
+            } else if (unpaidLock) {
+              rowBg = 'bg-orange-100/90 border-l-4 border-orange-600';
+              statusBadge = '<span class="ml-1.5 text-[10px] font-black px-2.5 py-0.5 rounded-full bg-orange-600 text-white">🔒 UNPAID COMM</span>';
+            }
+
             return `
-              <div class="p-3 flex flex-wrap items-center justify-between gap-2 text-xs ${active ? 'bg-white' : 'bg-red-50/80'}">
+              <div class="p-3 flex flex-wrap items-center justify-between gap-2 text-xs ${rowBg}">
                 <div>
                   <span class="font-black text-indigo-950">${s.shop_name}</span>
-                  <span class="ml-1.5 text-[10px] font-black px-2 py-0.5 rounded-full ${active ? 'bg-emerald-100 text-emerald-800' : 'bg-red-600 text-white'}">
-                    ${unpaidLock ? '🔒 LOCKED (UNPAID COMM)' : active ? '● LIVE' : '⏸️ ON HOLD'}
-                  </span>
-                  <p class="text-[11px] text-gray-500">📍 ${s.area} • 📞 ${s.phone || s.mobile}</p>
+                  ${statusBadge}
+                  <p class="text-[11px] text-gray-600 font-semibold mt-0.5">📍 ${s.area} • 📞 ${s.phone || s.mobile}</p>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  ${s.is_active !== false
-                    ? `<button type="button" onclick="toggleShopStatus(${s.id}, false)" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-black px-2.5 py-1.5 rounded-lg">⏸️ Hold</button>`
-                    : `<button type="button" onclick="toggleShopStatus(${s.id}, true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-2.5 py-1.5 rounded-lg">✅ Activate</button>`
-                  }
-                  <button type="button" onclick="deleteShop(${s.id}, '${(s.shop_name || '').replace(/'/g, '')}')" class="bg-red-600 hover:bg-red-700 text-white font-black px-2.5 py-1.5 rounded-lg">🗑️ Reject</button>
+                  ${state === 'Live' ? `
+                    <button type="button" onclick="setShopState(${s.id}, 'Hold', '${safeName}')" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-black px-3 py-1.5 rounded-lg shadow-sm">
+                      ⏸️ Hold
+                    </button>
+                    <button type="button" onclick="setShopState(${s.id}, 'Rejected', '${safeName}')" class="bg-red-600 hover:bg-red-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
+                      🚫 Reject
+                    </button>
+                  ` : state === 'Hold' ? `
+                    <button type="button" onclick="setShopState(${s.id}, 'Live', '${safeName}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
+                      ✅ Release Hold
+                    </button>
+                    <button type="button" onclick="setShopState(${s.id}, 'Rejected', '${safeName}')" class="bg-red-600 hover:bg-red-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
+                      🚫 Reject
+                    </button>
+                  ` : `
+                    <button type="button" onclick="setShopState(${s.id}, 'Live', '${safeName}')" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-3 py-1.5 rounded-lg shadow-sm">
+                      🔄 Restore Live
+                    </button>
+                    <button type="button" onclick="deleteShopForever(${s.id}, '${safeName}')" class="bg-gray-800 hover:bg-black text-white font-black px-2.5 py-1.5 rounded-lg shadow-sm">
+                      🗑️ Delete
+                    </button>
+                  `}
                 </div>
               </div>
             `;
