@@ -198,8 +198,18 @@
           <h4 class="font-black text-sm text-indigo-950">👗 Book This Tailor</h4>
           <input type="text" id="sbName" required placeholder="👤 Your Name *" class="border-2 border-purple-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-white" />
           <input type="tel" id="sbPhone" required placeholder="📱 Your WhatsApp Number *" class="border-2 border-purple-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-white" />
-          <select id="sbDress" onchange="updateLivePrice()" class="border-2 border-purple-200 rounded-xl px-3 py-2 text-sm w-full bg-white font-bold text-indigo-950"></select>
-          <input type="text" id="sbOther" placeholder="✍️ Type Custom Dress Name *" class="hidden border-2 border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-pink-50" />
+
+          <!-- MULTI-DRESS SELECTION WITH QUANTITY -->
+          <div class="bg-white p-3 rounded-2xl border-2 border-purple-200 space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-black text-indigo-950">✨ Select Dresses (1 or more):</label>
+              <span class="text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">Tick & set qty (+/-)</span>
+            </div>
+            <div id="garmentSelectionList" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+            <input type="text" id="sbOther" placeholder="✍️ Type Custom Dress Name (e.g. Lehenga, Gown) *" class="hidden border-2 border-pink-500 rounded-xl px-3 py-2 text-xs w-full bg-pink-50 mt-2 font-semibold" />
+            <div id="selectedItemsSummary" class="hidden text-[11px] font-extrabold text-indigo-900 bg-purple-50 p-2 rounded-xl border border-purple-200"></div>
+          </div>
+
           <select id="sbSpeed" onchange="updateLivePrice()" class="border-2 border-pink-400 rounded-xl px-3 py-2 text-sm w-full bg-pink-50 text-pink-900 font-extrabold">
             <option value="⚡ 1 Hour Express" data-extra="100">⚡ 1 Hour Express (+₹100 Urgent Fee)</option>
             <option value="🚀 3 Hours Urgent" data-extra="50">🚀 3 Hours Urgent (+₹50 Urgent Fee)</option>
@@ -507,17 +517,19 @@
 
       const rates = getShopRateList(s);
       const badgeBox = document.getElementById('mRateBadges');
-      const dressSel = document.getElementById('sbDress');
+      const garmentList = document.getElementById('garmentSelectionList');
 
       badgeBox.innerHTML = '';
-      dressSel.innerHTML = '';
+      garmentList.innerHTML = '';
 
-      Object.entries(rates).forEach(([dressName, price]) => {
+      const entries = Object.entries(rates);
+      entries.forEach(([dressName, price], idx) => {
         badgeBox.innerHTML += `<span class="bg-pink-50 border border-pink-200 text-indigo-950 font-bold px-2.5 py-1 rounded-lg">${dressName}: <strong class="text-pink-700">₹${price}</strong></span>`;
-        dressSel.innerHTML += `<option value="${dressName}" data-price="${price}">👗 ${dressName} — ₹${price}</option>`;
+        garmentList.innerHTML += createGarmentRowHTML(dressName, price, idx === 0);
       });
 
-      dressSel.innerHTML += `<option value="OTHER" data-price="250">✍️ Other Custom Design (Starts ₹250)</option>`;
+      // Add Custom Dress Option at the bottom
+      garmentList.innerHTML += createGarmentRowHTML('OTHER', 250, false, '✍️ Other Custom Design (₹250+)');
 
       const extraNote = (s.services || '').includes('Extra:') ? s.services.split('Extra:')[1] : '';
       document.getElementById('mExtraNote').innerText = extraNote ? `✨ Special Designs: ${extraNote}` : '';
@@ -526,42 +538,121 @@
       document.getElementById('shopModal').classList.remove('hidden');
     }
 
+    function createGarmentRowHTML(dressName, price, isChecked, customLabel = null) {
+      const displayLabel = customLabel || `👗 ${dressName} — ₹${price}`;
+      return `
+        <div class="garment-row flex items-center justify-between p-2.5 rounded-xl border ${isChecked ? 'border-pink-400 bg-pink-50/40' : 'border-purple-200 bg-purple-50/20'} transition">
+          <label class="flex items-center gap-2 cursor-pointer text-xs font-extrabold text-indigo-950 flex-1">
+            <input type="checkbox" class="garment-check w-4 h-4 accent-pink-600 rounded" data-item="${dressName}" data-price="${price}" ${isChecked ? 'checked' : ''} onchange="onGarmentCheckChange(this)" />
+            <span>${displayLabel}</span>
+          </label>
+          <div class="flex items-center gap-1.5 bg-white border border-purple-300 rounded-lg px-1.5 py-0.5 shadow-sm">
+            <button type="button" onclick="changeGarmentQty(this, -1)" class="w-6 h-6 flex items-center justify-center font-black text-pink-700 hover:bg-pink-100 rounded text-sm">-</button>
+            <span class="item-qty text-xs font-black text-indigo-950 min-w-[18px] text-center">1</span>
+            <button type="button" onclick="changeGarmentQty(this, 1)" class="w-6 h-6 flex items-center justify-center font-black text-pink-700 hover:bg-pink-100 rounded text-sm">+</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function onGarmentCheckChange(cb) {
+      const row = cb.closest('.garment-row');
+      if (cb.checked) {
+        row.classList.remove('border-purple-200', 'bg-purple-50/20');
+        row.classList.add('border-pink-400', 'bg-pink-50/40');
+      } else {
+        row.classList.remove('border-pink-400', 'bg-pink-50/40');
+        row.classList.add('border-purple-200', 'bg-purple-50/20');
+      }
+      updateLivePrice();
+    }
+
+    function changeGarmentQty(btn, delta) {
+      const row = btn.closest('.garment-row');
+      const qtySpan = row.querySelector('.item-qty');
+      const cb = row.querySelector('.garment-check');
+      let qty = parseInt(qtySpan.innerText) + delta;
+      if (qty < 1) qty = 1;
+      qtySpan.innerText = qty;
+      if (!cb.checked) {
+        cb.checked = true;
+        onGarmentCheckChange(cb);
+      } else {
+        updateLivePrice();
+      }
+    }
+
     function closeShop() {
       document.getElementById('shopModal').classList.add('hidden');
     }
 
-    function updateLivePrice() {
-      const dressSel = document.getElementById('sbDress');
-      const isOther = dressSel.value === 'OTHER';
-      const box = document.getElementById('sbOther');
-      box.classList.toggle('hidden', !isOther);
-      box.required = isOther;
+    function getSelectedGarmentsSummary() {
+      let baseTotal = 0;
+      let itemsList = [];
+      let hasOther = false;
 
-      const selectedOpt = dressSel.options[dressSel.selectedIndex];
-      const basePrice = Number(selectedOpt ? selectedOpt.getAttribute('data-price') : 180);
+      document.querySelectorAll('.garment-check:checked').forEach(cb => {
+        const row = cb.closest('.garment-row');
+        const item = cb.getAttribute('data-item');
+        const price = Number(cb.getAttribute('data-price') || 0);
+        const qty = parseInt(row.querySelector('.item-qty').innerText || '1');
+
+        if (item === 'OTHER') {
+          hasOther = true;
+          const customName = document.getElementById('sbOther').value.trim() || 'Custom Design';
+          itemsList.push(`${customName} x${qty}`);
+        } else {
+          itemsList.push(`${item} x${qty}`);
+        }
+        baseTotal += price * qty;
+      });
+
+      return { baseTotal, itemsList, hasOther };
+    }
+
+    function updateLivePrice() {
+      const { baseTotal, itemsList, hasOther } = getSelectedGarmentsSummary();
+
+      const otherBox = document.getElementById('sbOther');
+      otherBox.classList.toggle('hidden', !hasOther);
+      otherBox.required = hasOther;
+
+      const summaryBox = document.getElementById('selectedItemsSummary');
+      if (itemsList.length > 0) {
+        summaryBox.classList.remove('hidden');
+        summaryBox.innerText = `🛍️ Selected (${itemsList.length}): ${itemsList.join(', ')}`;
+      } else {
+        summaryBox.classList.add('hidden');
+      }
+
       const speedSel = document.getElementById('sbSpeed');
       const extraFee = Number(speedSel.options[speedSel.selectedIndex].getAttribute('data-extra') || 0);
 
-      currentEstAmount = basePrice + extraFee;
+      currentEstAmount = baseTotal > 0 ? (baseTotal + extraFee) : 0;
       document.getElementById('liveEstPrice').innerText = '₹' + currentEstAmount;
     }
 
     document.getElementById('sbForm').onsubmit = async function(e) {
       e.preventDefault();
       if (!activeShop) return;
+
+      const { baseTotal, itemsList } = getSelectedGarmentsSummary();
+      if (itemsList.length === 0 || baseTotal <= 0) {
+        alert('⚠️ Please select at least one dress to book!');
+        return;
+      }
+
       const btn = document.getElementById('sbBtn');
       btn.disabled = true;
       btn.innerText = 'Booking...';
 
-      const dress = document.getElementById('sbDress').value === 'OTHER'
-        ? document.getElementById('sbOther').value.trim()
-        : document.getElementById('sbDress').value;
+      const combinedDressText = `${itemsList.join(', ')} (₹${currentEstAmount})`;
 
       const orderRow = {
         customer_name: document.getElementById('sbName').value.trim(),
         customer_phone: cleanPh(document.getElementById('sbPhone').value),
         area: activeShop.area,
-        dress_type: `${dress} (₹${currentEstAmount})`,
+        dress_type: combinedDressText,
         delivery_speed: document.getElementById('sbSpeed').value,
         pickup_type: document.getElementById('sbPickup').value,
         tailor_shop: activeShop.shop_name,
@@ -583,10 +674,9 @@
       }
 
       this.reset();
-      updateLivePrice();
       closeShop();
       await loadInitialData();
-      alert(`🎉 Booked with ${activeShop.shop_name}!\nCharge: ₹${currentEstAmount}\n(Rapido/Porter delivery charges customer pay pannanum, illati direct shop-la vaangikalam)`);
+      alert(`🎉 Booked with ${activeShop.shop_name}!\nItems: ${itemsList.join(', ')}\nTotal Charge: ₹${currentEstAmount}\n(Rapido/Porter delivery charges customer pay pannanum, illati direct shop-la vaangikalam)`);
     };
 
     document.getElementById('rForm').onsubmit = async function(e) {
