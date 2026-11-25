@@ -199,11 +199,11 @@
           <input type="text" id="sbName" required placeholder="👤 Your Name *" class="border-2 border-purple-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-white" />
           <input type="tel" id="sbPhone" required placeholder="📱 Your WhatsApp Number *" class="border-2 border-purple-200 focus:border-pink-500 rounded-xl px-3 py-2 text-sm w-full bg-white" />
 
-          <!-- MULTI-DRESS SELECTION WITH QUANTITY -->
+          <!-- MULTI-DRESS SELECTION STARTING AT ZERO -->
           <div class="bg-white p-3 rounded-2xl border-2 border-purple-200 space-y-2">
             <div class="flex justify-between items-center">
-              <label class="text-xs font-black text-indigo-950">✨ Select Dresses (1 or more):</label>
-              <span class="text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">Tick & set qty (+/-)</span>
+              <label class="text-xs font-black text-indigo-950">✨ Select Dresses (Press + to add):</label>
+              <span class="text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">0 → Press + to add</span>
             </div>
             <div id="garmentSelectionList" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
             <input type="text" id="sbOther" placeholder="✍️ Type Custom Dress Name (e.g. Lehenga, Gown) *" class="hidden border-2 border-pink-500 rounded-xl px-3 py-2 text-xs w-full bg-pink-50 mt-2 font-semibold" />
@@ -507,6 +507,11 @@
     }
 
     function openShop(s) {
+      if (s.is_active === false || hasUnpaidCommission(s.phone || s.mobile)) {
+        alert('⛔ Sorry! This tailor shop is currently on HOLD or unavailable.');
+        return;
+      }
+
       activeShop = s;
       document.getElementById('mType').innerText = s.tailor_type || 'Tailor';
       document.getElementById('mStar').innerText = `⭐ ${s.rating || '4.9'}`;
@@ -522,13 +527,13 @@
       badgeBox.innerHTML = '';
       garmentList.innerHTML = '';
 
-      const entries = Object.entries(rates);
-      entries.forEach(([dressName, price], idx) => {
+      // All dresses start at 0 and unchecked
+      Object.entries(rates).forEach(([dressName, price]) => {
         badgeBox.innerHTML += `<span class="bg-pink-50 border border-pink-200 text-indigo-950 font-bold px-2.5 py-1 rounded-lg">${dressName}: <strong class="text-pink-700">₹${price}</strong></span>`;
-        garmentList.innerHTML += createGarmentRowHTML(dressName, price, idx === 0);
+        garmentList.innerHTML += createGarmentRowHTML(dressName, price, false);
       });
 
-      // Add Custom Dress Option at the bottom
+      // Custom Dress Option starting at 0
       garmentList.innerHTML += createGarmentRowHTML('OTHER', 250, false, '✍️ Other Custom Design (₹250+)');
 
       const extraNote = (s.services || '').includes('Extra:') ? s.services.split('Extra:')[1] : '';
@@ -548,7 +553,7 @@
           </label>
           <div class="flex items-center gap-1.5 bg-white border border-purple-300 rounded-lg px-1.5 py-0.5 shadow-sm">
             <button type="button" onclick="changeGarmentQty(this, -1)" class="w-6 h-6 flex items-center justify-center font-black text-pink-700 hover:bg-pink-100 rounded text-sm">-</button>
-            <span class="item-qty text-xs font-black text-indigo-950 min-w-[18px] text-center">1</span>
+            <span class="item-qty text-xs font-black text-indigo-950 min-w-[18px] text-center">0</span>
             <button type="button" onclick="changeGarmentQty(this, 1)" class="w-6 h-6 flex items-center justify-center font-black text-pink-700 hover:bg-pink-100 rounded text-sm">+</button>
           </div>
         </div>
@@ -557,10 +562,13 @@
 
     function onGarmentCheckChange(cb) {
       const row = cb.closest('.garment-row');
+      const qtySpan = row.querySelector('.item-qty');
       if (cb.checked) {
+        if (parseInt(qtySpan.innerText) === 0) qtySpan.innerText = 1;
         row.classList.remove('border-purple-200', 'bg-purple-50/20');
         row.classList.add('border-pink-400', 'bg-pink-50/40');
       } else {
+        qtySpan.innerText = 0;
         row.classList.remove('border-pink-400', 'bg-pink-50/40');
         row.classList.add('border-purple-200', 'bg-purple-50/20');
       }
@@ -572,14 +580,19 @@
       const qtySpan = row.querySelector('.item-qty');
       const cb = row.querySelector('.garment-check');
       let qty = parseInt(qtySpan.innerText) + delta;
-      if (qty < 1) qty = 1;
+      if (qty < 0) qty = 0;
       qtySpan.innerText = qty;
-      if (!cb.checked) {
+
+      if (qty > 0 && !cb.checked) {
         cb.checked = true;
-        onGarmentCheckChange(cb);
-      } else {
-        updateLivePrice();
+        row.classList.remove('border-purple-200', 'bg-purple-50/20');
+        row.classList.add('border-pink-400', 'bg-pink-50/40');
+      } else if (qty === 0 && cb.checked) {
+        cb.checked = false;
+        row.classList.remove('border-pink-400', 'bg-pink-50/40');
+        row.classList.add('border-purple-200', 'bg-purple-50/20');
       }
+      updateLivePrice();
     }
 
     function closeShop() {
@@ -595,16 +608,18 @@
         const row = cb.closest('.garment-row');
         const item = cb.getAttribute('data-item');
         const price = Number(cb.getAttribute('data-price') || 0);
-        const qty = parseInt(row.querySelector('.item-qty').innerText || '1');
+        const qty = parseInt(row.querySelector('.item-qty').innerText || '0');
 
-        if (item === 'OTHER') {
-          hasOther = true;
-          const customName = document.getElementById('sbOther').value.trim() || 'Custom Design';
-          itemsList.push(`${customName} x${qty}`);
-        } else {
-          itemsList.push(`${item} x${qty}`);
+        if (qty > 0) {
+          if (item === 'OTHER') {
+            hasOther = true;
+            const customName = document.getElementById('sbOther').value.trim() || 'Custom Design';
+            itemsList.push(`${customName} x${qty}`);
+          } else {
+            itemsList.push(`${item} x${qty}`);
+          }
+          baseTotal += price * qty;
         }
-        baseTotal += price * qty;
       });
 
       return { baseTotal, itemsList, hasOther };
@@ -638,13 +653,29 @@
 
       const { baseTotal, itemsList } = getSelectedGarmentsSummary();
       if (itemsList.length === 0 || baseTotal <= 0) {
-        alert('⚠️ Please select at least one dress to book!');
+        alert('⚠️ Please press + to select at least 1 dress before booking!');
         return;
       }
 
       const btn = document.getElementById('sbBtn');
       btn.disabled = true;
-      btn.innerText = 'Booking...';
+      btn.innerText = 'Checking & Booking...';
+
+      // LIVE CHECK IN DATABASE: Block booking if shop was put on HOLD or REJECTED
+      const { data: freshShop, error: checkErr } = await db
+        .from('tailors')
+        .select('id, is_active, phone, mobile')
+        .eq('id', activeShop.id)
+        .maybeSingle();
+
+      if (checkErr || !freshShop || freshShop.is_active === false || hasUnpaidCommission(freshShop.phone || freshShop.mobile)) {
+        btn.disabled = false;
+        btn.innerText = '✅ Confirm & Book Now';
+        closeShop();
+        await loadInitialData();
+        alert('⛔ Sorry! This tailor shop is currently on HOLD or no longer available. Please choose another shop.');
+        return;
+      }
 
       const combinedDressText = `${itemsList.join(', ')} (₹${currentEstAmount})`;
 
@@ -773,18 +804,47 @@
     }
 
     async function toggleShopStatus(shopId, newStatus) {
-      const { error } = await db.from('tailors').update({ is_active: newStatus }).eq('id', shopId);
-      if (error) return alert('Error: ' + error.message);
+      const { data, error } = await db
+        .from('tailors')
+        .update({ is_active: newStatus })
+        .eq('id', shopId)
+        .select();
+
+      if (error) {
+        alert('Database Error: ' + error.message);
+        return;
+      }
+      if (!data || data.length === 0) {
+        alert('⚠️ Database permission (RLS UPDATE policy) missing on "tailors" table! Run the SQL policy in Supabase first.');
+        return;
+      }
+
       await loadInitialData();
       await refreshDash();
+      alert(newStatus ? '✅ Shop Activated & Live!' : '⏸️ Shop Put on HOLD! Customers cannot book now.');
     }
 
     async function deleteShop(shopId, shopName) {
       if (!confirm(`Are you sure you want to permanently reject & delete "${shopName}"?`)) return;
-      const { error } = await db.from('tailors').delete().eq('id', shopId);
-      if (error) return alert('Error: ' + error.message);
+
+      const { data, error } = await db
+        .from('tailors')
+        .delete()
+        .eq('id', shopId)
+        .select();
+
+      if (error) {
+        alert('Database Error: ' + error.message);
+        return;
+      }
+      if (!data || data.length === 0) {
+        alert('⚠️ Database permission (RLS DELETE policy) missing on "tailors" table! Run the SQL policy in Supabase first.');
+        return;
+      }
+
       await loadInitialData();
       await refreshDash();
+      alert(`🗑️ "${shopName}" has been rejected & deleted.`);
     }
 
     async function markCommissionDone(orderId) {
